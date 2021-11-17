@@ -14,7 +14,7 @@ import ManageAsset from "./pages/ManageAsset/ManageAsset";
 import ManageUser from "./pages/ManageUser/ManageUser";
 import Report from "./pages/Report/Report";
 import Header from "./components/Header/Header";
-import "./assets/styles/custom.css"
+import "bootstrap/dist/css/bootstrap.min.css"
 const headerTitle = {
     Home: 'Home',
     User: 'Manage User',
@@ -32,7 +32,7 @@ export default function App() {
                 <div className="appcontainer">
                     <div className="grid wide">
                         <div className="row app-content">
-                            <div className="col l-3 m-4 c-4">
+                            <div className="col col-lg-3 col-md-4 col-sm-2 ">
                                 <img className="logo-img" src={logoimg} />
                                 <div className="app-content__title">Online Asset Management</div>
                                 <nav className="category">
@@ -58,7 +58,7 @@ export default function App() {
                                     </ul>
                                 </nav>
                             </div>
-                            <div className="col l-9 m-8 c-8">
+                            <div className="col col-lg-9 col-md-8 col-sm-10">
                                 <Switch>
                                     <Route path="/" exact>
                                         <Home/>

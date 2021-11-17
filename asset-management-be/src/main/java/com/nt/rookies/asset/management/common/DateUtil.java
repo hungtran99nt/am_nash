@@ -14,13 +14,13 @@ import static com.nt.rookies.asset.management.common.BaseConstants.*;
 
 public class DateUtil {
 
-    private static final int     NOON                = 12;
-    private static final Pattern PATTERN_TIMESTAMP   = Pattern.compile("^\\d{4}[/|\\-]?\\d{1,2}[/|\\-]?\\d{1,2}(| \\d{1,2}:\\d{1,2}(|:\\d{1,2}(|\\.\\d{1,3})))$");
+    private static final int NOON = 12;
+    private static final Pattern PATTERN_TIMESTAMP = Pattern.compile("^\\d{4}[/|\\-]?\\d{1,2}[/|\\-]?\\d{1,2}(| \\d{1,2}:\\d{1,2}(|:\\d{1,2}(|\\.\\d{1,3})))$");
 
-    private static final int     FIRST_HOUR          = 0;
-    private static final int     FIRST_MINUTE        = 0;
-    private static final int     FIRST_SECOND        = 0;
-    private static final int     FIRST_MILLISECOND   = 0;
+    private static final int FIRST_HOUR = 0;
+    private static final int FIRST_MINUTE = 0;
+    private static final int FIRST_SECOND = 0;
+    private static final int FIRST_MILLISECOND = 0;
 
 
     public static boolean isValidYearMonth(String date) {
@@ -184,6 +184,7 @@ public class DateUtil {
      *  getDayFirstTime(new Date(2004, 0, 2, 12, 11, 10)
      *      == Date(2004, 0, 2, 0, 0 ,0)    //2004/1/2 0:0:0.000
      * </pre>
+     *
      * @param date Date
      * @return Date the first time of specified day.
      */
@@ -213,6 +214,7 @@ public class DateUtil {
      *  getDayFirstTime(new Date(2004, 0, 2, 12, 11, 10)
      *      == Date(2004, 0, 2, 23, 59 ,59.999) //2004/1/2 23:59:59.999
      * </pre>
+     *
      * @param date Date
      * @return Date the last time of the specified day.
      */
