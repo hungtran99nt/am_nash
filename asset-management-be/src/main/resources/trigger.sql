@@ -19,6 +19,3 @@ BEGIN
                   WHERE category.id = NEW.category_id);
     SET NEW.asset_code = CONCAT(prefix, LPAD(NEW.id, 6, '0'));
 END;
-
-# TODO: generate username
-# username = first name + first letters of last name + number (if exists)

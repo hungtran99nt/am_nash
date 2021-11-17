@@ -10,15 +10,26 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@Configuration @EnableSwagger2 public class SwaggerConfig {
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig {
 
-    @Bean public Docket api() {
-        String version = "v1.0";
-        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).groupName(version).select().apis(RequestHandlerSelectors.any()).paths(PathSelectors.regex(".*/" + version + "/.*")).build();
-    }
+  @Bean
+  public Docket api() {
+    String version = "v1.0";
+    return new Docket(DocumentationType.SWAGGER_2)
+        .apiInfo(apiInfo())
+        .groupName(version)
+        .select()
+        .apis(RequestHandlerSelectors.any())
+        .paths(PathSelectors.regex(".*/" + version + "/.*"))
+        .build();
+  }
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("Online Asset Management").description("Description for Online Asset Management").build();
-    }
-
+  private ApiInfo apiInfo() {
+    return new ApiInfoBuilder()
+        .title("Online Asset Management")
+        .description("Description for Online Asset Management")
+        .build();
+  }
 }
