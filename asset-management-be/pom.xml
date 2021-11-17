@@ -44,13 +44,13 @@
     <dependency>
       <artifactId>springfox-swagger2</artifactId>
       <groupId>io.springfox</groupId>
-      <version>3.0.0</version>
+      <version>2.9.2</version>
     </dependency>
     <!-- swagger ui -->
     <dependency>
       <artifactId>springfox-swagger-ui</artifactId>
       <groupId>io.springfox</groupId>
-      <version>3.0.0</version>
+      <version>2.9.2</version>
     </dependency>
 
     <dependency>

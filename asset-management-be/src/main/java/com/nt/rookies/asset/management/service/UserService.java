@@ -1,3 +1,12 @@
 package com.nt.rookies.asset.management.service;
 
-public interface UserService {}
+import com.nt.rookies.asset.management.dto.UserDTO;
+
+public interface UserService {
+
+  UserDTO getUserById(Integer id);
+
+  UserDTO updateUser(UserDTO userDTO);
+
+//  UserDTO createUser(UserDTO userDTO);
+}

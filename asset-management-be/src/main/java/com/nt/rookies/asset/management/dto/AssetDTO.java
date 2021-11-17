@@ -3,9 +3,11 @@ package com.nt.rookies.asset.management.dto;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 public class AssetDTO {
   private Integer id;
   private String assetCode;
@@ -14,5 +16,5 @@ public class AssetDTO {
   private Date installedDate;
   private String state;
   private String location;
-  private String category;
+  private String categoryName;
 }

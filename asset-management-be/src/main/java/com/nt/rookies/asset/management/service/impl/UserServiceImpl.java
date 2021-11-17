@@ -5,11 +5,14 @@ import com.nt.rookies.asset.management.entity.User;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.UserService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+  private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
   private final UserRepository repository;
   private final ModelMapper modelMapper;
 
@@ -19,22 +22,42 @@ public class UserServiceImpl implements UserService {
     this.modelMapper = modelMapper;
   }
 
+  @Override
   public UserDTO getUserById(Integer id) {
     User user = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     return modelMapper.map(user, UserDTO.class);
   }
 
+  @Override
   public UserDTO updateUser(UserDTO userDTO) {
     User user =
         repository
             .findById(userDTO.getId())
             .orElseThrow(() -> new RuntimeException("Update user not found"));
+    logger.info("User found: {}", user);
     user.setBirthDate(userDTO.getBirthDate());
     user.setGender(userDTO.getGender());
     user.setJoinedDate(userDTO.getJoinedDate());
     user.setType(userDTO.getType());
+    logger.info("User edited: {}", user);
 
     User updatedUser = repository.save(user);
+    logger.info("User updated: {}", updatedUser);
     return modelMapper.map(updatedUser, UserDTO.class);
   }
+
+//  @Override
+//  public UserDTO createUser(UserDTO userDTO) {
+//
+//    // TODO: create username
+//    StringBuilder usernamePrefix = new StringBuilder(userDTO.getFirstName().toLowerCase());
+//    String[] lastNames = userDTO.getLastName().split(" ");
+//    for (String name : lastNames) {
+//      usernamePrefix.append(name.charAt(0));
+//    }
+//
+//    String maxUsername = repository.findMaxUsernameContains(usernamePrefix.toString());
+//    User createdUser = repository.save(user);
+//    return modelMapper.map(createdUser, UserDTO.class);
+//  }
 }
