@@ -4,9 +4,9 @@ CREATE TABLE category
         PRIMARY KEY,
     category_name   varchar(30) NOT NULL,
     category_prefix varchar(3)  NOT NULL,
-    CONSTRAINT UK_4fy0cvnsy6k1yky6kjs5frkra
+    CONSTRAINT UK_Category_CategoryPrefix
         UNIQUE (category_prefix),
-    CONSTRAINT UK_lroeo5fvfdeg4hpicn4lw7x9b
+    CONSTRAINT UK_Category_CategoryName
         UNIQUE (category_name)
 );
 
@@ -28,11 +28,11 @@ CREATE TABLE asset
     state          varchar(30)  NOT NULL,
     category_id    int          NOT NULL,
     location_id    int          NOT NULL,
-    CONSTRAINT UK_qn47dne4f1vrw5sy5o4b9yvgl
+    CONSTRAINT UK_Asset_AssetCode
         UNIQUE (asset_code),
-    CONSTRAINT FKe69ydkxgcthslax73274q33fs
+    CONSTRAINT FK_Asset_Category
         FOREIGN KEY (category_id) REFERENCES category (id),
-    CONSTRAINT FKoo11h2f4j12wv0axk6d8u1wy0
+    CONSTRAINT FK_Asset_Location
         FOREIGN KEY (location_id) REFERENCES location (id)
 );
 
@@ -64,11 +64,11 @@ CREATE TABLE user
     type        varchar(10) NOT NULL,
     username    varchar(30) NULL,
     location_id int         NOT NULL,
-    CONSTRAINT UK_ibuvfps1ce8o2hxuluo4pr68g
+    CONSTRAINT UK_User_StaffCode
         UNIQUE (staff_code),
-    CONSTRAINT UK_sb8bbouer5wak8vyiiy4pf2bx
+    CONSTRAINT UK_User_Username
         UNIQUE (username),
-    CONSTRAINT FKneyhvoj17hax43m8dq3u7gbic
+    CONSTRAINT FK_User_Location
         FOREIGN KEY (location_id) REFERENCES location (id)
 );
 
@@ -94,14 +94,14 @@ CREATE TABLE assignment
     assign_by     int          NOT NULL,
     assign_to     int          NOT NULL,
     request_by    int          NULL,
-    CONSTRAINT FK8babodn7ebvytymxa2gebw0sa
+    CONSTRAINT FK_Assignment_User_AssignTo
         FOREIGN KEY (assign_to) REFERENCES user (id),
-    CONSTRAINT FKa4ac45yc4dgn6mkxpk4elb03m
+    CONSTRAINT FK_Assignment_User_RequestBy
         FOREIGN KEY (request_by) REFERENCES user (id),
-    CONSTRAINT FKc9u2f8jjh7d7mdjlo8742q3xt
+    CONSTRAINT FK_Assignment_User_AssignBy
         FOREIGN KEY (assign_by) REFERENCES user (id),
-    CONSTRAINT FKfdurtvgn6ksekwqxtieb2h3wr
+    CONSTRAINT FK_Assignment_User_AcceptedBy
         FOREIGN KEY (accepted_by) REFERENCES user (id),
-    CONSTRAINT FKp4xufrrwsc72xaffg2yv1hiu1
+    CONSTRAINT FK_Assignment_Asset
         FOREIGN KEY (asset_id) REFERENCES asset (id)
 );
