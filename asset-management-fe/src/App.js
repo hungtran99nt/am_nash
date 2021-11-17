@@ -4,7 +4,7 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-     NavLink
+    NavLink
 } from "react-router-dom";
 import logoimg from "./assets/images/logonashtech.png"
 import ManageAssignment from "./pages/ManageAssignment/ManageAssignment";
@@ -14,6 +14,8 @@ import ManageAsset from "./pages/ManageAsset/ManageAsset";
 import ManageUser from "./pages/ManageUser/ManageUser";
 import Report from "./pages/Report/Report";
 import Header from "./components/Header/Header";
+import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
+
 const headerTitle = {
     Home: 'Home',
     User: 'Manage User',
@@ -37,22 +39,30 @@ export default function App() {
                                 <nav className="category">
                                     <ul className="category-list">
                                         <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Home)}>
-                                            <NavLink exact activeClassName="selected" className="category-item__link" to="/">Home</NavLink>
+                                            <NavLink exact activeClassName="selected" className="category-item__link"
+                                                     to="/">Home</NavLink>
                                         </li>
-                                        <li  onClick={() => setHeaderInfo(headerTitle.User)}>
-                                            <NavLink  exact activeClassName="selected" className="category-item__link" to="/user">Manage User</NavLink>
+                                        <li className="category-item" onClick={() => setHeaderInfo(headerTitle.User)}>
+                                            <NavLink activeClassName="selected" className="category-item__link"
+                                                     to="/user">Manage User</NavLink>
                                         </li>
                                         <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Asset)}>
-                                            <NavLink exact activeClassName="selected" className="category-item__link" to="/asset">Manage Asset</NavLink>
+                                            <NavLink activeClassName="selected" className="category-item__link"
+                                                     to="/asset">Manage Asset</NavLink>
                                         </li>
-                                        <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Assignment)}>
-                                            <NavLink activeClassName="selected" className="category-item__link" to="/assignment">Manage Assignment</NavLink>
+                                        <li className="category-item"
+                                            onClick={() => setHeaderInfo(headerTitle.Assignment)}>
+                                            <NavLink activeClassName="selected" className="category-item__link"
+                                                     to="/assignment">Manage Assignment</NavLink>
                                         </li>
-                                        <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Request)}>
-                                            <NavLink activeClassName="selected" className="category-item__link" to="/requestofreturning">Request Of Returning</NavLink>
+                                        <li className="category-item"
+                                            onClick={() => setHeaderInfo(headerTitle.Request)}>
+                                            <NavLink activeClassName="selected" className="category-item__link"
+                                                     to="/requestofreturning">Request Of Returning</NavLink>
                                         </li>
                                         <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Report)}>
-                                            <NavLink activeClassName="selected" className="category-item__link" to="/report">Report</NavLink>
+                                            <NavLink activeClassName="selected" className="category-item__link"
+                                                     to="/report">Report</NavLink>
                                         </li>
                                     </ul>
                                 </nav>
@@ -76,6 +86,9 @@ export default function App() {
                                     </Route>
                                     <Route path="/report" exact>
                                         <Report/>
+                                    </Route>
+                                    <Route path="/create" exact>
+                                        <CreateUserPage/>
                                     </Route>
                                 </Switch>
                             </div>
