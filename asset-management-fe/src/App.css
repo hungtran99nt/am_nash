@@ -24,6 +24,11 @@
   color: var(--text-color);
   font-size: 18px;
   font-weight: 700;
+  text-decoration: none;
+}
+.selected{
+  background-color: #EB5B64;
+  color:var(--white-color);
 }
 .category-item a:focus{
   background-color: #EB5B64;
@@ -31,4 +36,5 @@
 }
 .category-item a:hover{
   background-color: #EB5B64;
+  color:var(--white-color);
 }
