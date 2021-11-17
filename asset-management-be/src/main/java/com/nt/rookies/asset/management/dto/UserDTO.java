@@ -15,6 +15,6 @@ import java.util.Date;
     private String gender;
     private Date birthDate;
     private String type;
-    private boolean isDisable;
+    private boolean disable;
     private String location;
 }

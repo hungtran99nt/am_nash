@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Setter @Getter @ToString @Entity @Table(name = "assignment") public class Assignment {
-    @Id @Column(name = "id", nullable = false) private Integer id;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) @Column(name = "id", nullable = false) private Integer id;
 
     @ManyToOne(optional = false) @JoinColumn(name = "asset_id", nullable = false) private Asset asset;
 

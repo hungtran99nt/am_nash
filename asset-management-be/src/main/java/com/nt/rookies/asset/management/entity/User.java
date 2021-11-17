@@ -29,7 +29,7 @@ import java.util.List;
 
     @Column(name = "type", length = 10, nullable = false) private String type;
 
-    @Column(name = "disable", nullable = false) private boolean isDisable;
+    @Column(name = "disable", nullable = false) private boolean disable;
 
     @ManyToOne(cascade = CascadeType.ALL) @JoinColumn(name = "location_id", nullable = false) private Location location;
 

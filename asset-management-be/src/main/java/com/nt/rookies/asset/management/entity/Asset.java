@@ -7,9 +7,9 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Getter @Setter @Entity @Table(name = "asset") public class Asset {
-    @Id @Column(name = "id", nullable = false) private Integer id;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) @Column(name = "id", nullable = false) private Integer id;
 
-    @Column(name = "asset_code", unique = true, length = 8) private String assetCode;
+    @Column(name = "asset_code", unique = true, length = 9) private String assetCode;
 
     @Column(name = "asset_name", length = 50, nullable = false) private String assetName;
 
