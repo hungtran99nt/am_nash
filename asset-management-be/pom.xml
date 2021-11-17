@@ -64,10 +64,17 @@
       <groupId>org.projectlombok</groupId>
       <optional>true</optional>
     </dependency>
+
     <dependency>
       <artifactId>spring-boot-starter-test</artifactId>
       <groupId>org.springframework.boot</groupId>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.modelmapper</groupId>
+      <artifactId>modelmapper</artifactId>
+      <version>2.4.2</version>
     </dependency>
   </dependencies>
   <description>Online Asset Management</description>
