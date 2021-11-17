@@ -1,4 +1,3 @@
 package com.nt.rookies.asset.management.exception;
 
-public class BusinessException {
-}
+public class BusinessException {}
