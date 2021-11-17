@@ -4,7 +4,7 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    NavLink
 } from "react-router-dom";
 import logoimg from "./assets/images/logonashtech.png"
 import ManageAssignment from "./pages/ManageAssignment/ManageAssignment";
@@ -14,6 +14,8 @@ import ManageAsset from "./pages/ManageAsset/ManageAsset";
 import ManageUser from "./pages/ManageUser/ManageUser";
 import Report from "./pages/Report/Report";
 import Header from "./components/Header/Header";
+import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
+
 const headerTitle = {
     Home: 'Home',
     User: 'Manage User',
@@ -32,27 +34,35 @@ export default function App() {
                     <div className="grid wide">
                         <div className="row app-content">
                             <div className="col col-lg-3 col-md-4 col-sm-2 ">
-                                <img className="logo-img" src={logoimg} />
+                                <img className="logo-img" src={logoimg}/>
                                 <div className="app-content__title">Online Asset Management</div>
                                 <nav className="category">
                                     <ul className="category-list">
                                         <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Home)}>
-                                            <Link style={{ textDecoration: 'none' }} to="/">Home</Link>
+                                            <NavLink exact activeClassName="selected" className="category-item__link"
+                                                     to="/">Home</NavLink>
                                         </li>
                                         <li className="category-item" onClick={() => setHeaderInfo(headerTitle.User)}>
-                                            <Link style={{ textDecoration: 'none' }} to="/user">Manage User</Link>
+                                            <NavLink activeClassName="selected" className="category-item__link"
+                                                     to="/user">Manage User</NavLink>
                                         </li>
                                         <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Asset)}>
-                                            <Link style={{ textDecoration: 'none' }} to="/asset">Manage Asset</Link>
+                                            <NavLink activeClassName="selected" className="category-item__link"
+                                                     to="/asset">Manage Asset</NavLink>
                                         </li>
-                                        <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Assignment)}>
-                                            <Link style={{ textDecoration: 'none' }} to="/assignment">Manage Assignment</Link>
+                                        <li className="category-item"
+                                            onClick={() => setHeaderInfo(headerTitle.Assignment)}>
+                                            <NavLink activeClassName="selected" className="category-item__link"
+                                                     to="/assignment">Manage Assignment</NavLink>
                                         </li>
-                                        <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Request)}>
-                                            <Link style={{ textDecoration: 'none' }} to="/requestofreturning">Request Of Returning</Link>
+                                        <li className="category-item"
+                                            onClick={() => setHeaderInfo(headerTitle.Request)}>
+                                            <NavLink activeClassName="selected" className="category-item__link"
+                                                     to="/requestofreturning">Request Of Returning</NavLink>
                                         </li>
                                         <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Report)}>
-                                            <Link style={{ textDecoration: 'none' }} to="/report">Report</Link>
+                                            <NavLink activeClassName="selected" className="category-item__link"
+                                                     to="/report">Report</NavLink>
                                         </li>
                                     </ul>
                                 </nav>
@@ -76,6 +86,9 @@ export default function App() {
                                     </Route>
                                     <Route path="/report" exact>
                                         <Report/>
+                                    </Route>
+                                    <Route path="/create" exact>
+                                        <CreateUserPage/>
                                     </Route>
                                 </Switch>
                             </div>
