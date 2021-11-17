@@ -14,7 +14,6 @@ import ManageAsset from "./pages/ManageAsset/ManageAsset";
 import ManageUser from "./pages/ManageUser/ManageUser";
 import Report from "./pages/Report/Report";
 import Header from "./components/Header/Header";
-import "bootstrap/dist/css/bootstrap.min.css"
 const headerTitle = {
     Home: 'Home',
     User: 'Manage User',
