@@ -1,6 +1,17 @@
 package com.nt.rookies.asset.management.common;
 
-import org.apache.commons.lang3.StringUtils;
+import static com.nt.rookies.asset.management.common.BaseConstants.PATTERN_TIMESTAMP_A;
+import static com.nt.rookies.asset.management.common.BaseConstants.PATTERN_TIMESTAMP_A_HYPHEN;
+import static com.nt.rookies.asset.management.common.BaseConstants.PATTERN_TIMESTAMP_A_SLASH;
+import static com.nt.rookies.asset.management.common.BaseConstants.PATTERN_TIMESTAMP_B;
+import static com.nt.rookies.asset.management.common.BaseConstants.PATTERN_TIMESTAMP_B_HYPHEN;
+import static com.nt.rookies.asset.management.common.BaseConstants.PATTERN_TIMESTAMP_B_SLASH;
+import static com.nt.rookies.asset.management.common.BaseConstants.PATTERN_TIMESTAMP_C;
+import static com.nt.rookies.asset.management.common.BaseConstants.PATTERN_TIMESTAMP_C_HYPHEN;
+import static com.nt.rookies.asset.management.common.BaseConstants.PATTERN_TIMESTAMP_C_SLASH;
+import static com.nt.rookies.asset.management.common.BaseConstants.PATTERN_TIMESTAMP_D;
+import static com.nt.rookies.asset.management.common.BaseConstants.PATTERN_TIMESTAMP_D_HYPHEN;
+import static com.nt.rookies.asset.management.common.BaseConstants.PATTERN_TIMESTAMP_D_SLASH;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,8 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
-
-import static com.nt.rookies.asset.management.common.BaseConstants.*;
+import org.apache.commons.lang3.StringUtils;
 
 public class DateUtil {
 
