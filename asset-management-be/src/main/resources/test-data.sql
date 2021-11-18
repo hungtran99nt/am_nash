@@ -1,5 +1,3 @@
-use db_asset_management;
-
 -- location data
 insert into location (id, location_name) 
 values (1, 'Ha Noi'), (2, 'Da Nang'), (3, 'HCM');
