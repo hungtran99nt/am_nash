@@ -1,67 +1,89 @@
-import {Button, ButtonGroup, Col, Form, FormCheck, Row, ToggleButton} from "react-bootstrap";
-import {Formik,Field} from 'formik';
-import * as Yup from "yup";
+import React from "react";
+import {Button, Col, Form, Row} from "react-bootstrap";
+import {Formik} from 'formik';
+import * as Yup from 'yup';
+import moment from "moment";
+
 const validateForm = Yup.object().shape({
-    firstname:Yup.string().required("Required!"),
-    lastname:Yup.string().required("Required!"),
-    birthdate:Yup.date()
-        .max(new Date(Date.now() - 567648000000), "You must be at least 18 years")
+    firstname: Yup.string()
+        .min(2, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Required'),
+    lastname: Yup.string()
+        .min(2, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Required'),
+    birthdate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
         .required("Required"),
-    joineddate:Yup.date()
-
-        .required("Required"),
-
-    type:Yup.number().required("Required!")
+    type: Yup.string().required("Required!")
 })
-const initialValues = {firstname: "", lastname: "",birthdate:"",joineddate:"",type:""};
-const submit = values => {
-    console.log(values)
+const validation = (values) => {
+    const errors = {};
+    let isWeekend = moment(values.joineddate).isoWeekday();
+    if (!values.joineddate) {
+        errors.joineddate = "Required";
+    } else if (isWeekend === 0 || isWeekend === 6) {
+        errors.joineddate = "Joined date is Saturday or Sunday. Please select a different date"
+    } else if (moment(values.joineddate).isBefore(moment(values.birthdate))) {
+        errors.joineddate = "Joined date is not later than Date of Birth. Please select a different date";
+    }
+    return errors;
 }
+const submit = (values) => {
+    console.log(moment(values.joineddate))
+    console.log('values =',values)
+}
+
 const CreateUserPage = () => {
+    const initialValues = {firstname: "", lastname: "", birthdate: "", gender: "female", joineddate: "", type: ""};
     return (
         <div className="app-create">
             <div className="row">
-                <div className="col-lg-2">Left</div>
+                <div className="col-lg-2"/>
                 <div className="col-lg-8 ">
+                    <div className="app-content__title">Create New User</div>
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validateForm}
+                        validate={validation}
                         onSubmit={submit}
                     >
                         {({
                               values,
                               errors,
                               touched,
+                              handleBlur,
                               handleChange,
                               handleSubmit,
+                              isSubmitting
                           }) => (
                             <Form onSubmit={handleSubmit}>
-                                <div className="app-content__title">Create New User</div>
-                                <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
                                     <Form.Label column sm="2">First Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
                                             type="text"
                                             name="firstname"
-                                            id="firstname"
                                             value={values.firstname}
                                             onChange={handleChange}
+                                            onBlur={handleBlur}
                                             isInvalid={touched.firstname && errors.firstname}
+
                                         />
                                         <Form.Control.Feedback type="invalid">
                                             {errors.firstname}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextLastName">
                                     <Form.Label column sm="2">Last Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
                                             type="text"
                                             name="lastname"
-                                            id="lastname"
                                             onChange={handleChange}
                                             value={values.lastname}
+                                            onBlur={handleBlur}
                                             isInvalid={touched.lastname && errors.lastname}
                                         />
                                         <Form.Control.Feedback type="invalid">
@@ -69,7 +91,7 @@ const CreateUserPage = () => {
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextBirthDate">
                                     <Form.Label column sm="2">Date Of Birth</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
@@ -77,6 +99,7 @@ const CreateUserPage = () => {
                                             type="date"
                                             value={values.birthdate}
                                             onChange={handleChange}
+                                            onBlur={handleBlur}
                                             isInvalid={touched.birthdate && errors.birthdate}
                                         />
                                         <Form.Control.Feedback type="invalid">
@@ -89,24 +112,25 @@ const CreateUserPage = () => {
                                         Gender
                                     </Form.Label>
                                     <Col sm="6">
-                                            <div className="mb-3">
-                                                <Form.Check
-                                                    inline
-                                                    label="Female"
-                                                    name="group1"
-                                                    type={"radio"}
-                                                    id={`inline-1`}
-                                                    checked={true}
-
-                                                />
-                                                <Form.Check
-                                                    inline
-                                                    label="Male"
-                                                    name="group1"
-                                                    type={"radio"}
-                                                    id={`inline-2`}
-                                                />
-                                            </div>
+                                        <div className="mb-3">
+                                            <Form.Check
+                                                inline
+                                                label="Female"
+                                                name="gender"
+                                                type="radio"
+                                                value="female"
+                                                defaultChecked={true}
+                                                onChange={handleChange}
+                                            />
+                                            <Form.Check
+                                                inline
+                                                label="Male"
+                                                name="gender"
+                                                type="radio"
+                                                value="male"
+                                                onChange={handleChange}
+                                            />
+                                        </div>
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
@@ -119,6 +143,7 @@ const CreateUserPage = () => {
                                             type="date"
                                             value={values.joineddate}
                                             onChange={handleChange}
+                                            onBlur={handleBlur}
                                             isInvalid={touched.joineddate && errors.joineddate}
                                         />
                                         <Form.Control.Feedback type="invalid">
@@ -129,24 +154,30 @@ const CreateUserPage = () => {
                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
                                     <Form.Label column sm="2">Type</Form.Label>
                                     <Col sm="6">
-                                        <Form.Select>
-                                            <option value="0">select something</option>
-                                            <option value="1">Staff</option>
-                                            <option value="2">Admin</option>
+                                        <Form.Select
+                                            name="type"
+                                            value={values.type}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            isInvalid={touched.type && errors.type}
+                                        >
+                                            <option value=""/>
+                                            <option value="Staff" label="Staff"/>
+                                            <option value="Admin" label="Admin"/>
                                         </Form.Select>
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.joineddate}
+                                            {errors.type}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Button variant="primary" type="submit">
+                                <Button type="submit" className="btn-primary" disabled={isSubmitting}>
                                     Submit
                                 </Button>
                             </Form>
                         )}
                     </Formik>
                 </div>
-                <div className="col-lg-2">Right</div>
+                <div className="col-lg-2"/>
             </div>
         </div>
     )
