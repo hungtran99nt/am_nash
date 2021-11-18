@@ -1,21 +1,15 @@
 package com.nt.rookies.asset.management.dto;
 
 import java.util.Date;
+import lombok.Data;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-@Setter
-@Getter
-@ToString
+@Data
 public class UserDTO {
   private Integer id;
   private String staffCode;
   private String firstName;
   private String lastName;
   private String username;
-  private String password;
   private Date joinedDate;
   private String gender;
   private Date birthDate;

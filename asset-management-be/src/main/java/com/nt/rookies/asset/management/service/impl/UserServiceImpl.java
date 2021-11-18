@@ -1,7 +1,9 @@
 package com.nt.rookies.asset.management.service.impl;
 
+import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.User;
+import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.UserService;
 import java.util.List;
@@ -27,7 +29,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO getUserById(Integer id) {
-    User user = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    User user =
+        repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found."));
     return modelMapper.map(user, UserDTO.class);
   }
 
@@ -36,7 +39,7 @@ public class UserServiceImpl implements UserService {
     User user =
         repository
             .findById(userDTO.getId())
-            .orElseThrow(() -> new RuntimeException("Update user not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Update user not found."));
     logger.info("User found: {}", user);
     user.setBirthDate(userDTO.getBirthDate());
     user.setGender(userDTO.getGender());
@@ -65,12 +68,11 @@ public class UserServiceImpl implements UserService {
   //  }
 
   @Override
-  public Optional<UserDTO> findActiveByUsername(String username) {
-
-    return repository.findAll().stream()
-        .filter(user -> !user.isDisable() && user.getUsername().equals(username))
-        .map(this::convertEntityToDto)
-        .findFirst();
+  public Optional<AccountDTO> findActiveByUsername(String username) {
+    User user = repository.findByUsername(username);
+    //
+    if (!user.isDisable()) return Optional.of(modelMapper.map(user, AccountDTO.class));
+    return Optional.empty();
   }
 
   @Override
@@ -82,23 +84,6 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO findByUsernameTest(String username) {
-    return convertEntityToDto(repository.findByUsername(username));
-  }
-
-  private UserDTO convertEntityToDto(User user) {
-    UserDTO userDTO = new UserDTO();
-    userDTO.setId(user.getId());
-    userDTO.setStaffCode(user.getStaffCode());
-    userDTO.setUsername(user.getUsername());
-    userDTO.setType(user.getType());
-    userDTO.setPassword(user.getPassword());
-    userDTO.setDisable(user.isDisable());
-    userDTO.setGender(user.getGender());
-    userDTO.setBirthDate(user.getBirthDate());
-    userDTO.setFirstName(user.getFirstName());
-    userDTO.setLastName(user.getLastName());
-    userDTO.setJoinedDate(user.getJoinedDate());
-    userDTO.setLocation(user.getLocation().getLocationName());
-    return userDTO;
+    return modelMapper.map(repository.findByUsername(username), UserDTO.class);
   }
 }

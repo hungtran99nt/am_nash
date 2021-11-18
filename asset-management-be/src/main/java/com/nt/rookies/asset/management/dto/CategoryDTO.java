@@ -1,12 +1,8 @@
 package com.nt.rookies.asset.management.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@Setter
-@Getter
-@ToString
+@Data
 public class CategoryDTO {
   private Integer id;
   private String categoryPrefix;

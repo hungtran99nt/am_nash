@@ -13,18 +13,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class JwtUserDetailServiceImpl implements UserDetailsService {
-    @Autowired
-    private UserService userService;
+  @Autowired private UserService userService;
 
-    @Override
-    @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String username){
-        return userService.findActiveByUsername(username).map(u -> {
-                User.UserBuilder builder = User.withUsername(u.getUsername());
-                builder.password(new BCryptPasswordEncoder().encode(u.getPassword()));
-                SimpleGrantedAuthority authority = new SimpleGrantedAuthority(u.getType());
-                builder.authorities(authority.toString());
-                return builder.build();
-        }).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
+  @Override
+  @Transactional(readOnly = true)
+  public UserDetails loadUserByUsername(String username) {
+    return userService
+        .findActiveByUsername(username)
+        .map(
+            u -> {
+              User.UserBuilder builder = User.withUsername(u.getUsername());
+              builder.password(new BCryptPasswordEncoder().encode(u.getPassword()));
+              SimpleGrantedAuthority authority = new SimpleGrantedAuthority(u.getType());
+              builder.authorities(authority.toString());
+              return builder.build();
+            })
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+  }
 }

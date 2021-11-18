@@ -3,6 +3,7 @@ package com.nt.rookies.asset.management;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.AssetDTO;
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.dto.CategoryDTO;
@@ -15,12 +16,15 @@ import com.nt.rookies.asset.management.repository.AssetRepository;
 import com.nt.rookies.asset.management.repository.AssignmentRepository;
 import com.nt.rookies.asset.management.repository.CategoryRepository;
 import com.nt.rookies.asset.management.repository.UserRepository;
+import com.nt.rookies.asset.management.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class DTOModelMapperTests {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   @Autowired private UserRepository userRepository;
@@ -28,6 +32,7 @@ public class DTOModelMapperTests {
   @Autowired private CategoryRepository categoryRepository;
   @Autowired private AssignmentRepository assignmentRepository;
   @Autowired private ModelMapper modelMapper;
+  @Autowired private UserService userService;
 
   @Test
   void testUserMapper() {
@@ -105,5 +110,19 @@ public class DTOModelMapperTests {
         //        () -> assertEquals(assignment.getAcceptedBy().getUsername(),
         // assignmentDTO.getAcceptedBy())
         );
+  }
+
+  @Test
+  void testAccountMapper() {
+    User user = userRepository.findByUsername("phuongnv");
+    logger.info("User: {}", user);
+    AccountDTO account = userService.findActiveByUsername("phuongnv").get();
+    logger.info("AccountDTO: {}", account);
+
+    assertAll(
+        () -> assertEquals(user.getUsername(), account.getUsername()),
+        () -> assertEquals(user.getPassword(), account.getPassword()),
+        () -> assertEquals(user.getType(), account.getType())
+    );
   }
 }

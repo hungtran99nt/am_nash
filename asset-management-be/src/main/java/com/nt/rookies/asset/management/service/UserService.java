@@ -1,5 +1,6 @@
 package com.nt.rookies.asset.management.service;
 
+import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +14,7 @@ public interface UserService {
   //  UserDTO createUser(UserDTO userDTO);
 
   // Find Active(isDisable=false) Staff by username
-  Optional<UserDTO> findActiveByUsername(String username);
+  Optional<AccountDTO> findActiveByUsername(String username);
 
   List<UserDTO> getAllUser();
 
