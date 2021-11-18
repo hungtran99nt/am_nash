@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    @Query("SELECT u FROM User u WHERE u.username = :username")
-    User findByUsername(@Param("username") String username);
+  @Query("SELECT u FROM User u WHERE u.username = :username")
+  User findByUsername(@Param("username") String username);
   // TODO: finish query
-  String findMaxUsernameContains(String keyword);
+  //  String findMaxUsernameContains(String keyword);
 }

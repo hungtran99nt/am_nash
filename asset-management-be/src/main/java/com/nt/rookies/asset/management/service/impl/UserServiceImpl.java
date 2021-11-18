@@ -4,15 +4,15 @@ import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.User;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.UserService;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
   private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -49,57 +49,56 @@ public class UserServiceImpl implements UserService {
     return modelMapper.map(updatedUser, UserDTO.class);
   }
 
-//  @Override
-//  public UserDTO createUser(UserDTO userDTO) {
-//
-//    // TODO: create username
-//    StringBuilder usernamePrefix = new StringBuilder(userDTO.getFirstName().toLowerCase());
-//    String[] lastNames = userDTO.getLastName().split(" ");
-//    for (String name : lastNames) {
-//      usernamePrefix.append(name.charAt(0));
-//    }
-//
-//    String maxUsername = repository.findMaxUsernameContains(usernamePrefix.toString());
-//    User createdUser = repository.save(user);
-//    return modelMapper.map(createdUser, UserDTO.class);
-//  }
+  //  @Override
+  //  public UserDTO createUser(UserDTO userDTO) {
+  //
+  //    // TODO: create username
+  //    StringBuilder usernamePrefix = new StringBuilder(userDTO.getFirstName().toLowerCase());
+  //    String[] lastNames = userDTO.getLastName().split(" ");
+  //    for (String name : lastNames) {
+  //      usernamePrefix.append(name.charAt(0));
+  //    }
+  //
+  //    String maxUsername = repository.findMaxUsernameContains(usernamePrefix.toString());
+  //    User createdUser = repository.save(user);
+  //    return modelMapper.map(createdUser, UserDTO.class);
+  //  }
 
-    @Override
-    public Optional<UserDTO> findActiveByUsername(String username) {
-                .stream()
-        return userRepository.findAll()
-                .filter( user -> user.isDisable() == false && user.getUsername().equals(username))
-                .map(this::convertEntityToDto)
-                .findFirst();
-    }
+  @Override
+  public Optional<UserDTO> findActiveByUsername(String username) {
 
-    @Override
-    public List<UserDTO> getAllUser() {
-        return userRepository.findAll()
-                .stream()
-                .map(this::convertEntityToDto)
-                .collect(Collectors.toList());
-    }
+    return repository.findAll().stream()
+        .filter(user -> !user.isDisable() && user.getUsername().equals(username))
+        .map(this::convertEntityToDto)
+        .findFirst();
+  }
 
-    public UserDTO findByUsernameTest(String username) {
-    @Override
-        return convertEntityToDto(userRepository.findByUsername(username));
-    }
+  @Override
+  public List<UserDTO> getAllUser() {
+    return repository.findAll().stream()
+        .map(user -> modelMapper.map(user, UserDTO.class))
+        .collect(Collectors.toList());
+  }
 
-    private UserDTO convertEntityToDto (User user){
-        userDTO.setId(user.getId());
-        UserDTO userDTO = new UserDTO();
-        userDTO.setStaffCode(user.getStaffCode());
-        userDTO.setUsername(user.getUsername());
-        userDTO.setType(user.getType());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setDisable(user.isDisable());
-        userDTO.setGender(user.getGender());
-        userDTO.setBirthDate(user.getBirthDate());
-        userDTO.setFirstName(user.getFirstName());
-        userDTO.setLastName(user.getLastName());
-        userDTO.setJoinedDate(user.getJoinedDate());
-        userDTO.setLocation(user.getLocation().getLocationName());
-        return userDTO;
-    }
+  @Override
+  public UserDTO findByUsernameTest(String username) {
+    return convertEntityToDto(repository.findByUsername(username));
+  }
+
+  private UserDTO convertEntityToDto(User user) {
+    UserDTO userDTO = new UserDTO();
+    userDTO.setId(user.getId());
+    userDTO.setStaffCode(user.getStaffCode());
+    userDTO.setUsername(user.getUsername());
+    userDTO.setType(user.getType());
+    userDTO.setPassword(user.getPassword());
+    userDTO.setDisable(user.isDisable());
+    userDTO.setGender(user.getGender());
+    userDTO.setBirthDate(user.getBirthDate());
+    userDTO.setFirstName(user.getFirstName());
+    userDTO.setLastName(user.getLastName());
+    userDTO.setJoinedDate(user.getJoinedDate());
+    userDTO.setLocation(user.getLocation().getLocationName());
+    return userDTO;
+  }
 }

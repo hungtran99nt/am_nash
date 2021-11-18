@@ -37,7 +37,7 @@ public class UserRestController {
     UserDTO updatedUser = userService.updateUser(user);
     return ResponseEntity.ok().body(updatedUser);
   }
-    @GetMapping("/user")
+    @GetMapping("/")
     public List<UserDTO> getAllUser(){
         return userService.getAllUser();
     }
