@@ -1,54 +1,140 @@
-import React from 'react';
-import {Table} from "react-bootstrap";
+import BootstrapTable from 'react-bootstrap-table-next';
+import {useEffect, useState} from "react";
+import useFetch from "../../hooks/useFetch";
+import UserModal from "./UserModal/UserPopup";
+import UserPopup from "./UserModal/UserPopup";
+import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
+import paginationFactory from 'react-bootstrap-table2-paginator';
+import {Modal} from "react-bootstrap";
+import {onHidden} from "web-vitals/dist/modules/lib/onHidden";
+import {DATE_FORMAT} from "../../common/constants";
+import moment from 'moment';
+import axios from "axios";
+import {API_URL} from "../../common/constants";
+import data from "bootstrap/js/src/dom/data";
+import editImg from '../../assets/images/pen.png'
+import deleteImg from '../../assets/images/cross.png'
+import './UserTable.css'
 
-const UserTable = ({users}) => {
-
-	const tableData = users.map(({id, staffCode, fullName, userName, joinDate, type}) =>
-		<tr key={id}>
-			<td>{staffCode}</td>
-			<td>{fullName}</td>
-			<td>{userName}</td>
-			<td>{joinDate}</td>
-			<td>{type}</td>
-			<td>
-				<span>🖌</span>
-				<span>❌</span>
-			</td>
-		</tr>
-	);
-
+const columnFormatter = (cell, row, rowIndex, formatExtraData) => {
 	return (
-		<Table>
-			<thead>
-			<tr>
-				<th role="button" onClick={event => {
-					console.log("Staff code")
-				}}>Staff Code
-				</th>
-				<th role="button" onClick={event => {
-					console.log("Full name")
-				}}>Full Name
-				</th>
-				<th role="button" onClick={event => {
-					console.log("Username")
-				}}>UserName
-				</th>
-				<th role="button" onClick={event => {
-					console.log("Join Date")
-				}}>Join Date
-				</th>
-				<th role="button" onClick={event => {
-					console.log("Type")
-				}}>Type
-				</th>
-				<th/>
-			</tr>
-			</thead>
-			<tbody>
-			{tableData}
-			</tbody>
-		</Table>
-	);
+		<div className="table__actions">
+			<span className="action__items"><img src={editImg}/></span>
+			<span className="action__items"><img src={deleteImg}/></span>
+		</div>
+	)
 };
+
+const columns = [
+	{
+		dataField: 'staffCode',
+		text: 'Staff Code',
+		sort: true
+	}, {
+		dataField: 'fullName',
+		text: 'Full Name',
+		sort: true
+	}, {
+		dataField: 'userName',
+		text: 'Username',
+		sort: true
+	}, {
+		dataField: 'joinDate',
+		text: 'Join Date',
+		sort: true
+	}, {
+		dataField: 'type',
+		text: 'Type',
+		sort: true
+	}, {
+		dataField: 'action',
+		text: '',
+		width: '50',
+		formatter: columnFormatter,
+		headerStyle: () => {
+			return { width: '100px' };
+		}
+	}
+];
+
+const defaultSorted = [{
+	dataField: 'staffCode',
+	order: 'asc'
+}]
+
+//  config for pagination
+const pagination = paginationFactory({
+	page: 1,
+	sizePerPage: 19,
+	nextPageText: 'Next',
+	prePageText: 'Prev',
+	hideSizePerPage: true,
+	withFirstAndLast: false,
+	alwaysShowAllBtns: true,
+});
+
+const convertDataResponse = res => res.data.map(u => (
+	{
+		id: u.id,
+		staffCode: u.staffCode,
+		fullName: `${u.firstName} ${u.lastName}`,
+		userName: u.username,
+		joinDate: moment(u.joinDate, DATE_FORMAT.FROM).format(DATE_FORMAT.TO),
+		type: u.type,
+		location: u.location
+	}
+));
+
+const UserTable = ({users, isLoading}) => {
+	const [userDetail, setUserDetail] = useState({});
+	const [showModal, setShowModal] = useState(false);
+	const [userIdPopup, setUserIdPopup] = useState(1);
+
+	const [show, setShow] = useState(false);
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
+
+	// Get user detail for popup
+	useEffect(() => {
+		axios({
+			method: 'GET',
+			url: `${API_URL}/users/${userIdPopup}`
+		}).then(res => {
+			console.log(res.data)
+			setUserDetail(res.data);
+		}).catch(err => {
+			console.log(err);
+		})
+	}, [userIdPopup])
+
+	const getUserDetail = {
+		onClick: (e, row) => {
+			console.log(row)
+			setUserIdPopup(row.id);
+			toggleTrueFalse();
+		},
+	}
+
+	const toggleTrueFalse = () => {
+		setShowModal(handleShow);
+	};
+
+	if (isLoading) return (<div>Loading...</div>)
+	return (
+		<>
+			<BootstrapTable
+				keyField='id'
+				data={users}
+				columns={columns}
+				hover
+				rowEvents={getUserDetail}
+				formatter={columnFormatter}
+				defaultSorted={defaultSorted}
+				pagination={pagination}
+			/>
+			{show ? <UserPopup show={show} handleClose={handleClose} userInfo={userDetail}/> : null}
+		</>
+	)
+}
 
 export default UserTable;
