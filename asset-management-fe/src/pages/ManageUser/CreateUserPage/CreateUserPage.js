@@ -18,20 +18,22 @@ const validateForm = Yup.object().shape({
     type: Yup.string().required("Required!")
 })
 const validation = (values) => {
+    console.log(moment(values.joineddate).isoWeekday())
+    const isWeekend = moment(values.joineddate).isoWeekday();
     const errors = {};
-    let isWeekend = moment(values.joineddate).isoWeekday();
     if (!values.joineddate) {
         errors.joineddate = "Required";
-    } else if (isWeekend === 0 || isWeekend === 6) {
-        errors.joineddate = "Joined date is Saturday or Sunday. Please select a different date"
-    } else if (moment(values.joineddate).isBefore(moment(values.birthdate))) {
+    }else if (moment(values.joineddate).isBefore(moment(values.birthdate))) {
         errors.joineddate = "Joined date is not later than Date of Birth. Please select a different date";
+    }
+    else if (isWeekend === 7 || isWeekend === 6) {
+        errors.joineddate = "Joined date is Saturday or Sunday. Please select a different date"
     }
     return errors;
 }
-const submit = (values,{ resetForm }) => {
-    console.log(moment(values.joineddate))
-    console.log('values =',values)
+const submit = (values, {resetForm}) => {
+
+    console.log('values =', values)
     resetForm();
 }
 const CreateUserPage = () => {
@@ -56,7 +58,7 @@ const CreateUserPage = () => {
                               handleChange,
                               handleSubmit,
                               isSubmitting,
-                            resetForm,
+                              resetForm,
                           }) => (
                             <Form onSubmit={handleSubmit}>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
