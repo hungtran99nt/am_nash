@@ -1,8 +1,6 @@
 package com.nt.rookies.asset.management.controller;
 
-import com.nt.rookies.asset.management.dto.AssetDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
-import com.nt.rookies.asset.management.repository.AssetRepository;
 import com.nt.rookies.asset.management.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
