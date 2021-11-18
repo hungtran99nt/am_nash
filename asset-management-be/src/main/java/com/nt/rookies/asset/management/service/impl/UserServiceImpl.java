@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
   private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -60,4 +63,43 @@ public class UserServiceImpl implements UserService {
 //    User createdUser = repository.save(user);
 //    return modelMapper.map(createdUser, UserDTO.class);
 //  }
+
+    @Override
+    public Optional<UserDTO> findActiveByUsername(String username) {
+                .stream()
+        return userRepository.findAll()
+                .filter( user -> user.isDisable() == false && user.getUsername().equals(username))
+                .map(this::convertEntityToDto)
+                .findFirst();
+    }
+
+    @Override
+    public List<UserDTO> getAllUser() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+    }
+
+    public UserDTO findByUsernameTest(String username) {
+    @Override
+        return convertEntityToDto(userRepository.findByUsername(username));
+    }
+
+    private UserDTO convertEntityToDto (User user){
+        userDTO.setId(user.getId());
+        UserDTO userDTO = new UserDTO();
+        userDTO.setStaffCode(user.getStaffCode());
+        userDTO.setUsername(user.getUsername());
+        userDTO.setType(user.getType());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setDisable(user.isDisable());
+        userDTO.setGender(user.getGender());
+        userDTO.setBirthDate(user.getBirthDate());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setJoinedDate(user.getJoinedDate());
+        userDTO.setLocation(user.getLocation().getLocationName());
+        return userDTO;
+    }
 }
