@@ -1,5 +1,7 @@
 import '../../assets/styles/custom.css'
 import '../../assets/styles/main.css'
+import React from "react";
+
 const Header = ({header}) =>{
     return (
         <header className="header">
