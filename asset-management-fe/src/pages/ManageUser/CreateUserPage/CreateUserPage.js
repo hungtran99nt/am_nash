@@ -29,18 +29,18 @@ const validation = (values) => {
     }
     return errors;
 }
-const submit = (values) => {
+const submit = (values,{ resetForm }) => {
     console.log(moment(values.joineddate))
     console.log('values =',values)
+    resetForm();
 }
-
 const CreateUserPage = () => {
     const initialValues = {firstname: "", lastname: "", birthdate: "", gender: "female", joineddate: "", type: ""};
     return (
         <div className="app-create">
             <div className="row">
                 <div className="col-lg-2"/>
-                <div className="col-lg-8 ">
+                <div className="col-lg-8">
                     <div className="app-content__title">Create New User</div>
                     <Formik
                         initialValues={initialValues}
@@ -55,7 +55,8 @@ const CreateUserPage = () => {
                               handleBlur,
                               handleChange,
                               handleSubmit,
-                              isSubmitting
+                              isSubmitting,
+                            resetForm,
                           }) => (
                             <Form onSubmit={handleSubmit}>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
@@ -170,9 +171,14 @@ const CreateUserPage = () => {
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Button type="submit" className="btn-primary" disabled={isSubmitting}>
-                                    Submit
-                                </Button>
+                                <div className="group-btn">
+                                    <Button type="submit" className="btn-primary" disabled={isSubmitting}>
+                                        Save
+                                    </Button>
+                                    <Button className="btn-cancel" type="reset" onClick={resetForm}>
+                                        Cancel
+                                    </Button>
+                                </div>
                             </Form>
                         )}
                     </Formik>
