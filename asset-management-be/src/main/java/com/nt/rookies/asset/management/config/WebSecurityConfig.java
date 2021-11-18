@@ -44,6 +44,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
+    httpSecurity.authorizeRequests().antMatchers("/user/create").access("hasRole('Admin')");
+    httpSecurity.authorizeRequests().antMatchers("/user/edit").access("hasRole('Admin')");
+
     httpSecurity
         .csrf()
         .disable() // We don't need CSRF for this example

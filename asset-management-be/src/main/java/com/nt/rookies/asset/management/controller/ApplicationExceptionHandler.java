@@ -39,9 +39,10 @@ public class ApplicationExceptionHandler {
   public ResponseEntity<ErrorResponse> handleException(Exception ex, HttpServletRequest request) {
     logger.info("Exception: " + ex.getClass().getName());
     ex.printStackTrace();
+
     HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     ErrorResponse error =
-        new ErrorResponse(request.getRequestURI(), httpStatus.value(), ex.getMessage());
+        new ErrorResponse(request.getRequestURI(), httpStatus.value(), httpStatus.getReasonPhrase());
     return new ResponseEntity<>(error, httpStatus);
   }
 }
