@@ -7,7 +7,6 @@ import com.nt.rookies.asset.management.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,18 +21,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDTO> findByUsername(String username) {
+    public Optional<UserDTO> findActiveByUsername(String username) {
         return userRepository.findAll()
                 .stream()
                 .filter( user -> user.isDisable() == false && user.getUsername().equals(username))
                 .map(this::convertEntityToDto)
                 .findFirst();
-    }
-
-    @Override
-    public UserDTO findByUsernameTest(String username) {
-        System.out.println("ServiceImpl:" + username);
-        return convertEntityToDto(userRepository.findByUsername(username));
     }
 
     @Override
@@ -44,11 +37,17 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public UserDTO findByUsernameTest(String username) {
+        return convertEntityToDto(userRepository.findByUsername(username));
+    }
+
     private UserDTO convertEntityToDto (User user){
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setStaffCode(user.getStaffCode());
         userDTO.setUsername(user.getUsername());
+        userDTO.setType(user.getType());
         userDTO.setPassword(user.getPassword());
         userDTO.setDisable(user.isDisable());
         userDTO.setGender(user.getGender());
