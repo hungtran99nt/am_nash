@@ -1,55 +1,51 @@
 import React from 'react';
 import {Table} from "react-bootstrap";
 
-const UserTable = () => {
+const UserTable = ({users}) => {
+
+	const tableData = users.map(({id, staffCode, fullName, userName, joinDate, type}) =>
+		<tr key={id}>
+			<td>{staffCode}</td>
+			<td>{fullName}</td>
+			<td>{userName}</td>
+			<td>{joinDate}</td>
+			<td>{type}</td>
+			<td>
+				<span>🖌</span>
+				<span>❌</span>
+			</td>
+		</tr>
+	);
+
 	return (
 		<Table>
 			<thead>
 			<tr>
-				<th>#</th>
-				<th>Staff Code</th>
-				<th>Full Name</th>
-				<th>User Name</th>
-				<th>Join Date</th>
-				<th>Type</th>
+				<th role="button" onClick={event => {
+					console.log("Staff code")
+				}}>Staff Code
+				</th>
+				<th role="button" onClick={event => {
+					console.log("Full name")
+				}}>Full Name
+				</th>
+				<th role="button" onClick={event => {
+					console.log("Username")
+				}}>UserName
+				</th>
+				<th role="button" onClick={event => {
+					console.log("Join Date")
+				}}>Join Date
+				</th>
+				<th role="button" onClick={event => {
+					console.log("Type")
+				}}>Type
+				</th>
 				<th/>
 			</tr>
 			</thead>
 			<tbody>
-			<tr>
-				<td>1</td>
-				<td>Mark</td>
-				<td>Otto</td>
-				<td>@mdo</td>
-				<td>@mdo</td>
-				<td>@mdo</td>
-				<td>@mdo</td>
-			</tr>
-			<tr>
-				<td>2</td>
-				<td>Mark</td>
-				<td>Otto</td>
-				<td>@mdo</td>
-				<td>@mdo</td>
-				<td>@mdo</td>
-				<td>@mdo</td>
-			</tr><tr>
-				<td>3</td>
-				<td>Mark</td>
-				<td>Otto</td>
-				<td>@mdo</td>
-				<td>@mdo</td>
-				<td>@mdo</td>
-				<td>@mdo</td>
-			</tr><tr>
-				<td>4</td>
-				<td>Mark</td>
-				<td>Otto</td>
-				<td>@mdo</td>
-				<td>@mdo</td>
-				<td>@mdo</td>
-				<td>@mdo</td>
-			</tr>
+			{tableData}
 			</tbody>
 		</Table>
 	);
