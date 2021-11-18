@@ -22,7 +22,7 @@ const validation = (values) => {
     let isWeekend = moment(values.joineddate).isoWeekday();
     if (!values.joineddate) {
         errors.joineddate = "Required";
-    } else if (isWeekend === 0 || isWeekend === 6) {
+    } else if (isWeekend === 7 || isWeekend === 6) {
         errors.joineddate = "Joined date is Saturday or Sunday. Please select a different date"
     } else if (moment(values.joineddate).isBefore(moment(values.birthdate))) {
         errors.joineddate = "Joined date is not later than Date of Birth. Please select a different date";
