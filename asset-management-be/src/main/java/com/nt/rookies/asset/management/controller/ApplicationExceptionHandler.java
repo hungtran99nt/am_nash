@@ -1,9 +1,11 @@
 package com.nt.rookies.asset.management.controller;
 
+import com.nt.rookies.asset.management.exception.AccountNotAllowedException;
 import com.nt.rookies.asset.management.exception.BusinessException;
 import com.nt.rookies.asset.management.exception.ErrorResponse;
 import com.nt.rookies.asset.management.exception.ResourceAlreadyExistException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
+import com.nt.rookies.asset.management.exception.UserDisabledException;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +29,10 @@ public class ApplicationExceptionHandler {
       httpStatus = HttpStatus.NOT_FOUND;
     } else if (ex instanceof ResourceAlreadyExistException) {
       httpStatus = HttpStatus.CONFLICT;
+    } else if (ex instanceof AccountNotAllowedException) {
+      httpStatus = HttpStatus.METHOD_NOT_ALLOWED;
+    } else if (ex instanceof UserDisabledException) {
+      httpStatus = HttpStatus.NOT_ACCEPTABLE;
     } else {
       httpStatus = HttpStatus.BAD_REQUEST;
     }
@@ -42,7 +48,8 @@ public class ApplicationExceptionHandler {
 
     HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     ErrorResponse error =
-        new ErrorResponse(request.getRequestURI(), httpStatus.value(), httpStatus.getReasonPhrase());
+        new ErrorResponse(
+            request.getRequestURI(), httpStatus.value(), httpStatus.getReasonPhrase());
     return new ResponseEntity<>(error, httpStatus);
   }
 }
