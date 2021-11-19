@@ -1,0 +1,15 @@
+.action__items {
+    display: inline-block;
+    padding: 0 5px;
+}
+
+.page-item .page-link {
+    color:  #E30C18;
+    font-weight: 500;
+}
+
+.page-item.active .page-link {
+    background-color:  #E30C18 !important;
+    border-color:  #E30C18 !important;
+    box-shadow: none;
+}
