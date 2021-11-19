@@ -12,17 +12,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "user")
-@ToString
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

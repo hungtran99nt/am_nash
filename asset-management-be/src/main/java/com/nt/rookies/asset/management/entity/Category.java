@@ -12,9 +12,9 @@ import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 @Entity
 @Table(name = "category")
-@ToString
 public class Category {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
