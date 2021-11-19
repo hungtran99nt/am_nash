@@ -61,7 +61,7 @@ insert into assignment (id, assigned_date, note, returned_date, state, accepted_
 values
 (1, '2021-02-22 10:16:51', 'Diverse cohesive superstructure', '2021-04-16 10:27:07', 'Accepted', null, 1, 3, 1, null),
 (2, '2021-01-15 08:23:00', 'Down-sized analyzing interface', '2021-03-19 14:46:31', 'Waiting for acceptance', null, 9, 3, 2, null),
-(3, '2021-01-15 08:23:00', 'Down-sized analyzing interface', '', 'Waiting for returning', null, 10, 2, 2, 6),
+(3, '2021-01-15 08:23:00', 'Down-sized analyzing interface', '2021-03-19 14:46:31', 'Waiting for returning', null, 10, 2, 2, 6),
 (4, '2021-01-15 08:23:00', 'Down-sized analyzing interface', '2021-03-19 14:46:31', 'Completed', 2, 11, 3, 2, 3);
 
 

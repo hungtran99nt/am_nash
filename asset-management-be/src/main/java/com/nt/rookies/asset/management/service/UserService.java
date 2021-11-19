@@ -10,4 +10,5 @@ public interface UserService {
     Optional<UserDTO> findActiveByUsername(String username);
     List<UserDTO> getAllUser();
     UserDTO findByUsernameTest(String username);
+    List<UserDTO> findAllByLocation();
 }
