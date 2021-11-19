@@ -1,16 +1,10 @@
 import BootstrapTable from 'react-bootstrap-table-next';
 import {useEffect, useState} from "react";
-import useFetch from "../../hooks/useFetch";
-import UserModal from "./UserModal/UserPopup";
 import UserPopup from "./UserModal/UserPopup";
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import {Modal} from "react-bootstrap";
-import {DATE_FORMAT} from "../../common/constants";
-import moment from 'moment';
-import axios from "axios";
 import {API_URL} from "../../common/constants";
-import data from "bootstrap/js/src/dom/data";
+import axios from "axios";
 import editImg from '../../assets/images/pen.png'
 import deleteImg from '../../assets/images/cross.png'
 import './UserTable.css'
@@ -72,17 +66,6 @@ const pagination = paginationFactory({
 	alwaysShowAllBtns: true,
 });
 
-const convertDataResponse = res => res.data.map(u => (
-	{
-		id: u.id,
-		staffCode: u.staffCode,
-		fullName: `${u.firstName} ${u.lastName}`,
-		userName: u.username,
-		joinDate: moment(u.joinDate, DATE_FORMAT.FROM).format(DATE_FORMAT.TO),
-		type: u.type,
-		location: u.location
-	}
-));
 
 const UserTable = ({users, isLoading}) => {
 	const [userDetail, setUserDetail] = useState({});
