@@ -1,6 +1,3 @@
-import '../../assets/styles/custom.css'
-import '../../assets/styles/main.css'
-
 import './Header.css'
 import {DropdownButton} from "react-bootstrap";
 import DropdownItem from "react-bootstrap/DropdownItem";
