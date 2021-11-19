@@ -7,11 +7,6 @@ import com.nt.rookies.asset.management.entity.User;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,10 +14,13 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+
   private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
   private final UserRepository repository;
   private final ModelMapper modelMapper;
@@ -61,7 +59,9 @@ public class UserServiceImpl implements UserService {
   @Override
   public Optional<AccountDTO> findActiveByUsername(String username) {
     User user = repository.findByUsername(username);
-    if (!user.isDisable()) return Optional.of(modelMapper.map(user, AccountDTO.class));
+    if (!user.isDisable()) {
+      return Optional.of(modelMapper.map(user, AccountDTO.class));
+    }
     return Optional.empty();
   }
 
@@ -71,40 +71,46 @@ public class UserServiceImpl implements UserService {
         .map(user -> modelMapper.map(user, UserDTO.class))
         .collect(Collectors.toList());
   }
-    @Override
-    public List<UserDTO> findAllByLocation(){
-        Location location = getUserLocation();
 
-        List<User> users = userRepository.findAllByLocation(location);
-        return users.stream()
-                .map(this::convertEntityToDto)
-                .collect(Collectors.toList());
-    }
+  @Override
+  public UserDTO findByUsernameTest(String username) {
+    return null;
+  }
 
-    private Location getUserLocation() {
-        // get user location from token
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        String username = userDetails.getUsername();
-        User currentUser = userRepository.findByUsername(username);
+  @Override
+  public List<UserDTO> findAllByLocation() {
+    Location location = getUserLocation();
 
-        return currentUser.getLocation();
-    }
+    List<User> users = repository.findAllByLocation(location);
+    return users.stream()
+        .map(this::convertEntityToDto)
+        .collect(Collectors.toList());
+  }
 
-    private UserDTO convertEntityToDto (User user){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setStaffCode(user.getStaffCode());
-        userDTO.setUsername(user.getUsername());
-        userDTO.setType(user.getType());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setDisable(user.isDisable());
-        userDTO.setGender(user.getGender());
-        userDTO.setBirthDate(user.getBirthDate());
-        userDTO.setFirstName(user.getFirstName());
-        userDTO.setLastName(user.getLastName());
-        userDTO.setJoinedDate(user.getJoinedDate());
-        userDTO.setLocation(user.getLocation().getLocationName());
-        return userDTO;
-    }
+  private Location getUserLocation() {
+    // get user location from token
+    UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+        .getPrincipal();
+    String username = userDetails.getUsername();
+    User currentUser = repository.findByUsername(username);
+
+    return currentUser.getLocation();
+  }
+
+  private UserDTO convertEntityToDto(User user) {
+    UserDTO userDTO = new UserDTO();
+    userDTO.setId(user.getId());
+    userDTO.setStaffCode(user.getStaffCode());
+    userDTO.setUsername(user.getUsername());
+    userDTO.setType(user.getType());
+//        userDTO.setPassword(user.getPassword());
+    userDTO.setDisable(user.isDisable());
+    userDTO.setGender(user.getGender());
+    userDTO.setBirthDate(user.getBirthDate());
+    userDTO.setFirstName(user.getFirstName());
+    userDTO.setLastName(user.getLastName());
+    userDTO.setJoinedDate(user.getJoinedDate());
+    userDTO.setLocation(user.getLocation().getLocationName());
+    return userDTO;
+  }
 }
