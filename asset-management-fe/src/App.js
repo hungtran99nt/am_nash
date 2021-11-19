@@ -1,5 +1,5 @@
 import './App.css'
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     BrowserRouter as Router,
     Switch,
@@ -14,7 +14,12 @@ import ManageAsset from "./pages/ManageAsset/ManageAsset";
 import ManageUser from "./pages/ManageUser/ManageUser";
 import Report from "./pages/Report/Report";
 import Header from "./components/Header/Header";
+
+import Login from "./pages/Login/Login";
+import axios from "axios";
+
 import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
+
 
 const headerTitle = {
     Home: 'Home',
@@ -24,12 +29,34 @@ const headerTitle = {
     Request: 'Request Of Returning',
     Report: 'Report',
 }
+
 export default function App() {
-    const [headerInfo, setHeaderInfo] = useState(headerTitle.Home);
+    const [headerInfo, setHeaderInfo] = useState("");
+    const [user, setUser] = useState({});
+    const [token, setToken] = useState(localStorage.getItem("TOKEN"));
+
+    let curUsername = localStorage.getItem("USERNAME");
+
+    useEffect(() => {
+        axios.get('user/' + curUsername)
+            .then(res => {
+                console.log(res)
+                setUser(res.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }, [curUsername])
+    console.log(user)
+    console.log(token)
     return (
         <Router>
             <div>
-                <Header header={headerInfo}/>
+                <Header
+                    header={headerInfo}
+                    user={user}
+                    token={token}
+                />
                 <div className="appcontainer">
                     <div className="grid wide">
                         <div className="row app-content">
@@ -86,6 +113,10 @@ export default function App() {
                                     </Route>
                                     <Route path="/report" exact>
                                         <Report/>
+                                    </Route>
+
+                                    <Route path="/login" exact>
+                                        <Login/>
                                     </Route>
                                     <Route path="/create" exact>
                                         <CreateUserPage/>
