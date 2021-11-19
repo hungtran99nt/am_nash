@@ -3,7 +3,7 @@ import './UserPopup.css'
 import moment from "moment";
 import {DATE_FORMAT} from "../../../common/constants";
 
-const convert = date => moment(date,DATE_FORMAT.FROM).format(DATE_FORMAT.TO);
+const convert = date => moment(date).format(DATE_FORMAT.TO);
 
 const UserPopup = ({show, handleClose, userInfo}) => {
 

@@ -13,7 +13,7 @@ const convertDataResponse = res => res.data.map(u => (
 		staffCode: u.staffCode,
 		fullName: `${u.firstName} ${u.lastName}`,
 		userName: u.username,
-		joinDate:  moment(u.joinDate,DATE_FORMAT.FROM).format(DATE_FORMAT.TO),
+		joinDate:  moment(u.joinDate).format(DATE_FORMAT.TO),
 		type: u.type,
 		location: u.location
 	}
