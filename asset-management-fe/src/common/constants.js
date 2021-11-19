@@ -1,0 +1,12 @@
+export const API_URL = 'http://localhost:8080';
+
+export const DATE_FORMAT = {
+	FROM: 'YYYY-MM-DDTHH:mm:ss[Z]',
+	TO: "DD/MM/YYYY"
+}
+
+export const FILTER_USER_OPTIONS = {
+	NONE: '',
+	STAFF: 'Staff',
+	ADMIN: 'Admin',
+}
