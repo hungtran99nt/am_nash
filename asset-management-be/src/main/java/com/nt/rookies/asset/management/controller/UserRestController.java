@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/v1.0/user")
 @Api(tags = "User controller using REST API")
@@ -43,4 +46,13 @@ public class UserRestController {
   public List<UserDTO> getAllUser() {
     return userService.getAllUser();
   }
+    @GetMapping("/users")
+    public List<UserDTO> getAllUser(){
+        return userService.findAllByLocation();
+    }
+
+    @GetMapping("/user/{username}")
+    public Optional<UserDTO> getActiveUserByUsername(@PathVariable(name = "username") String username) {
+        return userService.findActiveByUsername(username);
+    }
 }
