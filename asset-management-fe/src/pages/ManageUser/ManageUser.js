@@ -19,11 +19,6 @@ const convertDataResponse = res => res.data.map(u => (
 	}
 ));
 
-// Fake location admin
-const current_user = {
-	location: 'HCM'
-}
-
 const ManageUser = () => {
 	const [filterOption, setFilterOption] = useState(FILTER_USER_OPTIONS.NONE);
 	const [searchText, setSearchText] = useState('');
@@ -37,7 +32,7 @@ const ManageUser = () => {
 		isLoading,
 		data: users,
 		errorMessage
-	} = useFetch([], `${API_URL}/users?location=${current_user.location}`, convertDataResponse);
+	} = useFetch([], `${API_URL}/users`, convertDataResponse);
 
 	const usersFiltered = useMemo(() => {
 		return users.filter(user =>

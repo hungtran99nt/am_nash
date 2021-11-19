@@ -6,7 +6,6 @@ import UserPopup from "./UserModal/UserPopup";
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import {Modal} from "react-bootstrap";
-import {onHidden} from "web-vitals/dist/modules/lib/onHidden";
 import {DATE_FORMAT} from "../../common/constants";
 import moment from 'moment';
 import axios from "axios";
