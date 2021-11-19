@@ -1,0 +1,38 @@
+.manager-user__heading {
+    font-size: 20px;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.manager-user__action {
+}
+
+.actions__wrapper {
+    height: 55px;
+}
+
+.action__filter {
+    max-width: 150px !important;
+}
+
+.search-bar {
+    position: relative;
+    height: 100%;
+}
+
+.search-input {
+    border: 1px #9CA2A7 solid !important;
+}
+
+.search-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.search-button {
+    width: 50px;
+    border-top-right-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+}
+
+

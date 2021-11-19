@@ -15,9 +15,9 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     public List<UserDTO> getAllUser(){
-        return userService.getAllUser();
+        return userService.findAllByLocation();
     }
 
     @GetMapping("/user/{username}")

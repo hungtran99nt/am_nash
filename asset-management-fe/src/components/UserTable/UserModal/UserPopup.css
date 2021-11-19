@@ -1,0 +1,11 @@
+.user__detail th {
+    font-weight: normal;
+}
+
+.user__detail th {
+    padding: 0 20px;
+}
+
+.user__detail td {
+    padding: 5px 20px;
+}

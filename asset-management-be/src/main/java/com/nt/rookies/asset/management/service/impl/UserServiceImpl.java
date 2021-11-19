@@ -1,10 +1,13 @@
 package com.nt.rookies.asset.management.service.impl;
 
 import com.nt.rookies.asset.management.dto.UserDTO;
+import com.nt.rookies.asset.management.entity.Location;
 import com.nt.rookies.asset.management.entity.User;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +43,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findByUsernameTest(String username) {
         return convertEntityToDto(userRepository.findByUsername(username));
+    }
+
+    @Override
+    public List<UserDTO> findAllByLocation(){
+        Location location = getUserLocation();
+
+        List<User> users = userRepository.findAllByLocation(location);
+        return users.stream()
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+    }
+
+    private Location getUserLocation() {
+        // get user location from token
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        String username = userDetails.getUsername();
+        User currentUser = userRepository.findByUsername(username);
+
+        return currentUser.getLocation();
     }
 
     private UserDTO convertEntityToDto (User user){
