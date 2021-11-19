@@ -1,7 +1,7 @@
 export const API_URL = 'http://localhost:8080';
 
 export const DATE_FORMAT = {
-	FROM: 'MM/DD/YYYY',
+	FROM: 'YYYY-MM-DDTHH:mm:ss[Z]',
 	TO: "DD/MM/YYYY"
 }
 
