@@ -13,7 +13,7 @@ const Header = ({header, user, token}) => {
             <div>
                 <p></p>
                 <DropdownButton id="dropdown-basic-button" title="" style={{float:"right"}}>
-                    <DropdownItem href="/login">Profile</DropdownItem>
+                    <DropdownItem href="/profile">Profile</DropdownItem>
                     <DropdownItem type="button" className="btn del-button btn-outline-secondary" data-bs-toggle="modal"
                                   data-bs-target="#confirmModal">Logout</DropdownItem>
                 </DropdownButton>
@@ -42,7 +42,6 @@ const Header = ({header, user, token}) => {
                     </div>
                 </div>
             </div>
-
         )
     } else {
         headerButton = (
@@ -53,7 +52,6 @@ const Header = ({header, user, token}) => {
         )
     }
     console.log(token);
-
     return (
         <nav className="header navbar navbar-expand-md">
             <div className="container-fluid">

@@ -19,6 +19,8 @@ import Login from "./pages/Login/Login";
 import axios from "axios";
 
 import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
+import Profile from "./pages/Profile/Profile";
+import ReactDOM from "react-dom";
 
 
 const headerTitle = {
@@ -36,7 +38,7 @@ export default function App() {
     const [token, setToken] = useState(localStorage.getItem("TOKEN"));
 
     let curUsername = localStorage.getItem("USERNAME");
-
+    // axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('TOKEN');
     useEffect(() => {
         axios.get('user/' + curUsername)
             .then(res => {
@@ -114,9 +116,11 @@ export default function App() {
                                     <Route path="/report" exact>
                                         <Report/>
                                     </Route>
-
                                     <Route path="/login" exact>
                                         <Login/>
+                                    </Route>
+                                    <Route path="/profile" exact>
+                                        <Profile/>
                                     </Route>
                                     <Route path="/create" exact>
                                         <CreateUserPage/>
