@@ -13,6 +13,7 @@
     padding-left: 0;
 }
 
+
 .category-item__link {
     display: block;
     background-color: var(--background-color);
@@ -32,5 +33,6 @@
 .selected {
     background-color: #EB5B64;
     color: var(--white-color);
+
 }
 
