@@ -11,5 +11,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
   @Query("SELECT u FROM User u WHERE u.username = :username")
   User findByUsername(@Param("username") String username);
   // TODO: finish query
-  //  String findMaxUsernameContains(String keyword);
+  @Query("SELECT count (u) FROM User u WHERE u.username like :username%")
+  Integer findCountUsername(@Param("username") String username);
 }

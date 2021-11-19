@@ -11,7 +11,7 @@ public interface UserService {
 
   UserDTO updateUser(UserDTO userDTO);
 
-  //  UserDTO createUser(UserDTO userDTO);
+  UserDTO createUser(UserDTO userDTO, String adminUsername);
 
   // Find Active(isDisable=false) Staff by username
   Optional<AccountDTO> findActiveByUsername(String username);

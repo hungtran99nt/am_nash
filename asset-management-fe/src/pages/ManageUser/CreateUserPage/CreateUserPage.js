@@ -3,6 +3,7 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import moment from "moment";
+import {useHistory} from "react-router-dom";
 
 const validateForm = Yup.object().shape({
     firstname: Yup.string()
@@ -31,6 +32,7 @@ const validation = (values) => {
     }
     return errors;
 }
+
 const submit = (values, {resetForm}) => {
 
     console.log('values =', values)
@@ -38,6 +40,11 @@ const submit = (values, {resetForm}) => {
 }
 const CreateUserPage = () => {
     const initialValues = {firstname: "", lastname: "", birthdate: "", gender: "female", joineddate: "", type: ""};
+    let history = useHistory();
+
+    function handleClick() {
+        history.push("/user");
+    }
     return (
         <div className="app-create">
             <div className="row">
@@ -177,7 +184,7 @@ const CreateUserPage = () => {
                                     <Button type="submit" className="btn-primary" disabled={isSubmitting}>
                                         Save
                                     </Button>
-                                    <Button className="btn-cancel" type="reset" onClick={resetForm}>
+                                    <Button className="btn-cancel" type="reset" onClick={handleClick}>
                                         Cancel
                                     </Button>
                                 </div>
