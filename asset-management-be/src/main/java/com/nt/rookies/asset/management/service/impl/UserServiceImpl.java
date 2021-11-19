@@ -52,25 +52,9 @@ public class UserServiceImpl implements UserService {
     return modelMapper.map(updatedUser, UserDTO.class);
   }
 
-  //  @Override
-  //  public UserDTO createUser(UserDTO userDTO) {
-  //
-  //    // TODO: create username
-  //    StringBuilder usernamePrefix = new StringBuilder(userDTO.getFirstName().toLowerCase());
-  //    String[] lastNames = userDTO.getLastName().split(" ");
-  //    for (String name : lastNames) {
-  //      usernamePrefix.append(name.charAt(0));
-  //    }
-  //
-  //    String maxUsername = repository.findMaxUsernameContains(usernamePrefix.toString());
-  //    User createdUser = repository.save(user);
-  //    return modelMapper.map(createdUser, UserDTO.class);
-  //  }
-
   @Override
   public Optional<AccountDTO> findActiveByUsername(String username) {
     User user = repository.findByUsername(username);
-    //
     if (!user.isDisable()) return Optional.of(modelMapper.map(user, AccountDTO.class));
     return Optional.empty();
   }
@@ -80,10 +64,5 @@ public class UserServiceImpl implements UserService {
     return repository.findAll().stream()
         .map(user -> modelMapper.map(user, UserDTO.class))
         .collect(Collectors.toList());
-  }
-
-  @Override
-  public UserDTO findByUsernameTest(String username) {
-    return modelMapper.map(repository.findByUsername(username), UserDTO.class);
   }
 }
