@@ -30,6 +30,22 @@
     line-height: 80px;
     margin-right:  32px;
 }
+.app-content__title{
+    font-size: 20px;
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: 32px;
+}
+.app-create{
+    margin-top: 36px;
+}
+.app-create__input{
+    border: 1px solid #9CA2A7;
+}
+.form-control{
+    border: 1px solid #3e4042 !important;
+
+}
 .btn{
     padding: 8px 20px;
     font-size: 14px;
@@ -46,4 +62,9 @@
     background-color: #ffffff !important;
     color: #9CA2A7 !important;
     border: 1px solid #9CA2A7 !important;
+    margin-left: 20px;
+}
+.group-btn{
+    text-align: center;
+    margin-left: 64px;
 }

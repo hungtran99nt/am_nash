@@ -89,5 +89,6 @@ const ManageUser = () => {
 			{/*<Paginator/>*/}
 		</div>
 	)
+
 }
 export default ManageUser
