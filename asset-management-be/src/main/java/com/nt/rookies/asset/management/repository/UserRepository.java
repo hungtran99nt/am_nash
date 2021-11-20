@@ -16,6 +16,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
   List<User> findAllByLocation(Location location);
 
   // TODO: finish query
-  @Query("SELECT count (u) FROM User u WHERE u.username like :username%")
-  Integer findCountUsername(@Param("username") String username);
+  @Query("SELECT count(u.username) FROM User u WHERE u.username like :username%")
+  String findCountUsername(@Param("username") String username);
 }

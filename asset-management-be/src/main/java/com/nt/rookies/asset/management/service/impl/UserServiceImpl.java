@@ -64,14 +64,17 @@ public class UserServiceImpl implements UserService {
     for (String name : lastNames) {
       username.append(name.charAt(0));
     }
-    Integer countUsername = repository.findCountUsername(username.toString());
+    String countUsername = repository.findCountUsername(username.toString());
     //  if username existed => username = username + countUsername
-    if (countUsername != 0) {
+    if (!countUsername.equals("0")) {
       username.append(countUsername);
     }
     SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
     String password = username + "@" + formatter.format(userDTO.getBirthDate());
+    System.out.println("password: " + password);
+    System.out.println("username: " + username);
     Location location = getUserLocation();
+    System.out.println("Location" + location);
     // TODO: Encode password
     User user = new User();
     user.setFirstName(userDTO.getFirstName());
@@ -127,7 +130,6 @@ public class UserServiceImpl implements UserService {
         .getPrincipal();
     String username = userDetails.getUsername();
     User currentUser = repository.findByUsername(username);
-
     return currentUser.getLocation();
   }
 
