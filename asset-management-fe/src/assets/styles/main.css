@@ -22,7 +22,7 @@
 .header{
     /*height: 80px;*/
     background-color: var(--primary-color);
-    border-bottom: 1px solid var(--black-color);
+    /*border-bottom: 1px solid var(--black-color);*/
 }
 .headerinfo{
     font-size: 20px;
