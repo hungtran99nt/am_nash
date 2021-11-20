@@ -28,7 +28,7 @@ const convertDataResponse = res =>(
     {
         id: res.data.id,
         staffCode: res.data.staffCode,
-        fullName: `${res.data.firstName} ${res.data.lastName}`,
+        fullName: `${res.data.lastName} ${res.data.firstName}`,
         userName: res.data.username,
         joinDate:  moment(res.data.joinDate).format(DATE_FORMAT.TO),
         type: res.data.type,
@@ -36,7 +36,7 @@ const convertDataResponse = res =>(
     }
 );
 export default function App() {
-    const [headerInfo, setHeaderInfo] = useState("");
+    const [headerInfo, setHeaderInfo] = useState(headerTitle.Home);
     const [token, setToken] = useState(localStorage.getItem("TOKEN"));
     let curUsername = localStorage.getItem("USERNAME");
     console.log(typeof curUsername)
