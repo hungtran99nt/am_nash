@@ -7,6 +7,7 @@ import com.nt.rookies.asset.management.entity.User;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.UserService;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,11 +26,14 @@ public class UserServiceImpl implements UserService {
   private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
   private final UserRepository repository;
   private final ModelMapper modelMapper;
+  private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserServiceImpl(UserRepository repository, ModelMapper modelMapper) {
+  public UserServiceImpl(
+      UserRepository repository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
     this.repository = repository;
     this.modelMapper = modelMapper;
+    this.passwordEncoder = passwordEncoder;
   }
 
   @Override
@@ -54,6 +59,42 @@ public class UserServiceImpl implements UserService {
     User updatedUser = repository.save(user);
     logger.info("User updated: {}", updatedUser);
     return modelMapper.map(updatedUser, UserDTO.class);
+  }
+
+  @Override
+  public UserDTO createUser(UserDTO userDTO) {
+
+    StringBuilder username = new StringBuilder(userDTO.getFirstName().toLowerCase());
+    String[] lastNames = userDTO.getLastName().split(" ");
+    for (String name : lastNames) {
+      username.append(Character.toLowerCase(name.charAt(0)));
+    }
+    Optional<Integer> maxPostfix = repository.findMaxUsernamePostfix(username.toString());
+    logger.info("maxPostfix: {}", maxPostfix.orElse(0));
+    //  if username existed => username = username + countUsername
+    maxPostfix.ifPresent(postfix -> username.append(++postfix));
+    SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
+    String password = username + "@" + formatter.format(userDTO.getBirthDate());
+    logger.info("username: {}", username);
+    logger.info("password: {}", password);
+    Location location = getUserLocation();
+    logger.info("location: {}", location);
+    User user = new User();
+    user.setFirstName(userDTO.getFirstName());
+    user.setLastName(userDTO.getLastName());
+    user.setUsername(username.toString());
+    user.setPassword(passwordEncoder.encode(password));
+    logger.info("encoded password: {}", passwordEncoder.encode(password));
+    user.setJoinedDate(userDTO.getJoinedDate());
+    user.setGender(userDTO.getGender());
+    user.setBirthDate(userDTO.getBirthDate());
+    user.setType(userDTO.getType());
+    user.setDisable(false);
+    user.setLocation(location);
+    logger.info("New User:{}", user);
+    User createdUser = repository.save(user);
+    logger.info("Created User:{}", createdUser);
+    return modelMapper.map(createdUser, UserDTO.class);
   }
 
   @Override

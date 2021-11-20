@@ -11,10 +11,14 @@ public interface UserService {
 
   UserDTO updateUser(Integer id, UserDTO userDTO);
 
+  UserDTO createUser(UserDTO userDTO);
+
   // Find Active(isDisable=false) Staff by username
   Optional<AccountDTO> findActiveByUsername(String username);
 
   List<UserDTO> getAllUser();
-    UserDTO findByUsernameTest(String username);
-    List<UserDTO> findAllByLocation();
+
+  UserDTO findByUsernameTest(String username);
+
+  List<UserDTO> findAllByLocation();
 }
