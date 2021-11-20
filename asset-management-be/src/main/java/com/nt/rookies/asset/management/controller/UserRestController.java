@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,13 @@ public class UserRestController {
   public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO user) {
     UserDTO updatedUser = userService.updateUser(user);
     return ResponseEntity.ok().body(updatedUser);
+  }
+
+  @PostMapping("/create")
+  @ApiOperation("Create user")
+  public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
+    UserDTO createdUser = userService.createUser(user);
+    return ResponseEntity.ok().body(createdUser);
   }
 
   @GetMapping("/")

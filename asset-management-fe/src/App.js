@@ -14,12 +14,9 @@ import ManageAsset from "./pages/ManageAsset/ManageAsset";
 import ManageUser from "./pages/ManageUser/ManageUser";
 import Report from "./pages/Report/Report";
 import Header from "./components/Header/Header";
-
 import Login from "./pages/Login/Login";
 import axios from "axios";
-
 import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
-
 
 const headerTitle = {
     Home: 'Home',
@@ -114,7 +111,6 @@ export default function App() {
                                     <Route path="/report" exact>
                                         <Report/>
                                     </Route>
-
                                     <Route path="/login" exact>
                                         <Login/>
                                     </Route>
