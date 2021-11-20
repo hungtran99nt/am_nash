@@ -17,6 +17,8 @@ import Header from "./components/Header/Header";
 import Login from "./pages/Login/Login";
 import axios from "axios";
 import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
+import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
+
 
 const headerTitle = {
     Home: 'Home',
@@ -116,6 +118,9 @@ export default function App() {
                                     </Route>
                                     <Route path="/create" exact>
                                         <CreateUserPage/>
+                                    </Route>
+                                    <Route path="/edit/:id" exact>
+                                        <EditUserPage/>
                                     </Route>
                                 </Switch>
                             </div>

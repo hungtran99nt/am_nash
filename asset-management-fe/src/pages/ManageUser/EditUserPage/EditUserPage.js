@@ -3,17 +3,11 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import moment from "moment";
-import {useHistory} from "react-router-dom";
+import {useHistory,useParams} from "react-router-dom";
+import useFetch from "../../../hooks/useFetch";
+import {API_URL, DATE_FORMAT} from "../../../common/constants";
 
 const validateForm = Yup.object().shape({
-    firstname: Yup.string()
-        .min(2, 'Too Short!')
-        .max(50, 'Too Long!')
-        .required('Required'),
-    lastname: Yup.string()
-        .min(2, 'Too Short!')
-        .max(50, 'Too Long!')
-        .required('Required'),
     birthdate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
         .required("Required"),
     type: Yup.string().required("Required!")
@@ -30,16 +24,30 @@ const validation = (values) => {
     }
     return errors;
 }
-
-const CreateUserPage = () => {
-    const initialValues = {firstname: "", lastname: "", birthdate: "", gender: "female", joineddate: "", type: ""};
-
+const convertDataResponse = res =>(
+    {
+        firstname: res.date.firstName,
+        lastname:res.data.lastName,
+        birthdate: moment(res.data.birthDate).format(DATE_FORMAT.TO),
+        joinDate:  moment(res.data.joinDate).format(DATE_FORMAT.TO),
+        type: res.data.type,
+        gender: res.data.gender
+    }
+);
+const EditUserPage = () => {
+    const {id} = useParams();
+    const {
+        isLoading,
+        data: users,
+        errorMessage
+    } = useFetch([], `${API_URL}/users/${id}`, convertDataResponse);
+    console.log(users);
+    const initialValues = {firstname: users.firstname, lastname: users.lastname,
+        birthdate: users.birthdate, gender: users.gender, joineddate: users.joineddate, type: users.type};
     let history = useHistory();
-
     const handleRedirectUseManagePage = () => {
         history.push("/user");
     }
-    
     const submit = (values, {resetForm}) => {
         console.log(moment(values.joineddate))
         console.log('values =', values)
@@ -51,7 +59,7 @@ const CreateUserPage = () => {
             <div className="row">
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
-                    <div className="app-content__title">Create New User</div>
+                    <div className="app-content__title">Edit User</div>
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validateForm}
@@ -79,7 +87,7 @@ const CreateUserPage = () => {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             isInvalid={touched.firstname && errors.firstname}
-
+                                            disabled={true}
                                         />
                                         <Form.Control.Feedback type="invalid">
                                             {errors.firstname}
@@ -96,6 +104,7 @@ const CreateUserPage = () => {
                                             value={values.lastname}
                                             onBlur={handleBlur}
                                             isInvalid={touched.lastname && errors.lastname}
+                                            disabled={true}
                                         />
                                         <Form.Control.Feedback type="invalid">
                                             {errors.lastname}
@@ -201,4 +210,4 @@ const CreateUserPage = () => {
         </div>
     )
 }
-export default CreateUserPage
+export default EditUserPage
