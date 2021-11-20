@@ -28,14 +28,14 @@ public class UserRestController {
   }
 
   @GetMapping("/{id}")
-  @ApiOperation("Get post by id")
+  @ApiOperation("Get user by id")
   public ResponseEntity<UserDTO> getUserById(@PathVariable(name = "id") Integer id) {
     UserDTO user = userService.getUserById(id);
     return ResponseEntity.ok().body(user);
   }
 
   @PutMapping("/{id}")
-  @ApiOperation("Edit user")
+  @ApiOperation("Edit user by id")
   public ResponseEntity<UserDTO> updateUser(@PathVariable(name = "id") Integer id, @RequestBody UserDTO user) {
     UserDTO updatedUser = userService.updateUser(id, user);
     return ResponseEntity.ok().body(updatedUser);
