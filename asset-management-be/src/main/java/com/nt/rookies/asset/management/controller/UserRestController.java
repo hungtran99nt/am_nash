@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1.0/user")
+@RequestMapping("/api/v1.0/users")
 @Api(tags = "User controller using REST API")
 public class UserRestController {
   private final UserService userService;
@@ -34,16 +34,11 @@ public class UserRestController {
     return ResponseEntity.ok().body(user);
   }
 
-  @PutMapping("/edit")
+  @PutMapping("/{id}")
   @ApiOperation("Edit user")
-  public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO user) {
-    UserDTO updatedUser = userService.updateUser(user);
+  public ResponseEntity<UserDTO> updateUser(@PathVariable(name = "id") Integer id, @RequestBody UserDTO user) {
+    UserDTO updatedUser = userService.updateUser(id, user);
     return ResponseEntity.ok().body(updatedUser);
-  }
-
-  @GetMapping("/")
-  public List<UserDTO> getAllUser() {
-    return userService.getAllUser();
   }
 
   @GetMapping("/users")
