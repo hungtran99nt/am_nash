@@ -36,7 +36,7 @@ const CreateUserPage = () => {
 
     let history = useHistory();
 
-    function handleRedirectUseManagePage() {
+    const handleRedirectUseManagePage = () =>{
         history.push("/user");
     }
     const submit = (values, {resetForm}) => {
@@ -182,8 +182,8 @@ const CreateUserPage = () => {
                                 </Form.Group>
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
-                                            disabled={errors.firstname || errors.lastname
-                                            || errors.birthdate || errors.joineddate || errors.type}>
+                                            disabled ={!values.firstname || !values.lastname
+                                            || errors.birthdate || errors.joineddate || !values.type}>
                                         Save
                                     </Button>
                                     <Button className="btn-cancel" type="reset" onClick={handleRedirectUseManagePage}>
