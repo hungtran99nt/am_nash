@@ -37,7 +37,7 @@ public class UserRestController {
     return ResponseEntity.ok().body(updatedUser);
   }
 
-  @GetMapping("/users")
+  @GetMapping("/")
   public List<UserDTO> getAllUserByLocation() {
     return userService.findAllByLocation();
   }
