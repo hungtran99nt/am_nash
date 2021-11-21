@@ -9,7 +9,7 @@ public interface UserService {
 
   UserDTO getUserById(Integer id);
 
-  UserDTO updateUser(UserDTO userDTO);
+  UserDTO updateUser(Integer id, UserDTO userDTO);
 
   // Find Active(isDisable=false) Staff by username
   Optional<AccountDTO> findActiveByUsername(String username);
