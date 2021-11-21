@@ -44,7 +44,7 @@ export default function App() {
         isLoading,
         data: user,
         errorMessage
-    } = useFetch({}, `${API_URL}/user/${curUsername}/`, convertDataResponse);
+    } = useFetch({}, `${API_URL}/${curUsername}/`, convertDataResponse);
     console.log(user)
     console.log(token)
     return (
