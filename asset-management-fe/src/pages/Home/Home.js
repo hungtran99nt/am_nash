@@ -7,7 +7,7 @@ const Home = () => {
     let history = useHistory();
 
     const handleRedirectEditPage = () => {
-        history.push("/edit/1");
+        history.push("/edit/30");
     }
     return (
     <div>

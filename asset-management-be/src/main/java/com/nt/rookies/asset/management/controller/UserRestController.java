@@ -49,7 +49,7 @@ public class UserRestController {
     return userService.findAllByLocation();
   }
 
-  @GetMapping("/{username}")
+  @GetMapping("/username/{username}")
   public Optional<AccountDTO> getActiveUserByUsername(
       @PathVariable(name = "username") String username) {
     return userService.findActiveByUsername(username);

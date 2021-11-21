@@ -27,7 +27,6 @@ const ManageUser = () => {
 	const handleAddNewClick = () => {
 		history.push("/create");
 	}
-
 	const {
 		isLoading,
 		data: users,
