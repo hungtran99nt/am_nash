@@ -1,11 +1,6 @@
 import './App.css'
-import React, {useEffect, useState} from "react";
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    NavLink
-} from "react-router-dom";
+import React, {useState} from "react";
+import {BrowserRouter as Router, NavLink, Route, Switch} from "react-router-dom";
 import logoimg from "./assets/images/logonashtech.png"
 import ManageAssignment from "./pages/ManageAssignment/ManageAssignment";
 import RequestOfReturning from "./pages/RequestOfReturning/RequestOfReturning";
@@ -14,13 +9,12 @@ import ManageAsset from "./pages/ManageAsset/ManageAsset";
 import ManageUser from "./pages/ManageUser/ManageUser";
 import Report from "./pages/Report/Report";
 import Header from "./components/Header/Header";
-
 import Login from "./pages/Login/Login";
-import axios from "axios";
-
 import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
-import {API_URL} from "./common/constants";
-
+import Profile from "./pages/Profile/Profile";
+import {API_URL, DATE_FORMAT} from "./common/constants";
+import useFetch from "./hooks/useFetch";
+import moment from "moment";
 
 const headerTitle = {
     Home: 'Home',
@@ -30,24 +24,27 @@ const headerTitle = {
     Request: 'Request Of Returning',
     Report: 'Report',
 }
-
+const convertDataResponse = res =>(
+    {
+        id: res.data.id,
+        staffCode: res.data.staffCode,
+        fullName: `${res.data.lastName} ${res.data.firstName}`,
+        userName: res.data.username,
+        joinDate:  moment(res.data.joinDate).format(DATE_FORMAT.TO),
+        type: res.data.type,
+        location: res.data.location
+    }
+);
 export default function App() {
-    const [headerInfo, setHeaderInfo] = useState("");
-    const [user, setUser] = useState({});
+    const [headerInfo, setHeaderInfo] = useState(headerTitle.Home);
     const [token, setToken] = useState(localStorage.getItem("TOKEN"));
-
     let curUsername = localStorage.getItem("USERNAME");
-
-    useEffect(() => {
-        axios.get(`${API_URL}/users/user/${curUsername}`)
-            .then(res => {
-                console.log(res)
-                setUser(res.data)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }, [curUsername])
+    console.log(typeof curUsername)
+    const {
+        isLoading,
+        data: user,
+        errorMessage
+    } = useFetch({}, `${API_URL}/${curUsername}/`, convertDataResponse);
     console.log(user)
     console.log(token)
     return (
@@ -115,9 +112,11 @@ export default function App() {
                                     <Route path="/report" exact>
                                         <Report/>
                                     </Route>
-
                                     <Route path="/login" exact>
                                         <Login/>
+                                    </Route>
+                                    <Route path="/profile" exact>
+                                        <Profile/>
                                     </Route>
                                     <Route path="/create" exact>
                                         <CreateUserPage/>
@@ -129,7 +128,5 @@ export default function App() {
                 </div>
             </div>
         </Router>
-    )
-        ;
+    );
 }
-
