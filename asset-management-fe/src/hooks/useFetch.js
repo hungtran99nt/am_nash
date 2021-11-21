@@ -22,6 +22,7 @@ const useFetch = (initialData, url, convertResponseToData) => {
 			url: url,
 		}).then(response => {
 			if (!didCancel) {
+				console.log(response);
 				setIsLoading(false);
 				setData(convertResponseToData(response));
 			}
