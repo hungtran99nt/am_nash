@@ -1,9 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import moment from "moment";
-import {useHistory,useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
 import {API_URL, DATE_FORMAT} from "../../../common/constants";
 
@@ -12,47 +12,67 @@ const validateForm = Yup.object().shape({
         .required("Required"),
     type: Yup.string().required("Required!")
 })
-const validation = (values) => {
+const validatioedit = (values) => {
     const errors = {};
-    let isWeekend = moment(values.joineddate).isoWeekday();
-    if (!values.joineddate) {
-        errors.joineddate = "Required";
-    } else if (moment(values.joineddate).isBefore(moment(values.birthdate))) {
-        errors.joineddate = "Joined date is not later than Date of Birth. Please select a different date";
+    let isWeekend = moment(values.joinDate).isoWeekday();
+    if (!values.joinDate) {
+        errors.joinDate = "Required";
+    } else if (moment(values.joinDate).isBefore(moment(values.joinDate))) {
+        errors.joinDate = "Joined date is not later than Date of Birth. Please select a different date";
     } else if (isWeekend === 7 || isWeekend === 6) {
-        errors.joineddate = "Joined date is Saturday or Sunday. Please select a different date"
+        errors.joinDate = "Joined date is Saturday or Sunday. Please select a different date"
     }
     return errors;
 }
-const convertDataResponse = res =>(
+const convertDataResponse = res => (
     {
-        firstname: res.date.firstName,
-        lastname:res.data.lastName,
-        birthdate: moment(res.data.birthDate).format(DATE_FORMAT.TO),
-        joinDate:  moment(res.data.joinDate).format(DATE_FORMAT.TO),
+        firstname: res.data.firstName,
+        lastname: res.data.lastName,
+        birthdate: moment(res.data.birthDate).format("MM/DD/YYYY"),
+        joinDate: moment(res.data.joinDate).format("MM/DD/YYYY"),
         type: res.data.type,
         gender: res.data.gender
     }
 );
+
+// `${API_URL}/users/${id}`
 const EditUserPage = () => {
     const {id} = useParams();
     const {
         isLoading,
         data: users,
-        errorMessage
-    } = useFetch([], `${API_URL}/users/${id}`, convertDataResponse);
-    console.log(users);
-    const initialValues = {firstname: users.firstname, lastname: users.lastname,
-        birthdate: users.birthdate, gender: users.gender, joineddate: users.joineddate, type: users.type};
-    let history = useHistory();
-    const handleRedirectUseManagePage = () => {
-        history.push("/user");
-    }
+        errorMessage,
+    } = useFetch({
+        firstname: null,
+        lastname: null,
+        birthdate: null,
+        joinDate: null,
+        type: null,
+        gender: null
+    }, `${API_URL}/users/${id}`, convertDataResponse);
+    if (isLoading) return "Loading";
+    if (errorMessage) return <div style={{ color: "red" }}>{errorMessage}</div>;
+    console.log("user = ", users);
+    const [initialValues,setInitialValues] = useState([]);
+    setInitialValues({
+        firstname: users.firstname,
+        lastname: users.lastname,
+        birthdate: moment(users.birthdate).toDate(),
+        gender: users.gender,
+        joinDate: moment(users.joinDate).toDate(),
+        type: users.type
+    })
+    console.log('initialValues', initialValues)
+
+    // let history = useHistory();
+    // const handleRedirectUseManagePage = () => {
+    //     history.push("/user");
+    // }
     const submit = (values, {resetForm}) => {
-        console.log(moment(values.joineddate))
+        console.log(moment(values.joinDate))
         console.log('values =', values)
         resetForm();
-        history.push("/user");
+        // history.push("/user");
     }
     return (
         <div className="app-create">
@@ -63,7 +83,7 @@ const EditUserPage = () => {
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validateForm}
-                        validate={validation}
+                        validate={validatioedit}
                         onSubmit={submit}
                     >
                         {({
@@ -73,8 +93,6 @@ const EditUserPage = () => {
                               handleBlur,
                               handleChange,
                               handleSubmit,
-                              isSubmitting,
-                              resetForm,
                           }) => (
                             <Form onSubmit={handleSubmit}>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
@@ -84,14 +102,9 @@ const EditUserPage = () => {
                                             type="text"
                                             name="firstname"
                                             value={values.firstname}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            isInvalid={touched.firstname && errors.firstname}
                                             disabled={true}
+                                            onChange={handleChange('firstname')}
                                         />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.firstname}
-                                        </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextLastName">
@@ -100,15 +113,9 @@ const EditUserPage = () => {
                                         <Form.Control
                                             type="text"
                                             name="lastname"
-                                            onChange={handleChange}
                                             value={values.lastname}
-                                            onBlur={handleBlur}
-                                            isInvalid={touched.lastname && errors.lastname}
                                             disabled={true}
                                         />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.lastname}
-                                        </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextBirthDate">
@@ -138,8 +145,8 @@ const EditUserPage = () => {
                                                 label="Female"
                                                 name="gender"
                                                 type="radio"
-                                                value="female"
-                                                defaultChecked={true}
+                                                value="Female"
+                                                Checked={values.gender === "Female"}
                                                 onChange={handleChange}
                                             />
                                             <Form.Check
@@ -147,8 +154,10 @@ const EditUserPage = () => {
                                                 label="Male"
                                                 name="gender"
                                                 type="radio"
-                                                value="male"
+                                                value="Male"
+                                                Checked={values.gender === "Male"}
                                                 onChange={handleChange}
+
                                             />
                                         </div>
                                     </Col>
@@ -159,15 +168,15 @@ const EditUserPage = () => {
                                     </Form.Label>
                                     <Col sm="6">
                                         <Form.Control
-                                            name="joineddate"
+                                            name="joinDate"
                                             type="date"
-                                            value={values.joineddate}
+                                            value={values.joinDate}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.joineddate && errors.joineddate}
+                                            isInvalid={touched.joineDate && errors.joinDate}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.joineddate}
+                                            {errors.joinDate}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
@@ -182,8 +191,9 @@ const EditUserPage = () => {
                                             isInvalid={touched.type && errors.type}
                                         >
                                             <option value=""/>
-                                            <option value="Staff" label="Staff"/>
-                                            <option value="Admin" label="Admin"/>
+                                            {/*selected={values.type.equals("Staff")}*/}
+                                            <option value="Staff"  label="Staff"/>
+                                            <option value="Admin"  label="Admin"/>
                                         </Form.Select>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.type}
@@ -193,11 +203,11 @@ const EditUserPage = () => {
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
                                             disabled={!values.firstname || !values.lastname ||
-                                            !values.birthdate || !values.joineddate ||
-                                            errors.birthdate || errors.joineddate || !values.type}>
+                                            !values.birthdate || !values.joinDate ||
+                                            errors.birthdate || errors.joinDate || !values.type}>
                                         Save
                                     </Button>
-                                    <Button className="btn-cancel" type="reset" onClick={handleRedirectUseManagePage}>
+                                    <Button className="btn-cancel" type="reset" >
                                         Cancel
                                     </Button>
                                 </div>

@@ -20,19 +20,19 @@ const validateForm = Yup.object().shape({
 })
 const validation = (values) => {
     const errors = {};
-    let isWeekend = moment(values.joineddate).isoWeekday();
-    if (!values.joineddate) {
-        errors.joineddate = "Required";
-    } else if (moment(values.joineddate).isBefore(moment(values.birthdate))) {
-        errors.joineddate = "Joined date is not later than Date of Birth. Please select a different date";
+    let isWeekend = moment(values.joinDate).isoWeekday();
+    if (!values.joinDate) {
+        errors.joinDate = "Required";
+    } else if (moment(values.joinDate).isBefore(moment(values.joinDate))) {
+        errors.joinDate = "Joined date is not later than Date of Birth. Please select a different date";
     } else if (isWeekend === 7 || isWeekend === 6) {
-        errors.joineddate = "Joined date is Saturday or Sunday. Please select a different date"
+        errors.joinDate = "Joined date is Saturday or Sunday. Please select a different date"
     }
     return errors;
 }
 
 const CreateUserPage = () => {
-    const initialValues = {firstname: "", lastname: "", birthdate: "", gender: "female", joineddate: "", type: ""};
+    const initialValues = {firstname: "", lastname: "", birthdate: "", gender: "female", joinDate: "", type: ""};
 
     let history = useHistory();
 
@@ -41,7 +41,7 @@ const CreateUserPage = () => {
     }
     
     const submit = (values, {resetForm}) => {
-        console.log(moment(values.joineddate))
+        console.log(moment(values.joinDate))
         console.log('values =', values)
         resetForm();
         history.push("/user");
@@ -150,15 +150,15 @@ const CreateUserPage = () => {
                                     </Form.Label>
                                     <Col sm="6">
                                         <Form.Control
-                                            name="joineddate"
+                                            name="joinDate"
                                             type="date"
-                                            value={values.joineddate}
+                                            value={values.joinDate}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.joineddate && errors.joineddate}
+                                            isInvalid={touched.joinDate && errors.joinDate}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.joineddate}
+                                            {errors.joinDate}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
@@ -184,8 +184,8 @@ const CreateUserPage = () => {
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
                                             disabled={!values.firstname || !values.lastname ||
-                                            !values.birthdate || !values.joineddate ||
-                                            errors.birthdate || errors.joineddate || !values.type}>
+                                            !values.birthdate || !values.joinDate ||
+                                            errors.birthdate || errors.joinDate || !values.type}>
                                         Save
                                     </Button>
                                     <Button className="btn-cancel" type="reset" onClick={handleRedirectUseManagePage}>
