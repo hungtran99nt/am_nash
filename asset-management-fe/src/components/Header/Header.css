@@ -1,3 +1,16 @@
 #dropdown-basic-button{
-    background-color: #EB5B64 !important;
+    background-color: transparent !important;
+    transition: none !important;
+}
+.btn-primary:hover,.btn-primary:focus,.btn-primary:active,
+.btn-primary:active:focus:not(:disabled):not(.disabled),
+.btn:focus, .btn:active, .btn:hover{
+    box-shadow: none!important;
+    outline: 0;
+}
+.dropdown-toggle::after {
+    display:none !important;
+}
+.navbar{
+    align-items: center !important;
 }
