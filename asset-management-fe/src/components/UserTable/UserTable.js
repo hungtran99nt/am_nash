@@ -80,7 +80,7 @@ const UserTable = ({users, isLoading}) => {
 	useEffect(() => {
 		axios({
 			method: 'GET',
-			url: `${API_URL}/user/${userIdPopup}`
+			url: `${API_URL}/users/${userIdPopup}`
 		}).then(res => {
 			setUserDetail(res.data);
 		}).catch(err => {

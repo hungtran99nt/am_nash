@@ -32,7 +32,7 @@ const ManageUser = () => {
 		isLoading,
 		data: users,
 		errorMessage
-	} = useFetch([], `${API_URL}/user/users`, convertDataResponse);
+	} = useFetch([], `${API_URL}/users/users`, convertDataResponse);
 
 	const usersFiltered = useMemo(() => {
 		return users.filter(user =>
