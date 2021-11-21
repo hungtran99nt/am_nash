@@ -1,11 +1,9 @@
 package com.nt.rookies.asset.management.dto;
 
 import java.util.Date;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class AssignmentDTO {
   private Integer id;
   private String assetCode;

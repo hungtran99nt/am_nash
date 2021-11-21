@@ -3,6 +3,7 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import moment from "moment";
+import {useHistory} from "react-router-dom";
 
 const validateForm = Yup.object().shape({
     firstname: Yup.string()
@@ -29,13 +30,21 @@ const validation = (values) => {
     }
     return errors;
 }
-const submit = (values, {resetForm}) => {
-    console.log(moment(values.joineddate))
-    console.log('values =', values)
-    resetForm();
-}
+
 const CreateUserPage = () => {
     const initialValues = {firstname: "", lastname: "", birthdate: "", gender: "female", joineddate: "", type: ""};
+
+    let history = useHistory();
+
+    function handleRedirectUseManagePage() {
+        history.push("/user");
+    }
+    const submit = (values, {resetForm}) => {
+        console.log(moment(values.joineddate))
+        console.log('values =', values)
+        resetForm();
+        history.push("/user");
+    }
     return (
         <div className="app-create">
             <div className="row">
@@ -172,10 +181,12 @@ const CreateUserPage = () => {
                                     </Col>
                                 </Form.Group>
                                 <div className="group-btn">
-                                    <Button type="submit" className="btn-primary" disabled={isSubmitting}>
+                                    <Button type="submit" className="btn-primary"
+                                            disabled={errors.firstname || errors.lastname
+                                            || errors.birthdate || errors.joineddate || errors.type}>
                                         Save
                                     </Button>
-                                    <Button className="btn-cancel" type="reset" onClick={resetForm}>
+                                    <Button className="btn-cancel" type="reset" onClick={handleRedirectUseManagePage}>
                                         Cancel
                                     </Button>
                                 </div>
