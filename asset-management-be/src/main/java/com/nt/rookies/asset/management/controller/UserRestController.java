@@ -50,7 +50,7 @@ public class UserRestController {
     return ResponseEntity.ok().body(createdUser);
   }
 
-  @GetMapping("/users")
+  @GetMapping("/")
   public List<UserDTO> getAllUserByLocation() {
     return userService.findAllByLocation();
   }

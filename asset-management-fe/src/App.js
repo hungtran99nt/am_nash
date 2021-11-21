@@ -19,6 +19,7 @@ import Login from "./pages/Login/Login";
 import axios from "axios";
 
 import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
+import {API_URL} from "./common/constants";
 
 
 const headerTitle = {
@@ -38,7 +39,7 @@ export default function App() {
     let curUsername = localStorage.getItem("USERNAME");
 
     useEffect(() => {
-        axios.get('user/' + curUsername)
+        axios.get(`${API_URL}/users/user/${curUsername}`)
             .then(res => {
                 console.log(res)
                 setUser(res.data)
