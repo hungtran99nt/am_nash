@@ -1,5 +1,4 @@
 package com.nt.rookies.asset.management.controller;
-
 import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.service.UserService;
@@ -8,12 +7,12 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1.0/users")
+
 @Api(tags = "User controller using REST API")
 public class UserRestController {
   private final UserService userService;
@@ -37,7 +36,15 @@ public class UserRestController {
     return ResponseEntity.ok().body(updatedUser);
   }
 
-  @GetMapping("/users")
+
+  @PostMapping(value = "/create")
+  @ApiOperation("Create user")
+  public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
+    UserDTO createdUser = userService.createUser(user);
+    return ResponseEntity.ok().body(createdUser);
+  }
+
+  @GetMapping("/")
   public List<UserDTO> getAllUserByLocation() {
     return userService.findAllByLocation();
   }

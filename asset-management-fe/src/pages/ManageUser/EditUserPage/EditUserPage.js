@@ -1,24 +1,18 @@
-import React from "react";
+import React, {useState} from "react";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import moment from "moment";
-import {useHistory} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
+import useFetch from "../../../hooks/useFetch";
+import {API_URL, DATE_FORMAT} from "../../../common/constants";
 
 const validateForm = Yup.object().shape({
-    firstname: Yup.string()
-        .min(2, 'Too Short!')
-        .max(50, 'Too Long!')
-        .required('Required'),
-    lastname: Yup.string()
-        .min(2, 'Too Short!')
-        .max(50, 'Too Long!')
-        .required('Required'),
     birthdate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
         .required("Required"),
     type: Yup.string().required("Required!")
 })
-const validation = (values) => {
+const validatioedit = (values) => {
     const errors = {};
     let isWeekend = moment(values.joinDate).isoWeekday();
     if (!values.joinDate) {
@@ -30,32 +24,66 @@ const validation = (values) => {
     }
     return errors;
 }
-
-const CreateUserPage = () => {
-    const initialValues = {firstname: "", lastname: "", birthdate: "", gender: "female", joinDate: "", type: ""};
-
-    let history = useHistory();
-
-    const handleRedirectUseManagePage = () => {
-        history.push("/user");
+const convertDataResponse = res => (
+    {
+        firstname: res.data.firstName,
+        lastname: res.data.lastName,
+        birthdate: moment(res.data.birthDate).format("MM/DD/YYYY"),
+        joinDate: moment(res.data.joinDate).format("MM/DD/YYYY"),
+        type: res.data.type,
+        gender: res.data.gender
     }
-    
+);
+
+// `${API_URL}/users/${id}`
+const EditUserPage = () => {
+    const {id} = useParams();
+    const {
+        isLoading,
+        data: users,
+        errorMessage,
+    } = useFetch({
+        firstname: null,
+        lastname: null,
+        birthdate: null,
+        joinDate: null,
+        type: null,
+        gender: null
+    }, `${API_URL}/users/${id}`, convertDataResponse);
+    if (isLoading) return "Loading";
+    if (errorMessage) return <div style={{ color: "red" }}>{errorMessage}</div>;
+    console.log("user = ", users);
+    const [initialValues,setInitialValues] = useState([]);
+    setInitialValues({
+        firstname: users.firstname,
+        lastname: users.lastname,
+        birthdate: moment(users.birthdate).toDate(),
+        gender: users.gender,
+        joinDate: moment(users.joinDate).toDate(),
+        type: users.type
+    })
+    console.log('initialValues', initialValues)
+
+    // let history = useHistory();
+    // const handleRedirectUseManagePage = () => {
+    //     history.push("/user");
+    // }
     const submit = (values, {resetForm}) => {
         console.log(moment(values.joinDate))
         console.log('values =', values)
         resetForm();
-        history.push("/user");
+        // history.push("/user");
     }
     return (
         <div className="app-create">
             <div className="row">
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
-                    <div className="app-content__title">Create New User</div>
+                    <div className="app-content__title">Edit User</div>
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validateForm}
-                        validate={validation}
+                        validate={validatioedit}
                         onSubmit={submit}
                     >
                         {({
@@ -65,8 +93,6 @@ const CreateUserPage = () => {
                               handleBlur,
                               handleChange,
                               handleSubmit,
-                              isSubmitting,
-                              resetForm,
                           }) => (
                             <Form onSubmit={handleSubmit}>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
@@ -76,14 +102,9 @@ const CreateUserPage = () => {
                                             type="text"
                                             name="firstname"
                                             value={values.firstname}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            isInvalid={touched.firstname && errors.firstname}
-
+                                            disabled={true}
+                                            onChange={handleChange('firstname')}
                                         />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.firstname}
-                                        </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextLastName">
@@ -92,14 +113,9 @@ const CreateUserPage = () => {
                                         <Form.Control
                                             type="text"
                                             name="lastname"
-                                            onChange={handleChange}
                                             value={values.lastname}
-                                            onBlur={handleBlur}
-                                            isInvalid={touched.lastname && errors.lastname}
+                                            disabled={true}
                                         />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.lastname}
-                                        </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextBirthDate">
@@ -129,8 +145,8 @@ const CreateUserPage = () => {
                                                 label="Female"
                                                 name="gender"
                                                 type="radio"
-                                                value="female"
-                                                defaultChecked={true}
+                                                value="Female"
+                                                Checked={values.gender === "Female"}
                                                 onChange={handleChange}
                                             />
                                             <Form.Check
@@ -138,8 +154,10 @@ const CreateUserPage = () => {
                                                 label="Male"
                                                 name="gender"
                                                 type="radio"
-                                                value="male"
+                                                value="Male"
+                                                Checked={values.gender === "Male"}
                                                 onChange={handleChange}
+
                                             />
                                         </div>
                                     </Col>
@@ -155,7 +173,7 @@ const CreateUserPage = () => {
                                             value={values.joinDate}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.joinDate && errors.joinDate}
+                                            isInvalid={touched.joineDate && errors.joinDate}
                                         />
                                         <Form.Control.Feedback type="invalid">
                                             {errors.joinDate}
@@ -173,8 +191,9 @@ const CreateUserPage = () => {
                                             isInvalid={touched.type && errors.type}
                                         >
                                             <option value=""/>
-                                            <option value="Staff" label="Staff"/>
-                                            <option value="Admin" label="Admin"/>
+                                            {/*selected={values.type.equals("Staff")}*/}
+                                            <option value="Staff"  label="Staff"/>
+                                            <option value="Admin"  label="Admin"/>
                                         </Form.Select>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.type}
@@ -188,7 +207,7 @@ const CreateUserPage = () => {
                                             errors.birthdate || errors.joinDate || !values.type}>
                                         Save
                                     </Button>
-                                    <Button className="btn-cancel" type="reset" onClick={handleRedirectUseManagePage}>
+                                    <Button className="btn-cancel" type="reset" >
                                         Cancel
                                     </Button>
                                 </div>
@@ -201,4 +220,4 @@ const CreateUserPage = () => {
         </div>
     )
 }
-export default CreateUserPage
+export default EditUserPage

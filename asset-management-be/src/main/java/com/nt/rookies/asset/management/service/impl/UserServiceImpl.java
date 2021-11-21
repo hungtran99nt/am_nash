@@ -7,6 +7,7 @@ import com.nt.rookies.asset.management.entity.User;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.UserService;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,6 +58,42 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public UserDTO createUser(UserDTO userDTO) {
+    StringBuilder username = new StringBuilder(userDTO.getFirstName().toLowerCase());
+    String[] lastNames = userDTO.getLastName().split(" ");
+    for (String name : lastNames) {
+      username.append(name.charAt(0));
+    }
+    String countUsername = repository.findCountUsername(username.toString());
+    //  if username existed => username = username + countUsername
+    if (!countUsername.equals("0")) {
+      username.append(countUsername);
+    }
+    SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
+    String password = username + "@" + formatter.format(userDTO.getBirthDate());
+    System.out.println("password: " + password);
+    System.out.println("username: " + username);
+    Location location = getUserLocation();
+    System.out.println("Location" + location);
+    // TODO: Encode password
+    User user = new User();
+    user.setFirstName(userDTO.getFirstName());
+    user.setLastName(userDTO.getLastName());
+    user.setUsername(username.toString());
+    user.setPassword(password);
+    user.setJoinedDate(userDTO.getJoinedDate());
+    user.setGender(userDTO.getGender());
+    user.setBirthDate(userDTO.getBirthDate());
+    user.setType(userDTO.getType());
+    user.setDisable(false);
+    user.setLocation(location);
+    logger.info("New User:{}", user);
+    User createdUser = repository.save(user);
+    logger.info("Created User:{}", createdUser);
+    return modelMapper.map(createdUser, UserDTO.class);
+  }
+
+  @Override
   public Optional<AccountDTO> findActiveByUsername(String username) {
     User user = repository.findByUsername(username);
     if (!user.isDisable()) {
@@ -91,7 +128,6 @@ public class UserServiceImpl implements UserService {
         (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
     User currentUser = repository.findByUsername(username);
-
     return currentUser.getLocation();
   }
 
