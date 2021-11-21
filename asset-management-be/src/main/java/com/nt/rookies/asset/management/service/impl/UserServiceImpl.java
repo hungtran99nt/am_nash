@@ -82,7 +82,9 @@ public class UserServiceImpl implements UserService {
     Location location = getUserLocation();
 
     List<User> users = repository.findAllByLocation(location);
-    return users.stream().map(this::convertEntityToDto).collect(Collectors.toList());
+    return users.stream()
+            .map(user -> modelMapper.map(user, UserDTO.class))
+            .collect(Collectors.toList());
   }
 
   private Location getUserLocation() {
@@ -95,20 +97,4 @@ public class UserServiceImpl implements UserService {
     return currentUser.getLocation();
   }
 
-  private UserDTO convertEntityToDto(User user) {
-    UserDTO userDTO = new UserDTO();
-    userDTO.setId(user.getId());
-    userDTO.setStaffCode(user.getStaffCode());
-    userDTO.setUsername(user.getUsername());
-    userDTO.setType(user.getType());
-    //        userDTO.setPassword(user.getPassword());
-    userDTO.setDisable(user.isDisable());
-    userDTO.setGender(user.getGender());
-    userDTO.setBirthDate(user.getBirthDate());
-    userDTO.setFirstName(user.getFirstName());
-    userDTO.setLastName(user.getLastName());
-    userDTO.setJoinedDate(user.getJoinedDate());
-    userDTO.setLocation(user.getLocation().getLocationName());
-    return userDTO;
-  }
 }

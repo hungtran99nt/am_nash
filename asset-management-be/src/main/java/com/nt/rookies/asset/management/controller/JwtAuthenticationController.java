@@ -1,5 +1,6 @@
 package com.nt.rookies.asset.management.controller;
 
+import com.google.common.collect.Iterables;
 import com.nt.rookies.asset.management.common.JwtTokenUtil;
 import com.nt.rookies.asset.management.jwt.model.JwtRequest;
 import com.nt.rookies.asset.management.jwt.model.JwtResponse;
@@ -10,11 +11,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collection;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -34,7 +38,8 @@ public class JwtAuthenticationController {
         userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
     final String token = jwtTokenUtil.generateToken(userDetails);
     final String username = userDetails.getUsername();
-    return ResponseEntity.ok(new JwtResponse(token, username));
+    final Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+    return ResponseEntity.ok(new JwtResponse(token, username, Iterables.get(authorities, 0).getAuthority()));
   }
 
   private void authenticate(String username, String password) throws Exception {
