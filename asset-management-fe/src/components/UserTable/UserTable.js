@@ -80,9 +80,8 @@ const UserTable = ({users, isLoading}) => {
 	useEffect(() => {
 		axios({
 			method: 'GET',
-			url: `${API_URL}/users/${userIdPopup}`
+			url: `${API_URL}/user/${userIdPopup}`
 		}).then(res => {
-			console.log(res.data)
 			setUserDetail(res.data);
 		}).catch(err => {
 			console.log(err);
@@ -91,7 +90,6 @@ const UserTable = ({users, isLoading}) => {
 
 	const getUserDetail = {
 		onClick: (e, row) => {
-			console.log(row)
 			setUserIdPopup(row.id);
 			toggleTrueFalse();
 		},

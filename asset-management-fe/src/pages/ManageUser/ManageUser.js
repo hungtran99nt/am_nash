@@ -32,7 +32,7 @@ const ManageUser = () => {
 		isLoading,
 		data: users,
 		errorMessage
-	} = useFetch([], `${API_URL}/users`, convertDataResponse);
+	} = useFetch([], `${API_URL}/user/users`, convertDataResponse);
 
 	const usersFiltered = useMemo(() => {
 		return users.filter(user =>
@@ -86,7 +86,6 @@ const ManageUser = () => {
 			</Container>
 			{ errorMessage && <div>errorMessage</div> }
 			{ usersSearched && <UserTable isLoading={isLoading} users={usersSearched}/>}
-			{/*<Paginator/>*/}
 		</div>
 	)
 
