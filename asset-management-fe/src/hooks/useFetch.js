@@ -8,7 +8,7 @@ const useFetch = (initialData, url, convertResponseToData) => {
 
 	const token = localStorage.getItem("TOKEN");
 
-	if (token) {
+	if (token !== null && token !== "") {
 		axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 	}
 
@@ -18,7 +18,6 @@ const useFetch = (initialData, url, convertResponseToData) => {
 		axios({
 			method: 'GET',
 			url: url,
-
 		}).then(response => {
 			if (!didCancel) {
 				setIsLoading(false);
@@ -41,5 +40,4 @@ const useFetch = (initialData, url, convertResponseToData) => {
 		errorMessage
 	}
 }
-
 export default useFetch;

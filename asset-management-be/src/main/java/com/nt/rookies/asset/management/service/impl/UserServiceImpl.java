@@ -39,10 +39,10 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDTO updateUser(UserDTO userDTO) {
+  public UserDTO updateUser(Integer id, UserDTO userDTO) {
     User user =
         repository
-            .findById(userDTO.getId())
+            .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Update user not found."));
     logger.info("User found: {}", user);
     user.setBirthDate(userDTO.getBirthDate());
@@ -82,15 +82,13 @@ public class UserServiceImpl implements UserService {
     Location location = getUserLocation();
 
     List<User> users = repository.findAllByLocation(location);
-    return users.stream()
-        .map(this::convertEntityToDto)
-        .collect(Collectors.toList());
+    return users.stream().map(this::convertEntityToDto).collect(Collectors.toList());
   }
 
   private Location getUserLocation() {
     // get user location from token
-    UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-        .getPrincipal();
+    UserDetails userDetails =
+        (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
     User currentUser = repository.findByUsername(username);
 
@@ -103,7 +101,7 @@ public class UserServiceImpl implements UserService {
     userDTO.setStaffCode(user.getStaffCode());
     userDTO.setUsername(user.getUsername());
     userDTO.setType(user.getType());
-//        userDTO.setPassword(user.getPassword());
+    //        userDTO.setPassword(user.getPassword());
     userDTO.setDisable(user.isDisable());
     userDTO.setGender(user.getGender());
     userDTO.setBirthDate(user.getBirthDate());
