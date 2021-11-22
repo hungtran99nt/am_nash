@@ -15,6 +15,10 @@
     max-width: 150px !important;
 }
 
+.form-select {
+    background-image: url("../../assets/images/filter.png") !important;
+}
+
 .search-bar {
     position: relative;
     height: 100%;
