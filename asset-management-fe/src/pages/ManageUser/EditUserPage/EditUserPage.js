@@ -5,8 +5,7 @@ import * as Yup from 'yup';
 import moment from "moment";
 import {useHistory, useParams} from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
-import {API_URL, DATE_FORMAT} from "../../../common/constants";
-import axios from "axios";
+import {API_URL} from "../../../common/constants";
 
 const validateForm = Yup.object().shape({
     birthdate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
@@ -36,18 +35,11 @@ const convertDataResponse = res => (
     }
 );
 
-// `${API_URL}/users/${id}`
 const EditUserPage = () => {
     let history = useHistory();
     const handleRedirectUseManagePage = () => {
         history.push("/user");
     }
-    // const [formValue,setFormValue] = useState({
-    //     firstname:null
-    // });
-    // const [isLoading, setIsLoading] = useState(true);
-    // const [errorMessage, setErrorMessage] = useState('');
-
     const {id} = useParams();
     const {
         isLoading,
@@ -73,11 +65,10 @@ const EditUserPage = () => {
         gender: user.gender
     }
     if (isLoading) return "Loading";
-    if (errorMessage) return <div style={{ color: "red" }}>{errorMessage}</div>;
-    console.log("Values = " , initialValues)
+    if (errorMessage) return <div style={{color: "red"}}>{errorMessage}</div>;
+    console.log("user = ", user);
     const submit = (values, {resetForm}) => {
-        console.log(moment(values.joinDate))
-        console.log('valuesSubmit =', values)
+        console.log('values =', values)
         resetForm();
         history.push("/user");
     }
@@ -86,7 +77,7 @@ const EditUserPage = () => {
             <div className="row">
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
-                    <div className="app-content__title">Edit User</div>
+                    <div className="app-content__title">Edit User {user.firstname} {user.lastname}</div>
                     <Formik
                         enableReinitialize={true}
                         initialValues={initialValues}
@@ -109,9 +100,12 @@ const EditUserPage = () => {
                                         <Form.Control
                                             type="text"
                                             name="firstname"
-                                            value={values.firstname}
+                                            defaultValue={values.firstname}
                                             disabled={true}
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.firstname}
+                                        </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextLastName">
@@ -120,9 +114,12 @@ const EditUserPage = () => {
                                         <Form.Control
                                             type="text"
                                             name="lastname"
-                                            value={values.lastname}
+                                            defaultValue={values.lastname}
                                             disabled={true}
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.lastname}
+                                        </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextBirthDate">
@@ -164,7 +161,6 @@ const EditUserPage = () => {
                                                 value="Male"
                                                 checked={values.gender === "Male"}
                                                 onChange={handleChange}
-
                                             />
                                         </div>
                                     </Col>
@@ -177,10 +173,10 @@ const EditUserPage = () => {
                                         <Form.Control
                                             name="joinDate"
                                             type="date"
-                                            value={values.joinDate}
+                                            defaultChecked={user.joinDate}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.joineDate && errors.joinDate}
+                                            isInvalid={touched.joinDate && errors.joinDate}
                                         />
                                         <Form.Control.Feedback type="invalid">
                                             {errors.joinDate}
@@ -192,15 +188,16 @@ const EditUserPage = () => {
                                     <Col sm="6">
                                         <Form.Select
                                             name="type"
-                                            value={values.type}
+                                            defaultValue={values.type}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             isInvalid={touched.type && errors.type}
                                         >
                                             <option value=""/>
-                                            {/*selected={values.type.equals("Staff")}*/}
-                                            <option value="Staff"  label="Staff"/>
-                                            <option value="Admin"  label="Admin"/>
+                                            <option value="Staff" defaultChecked={values.type === "Staff"}
+                                                    label="Staff"/>
+                                            <option value="Admin" defaultChecked={values.type === "Admin"}
+                                                    label="Admin"/>
                                         </Form.Select>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.type}
@@ -211,10 +208,11 @@ const EditUserPage = () => {
                                     <Button type="submit" className="btn-primary"
                                             disabled={!values.firstname || !values.lastname ||
                                             !values.birthdate || !values.joinDate ||
-                                            errors.birthdate || errors.joinDate || !values.type}>
+                                            errors.birthdate || errors.joinDate || !values.type}
+                                    >
                                         Save
                                     </Button>
-                                    <Button className="btn-cancel" type="reset" onClick={handleRedirectUseManagePage} >
+                                    <Button className="btn-cancel" type="reset" onClick={handleRedirectUseManagePage}>
                                         Cancel
                                     </Button>
                                 </div>

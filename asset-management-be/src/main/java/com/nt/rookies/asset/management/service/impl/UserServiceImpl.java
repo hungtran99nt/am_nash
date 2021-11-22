@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,11 +26,14 @@ public class UserServiceImpl implements UserService {
   private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
   private final UserRepository repository;
   private final ModelMapper modelMapper;
+  private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserServiceImpl(UserRepository repository, ModelMapper modelMapper) {
+  public UserServiceImpl(
+      UserRepository repository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
     this.repository = repository;
     this.modelMapper = modelMapper;
+    this.passwordEncoder = passwordEncoder;
   }
 
   @Override
@@ -40,10 +44,10 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDTO updateUser(UserDTO userDTO) {
+  public UserDTO updateUser(Integer id, UserDTO userDTO) {
     User user =
         repository
-            .findById(userDTO.getId())
+            .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Update user not found."));
     logger.info("User found: {}", user);
     user.setBirthDate(userDTO.getBirthDate());
@@ -59,28 +63,29 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO createUser(UserDTO userDTO) {
+
     StringBuilder username = new StringBuilder(userDTO.getFirstName().toLowerCase());
     String[] lastNames = userDTO.getLastName().split(" ");
     for (String name : lastNames) {
-      username.append(name.charAt(0));
+      username.append(Character.toLowerCase(name.charAt(0)));
     }
-    String countUsername = repository.findCountUsername(username.toString());
+    Optional<Integer> maxPostfix = repository.findMaxUsernamePostfix(username.toString());
+    logger.info("maxPostfix: {}", maxPostfix.orElse(0));
     //  if username existed => username = username + countUsername
-    if (!countUsername.equals("0")) {
-      username.append(countUsername);
-    }
+    maxPostfix.ifPresent(postfix -> username.append(++postfix));
     SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
     String password = username + "@" + formatter.format(userDTO.getBirthDate());
-    System.out.println("password: " + password);
-    System.out.println("username: " + username);
+    String encodedPassword = passwordEncoder.encode(password);
+    logger.info("username: {}", username);
+    logger.info("password: {}", password);
+    logger.info("encoded password: {}", encodedPassword);
     Location location = getUserLocation();
-    System.out.println("Location" + location);
-    // TODO: Encode password
+    logger.info("location: {}", location);
     User user = new User();
     user.setFirstName(userDTO.getFirstName());
     user.setLastName(userDTO.getLastName());
     user.setUsername(username.toString());
-    user.setPassword(password);
+    user.setPassword(encodedPassword);
     user.setJoinedDate(userDTO.getJoinedDate());
     user.setGender(userDTO.getGender());
     user.setBirthDate(userDTO.getBirthDate());
@@ -89,6 +94,8 @@ public class UserServiceImpl implements UserService {
     user.setLocation(location);
     logger.info("New User:{}", user);
     User createdUser = repository.save(user);
+    String generatedCode = repository.generateStaffCode();
+    createdUser.setStaffCode(generatedCode);
     logger.info("Created User:{}", createdUser);
     return modelMapper.map(createdUser, UserDTO.class);
   }
@@ -120,33 +127,17 @@ public class UserServiceImpl implements UserService {
 
     List<User> users = repository.findAllByLocation(location);
     return users.stream()
-        .map(this::convertEntityToDto)
-        .collect(Collectors.toList());
+            .map(user -> modelMapper.map(user, UserDTO.class))
+            .collect(Collectors.toList());
   }
 
   private Location getUserLocation() {
     // get user location from token
-    UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-        .getPrincipal();
+    UserDetails userDetails =
+        (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
     User currentUser = repository.findByUsername(username);
     return currentUser.getLocation();
   }
 
-  private UserDTO convertEntityToDto(User user) {
-    UserDTO userDTO = new UserDTO();
-    userDTO.setId(user.getId());
-    userDTO.setStaffCode(user.getStaffCode());
-    userDTO.setUsername(user.getUsername());
-    userDTO.setType(user.getType());
-//        userDTO.setPassword(user.getPassword());
-    userDTO.setDisable(user.isDisable());
-    userDTO.setGender(user.getGender());
-    userDTO.setBirthDate(user.getBirthDate());
-    userDTO.setFirstName(user.getFirstName());
-    userDTO.setLastName(user.getLastName());
-    userDTO.setJoinedDate(user.getJoinedDate());
-    userDTO.setLocation(user.getLocation().getLocationName());
-    return userDTO;
-  }
 }

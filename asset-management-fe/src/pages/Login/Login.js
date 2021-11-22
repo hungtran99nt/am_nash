@@ -14,13 +14,14 @@ const Login = () => {
             password: password
         }
         console.log(data)
-        axios.post('authenticate', data)
+        axios.post('http://localhost:8080/authenticate', data)
             .then(res => {
                 console.log(res);
                 if (res.status == 200){
                     setRedirect(true);
+                    console.log(res);
                     localStorage.setItem('TOKEN', res.data.jwttoken);
-                    localStorage.setItem('USERNAME', JSON.parse(res.config.data).username);
+                    localStorage.setItem('USERNAME', res.data.username);
                 }
             })
             .catch(err => {
