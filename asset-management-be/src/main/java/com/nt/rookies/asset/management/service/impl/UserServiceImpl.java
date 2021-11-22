@@ -94,6 +94,8 @@ public class UserServiceImpl implements UserService {
     user.setLocation(location);
     logger.info("New User:{}", user);
     User createdUser = repository.save(user);
+    String generatedCode = repository.generateStaffCode();
+    createdUser.setStaffCode(generatedCode);
     logger.info("Created User:{}", createdUser);
     return modelMapper.map(createdUser, UserDTO.class);
   }
