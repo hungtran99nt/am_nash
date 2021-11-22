@@ -13,7 +13,7 @@ import Login from "./pages/Login/Login";
 
 import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
 import Profile from "./pages/Profile/Profile";
-import {API_URL, DATE_FORMAT} from "./common/constants";
+import {API_URL} from "./common/constants";
 import useFetch from "./hooks/useFetch";
 import moment from "moment";
 import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
@@ -42,8 +42,6 @@ export default function App() {
         data: account,
         errorMessage
     } = useFetch({}, `${API_URL}/users/user?username=${curUsername}`, convertDataResponse);
-    console.log(account)
-    console.log(token)
     return (
         <Router>
             <div>

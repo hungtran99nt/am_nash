@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Redirect, useHistory } from 'react-router-dom';
+import {Redirect, useHistory} from 'react-router-dom';
 import axios from "axios";
 
 const Login = () => {
@@ -17,9 +17,8 @@ const Login = () => {
         axios.post('http://localhost:8080/authenticate', data)
             .then(res => {
                 console.log(res);
-                if (res.status == 200){
+                if (res.status == 200) {
                     setRedirect(true);
-                    console.log(res);
                     localStorage.setItem('TOKEN', res.data.jwttoken);
                     localStorage.setItem('USERNAME', res.data.username);
                 }
@@ -29,7 +28,7 @@ const Login = () => {
             })
     }
     console.log(localStorage)
-    if(redirect) window.location.reload(history.push("/"));
+    if (redirect) window.location.reload(history.push("/"));
 
     return (
         <section className="vh-100">
