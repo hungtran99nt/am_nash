@@ -86,7 +86,12 @@ const EditUserPage = () => {
                 'Content-Type': 'application/json',
                 // 'Authorization': `Bearer ${localStorage.getItem('TOKEN')}`
             },
-            data: values
+            data: {
+                birthDate: values.birthDate,
+                gender: values.gender,
+                joinedDate: values.joinedDate,
+                type: values.type
+            }
         }).then((res) => {
             console.log("res = ", res);
             console.log("Edit success");

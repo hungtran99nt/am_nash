@@ -64,7 +64,15 @@ const CreateUserPage = () => {
         axios({
             method: 'POST',
             url: `${API_URL}/users/`,
-            data: values
+            data: {
+                firstName: values.firstName,
+                lastName: values.lastName,
+                birthDate: values.birthDate,
+                gender: values.gender,
+                joinedDate: values.joinedDate,
+                type: values.type,
+                status: -1
+            }
         }).then(res => {
             // console.log("res = ", res);
             console.log('create user success.');

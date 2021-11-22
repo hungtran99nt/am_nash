@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
     user.setGender(userDTO.getGender());
     user.setBirthDate(userDTO.getBirthDate());
     user.setType(userDTO.getType());
-    user.setDisable(false);
+    user.setStatus(-1); // account initial
     user.setLocation(location);
     logger.info("New User:{}", user);
     User createdUser = repository.save(user);
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public Optional<AccountDTO> findActiveByUsername(String username) {
     User user = repository.findByUsername(username);
-    if (!user.isDisable()) {
+    if (user.getStatus() != 0) {
       return Optional.of(modelMapper.map(user, AccountDTO.class));
     }
     return Optional.empty();
