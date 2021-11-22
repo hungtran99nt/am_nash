@@ -88,7 +88,6 @@ const ManageUser = () => {
 			</Container>
 			{ errorMessage && <div>errorMessage</div> }
 			{ usersSearched && <UserTable isLoading={isLoading} users={usersSearched}/>}
-			{/*<Paginator/>*/}
 		</div>
 	)
 
