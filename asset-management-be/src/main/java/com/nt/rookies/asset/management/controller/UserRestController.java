@@ -1,5 +1,4 @@
 package com.nt.rookies.asset.management.controller;
-
 import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.service.UserService;
@@ -20,6 +19,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1.0/users")
+
 @Api(tags = "User controller using REST API")
 public class UserRestController {
   private final UserService userService;
@@ -56,7 +56,7 @@ public class UserRestController {
     return userService.findAllByLocation();
   }
 
-  @GetMapping("/{username}")
+  @GetMapping("/username/{username}")
   public Optional<AccountDTO> getActiveUserByUsername(
       @PathVariable(name = "username") String username) {
     return userService.findActiveByUsername(username);

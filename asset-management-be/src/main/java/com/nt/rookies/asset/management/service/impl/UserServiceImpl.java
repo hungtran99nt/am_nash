@@ -135,7 +135,6 @@ public class UserServiceImpl implements UserService {
         (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
     User currentUser = repository.findByUsername(username);
-
     return currentUser.getLocation();
   }
 

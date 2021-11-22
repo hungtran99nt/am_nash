@@ -20,6 +20,7 @@ const useFetch = (initialData, url, convertResponseToData) => {
 			url: url,
 		}).then(response => {
 			if (!didCancel) {
+				console.log(response);
 				setIsLoading(false);
 				setData(convertResponseToData(response));
 			}
@@ -33,7 +34,6 @@ const useFetch = (initialData, url, convertResponseToData) => {
 			didCancel = true;
 		}
 	}, [url, convertResponseToData]);
-
 	return {
 		isLoading,
 		data,
