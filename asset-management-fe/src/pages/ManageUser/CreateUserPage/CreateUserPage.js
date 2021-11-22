@@ -60,7 +60,6 @@ const CreateUserPage = () => {
     }
     
     const submit = (values, {resetForm}) => {
-        let createdUser;
         axios({
             method: 'POST',
             url: `${API_URL}/users/`,
@@ -74,7 +73,7 @@ const CreateUserPage = () => {
                 status: USER_STATUS.NEW
             }
         }).then(res => {
-            // console.log("res = ", res);
+            console.log("res = ", res);
             console.log('create user success.');
             history.push("/user");
         }).catch(err => {

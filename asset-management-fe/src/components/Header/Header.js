@@ -44,32 +44,36 @@ const Header = ({header, account, token}) => {
     }
     return (
         <nav className="header navbar w-100">
-            <div className="headerinfo nav-item">{header}</div>
-            <div className="nav-item">
-                {headerButton}
-            </div>
-            <div className="modal fade" id="confirmModal" tabIndex="-1"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog modal-sm">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel" style={{color: "#f44336"}}>Are you
-                                sure?</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            <h2>Log out...</h2>
-                            <h3></h3>
-                        </div>
-                        <div className="modal-footer">
-                            <a href="/login" className="btn btn-primary"
-                               style={{backgroundColor: "#f44336", borderColor: "#f44336"}}
-                               onClick={() => localStorage.clear()}
-                            >Log out</a>
-                            <button type="button" className="btn btn-secondary"
-                                    data-bs-dismiss="modal">Cancel
-                            </button>
+            <div className="grid wide">
+                <div className="header">
+                    <div className="header-info">{header}</div>
+                    <div className="header-btn">
+                        <span>{headerButton}</span>
+                    </div>
+                </div>
+                <div className="modal fade" id="confirmModal" tabIndex="-1"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-sm">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel" style={{color: "#f44336"}}>Are you
+                                    sure?</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                <h2>Log out...</h2>
+                                <h3></h3>
+                            </div>
+                            <div className="modal-footer">
+                                <a href="/login" className="btn btn-primary"
+                                   style={{backgroundColor: "#f44336", borderColor: "#f44336"}}
+                                   onClick={() => localStorage.clear()}
+                                >Log out</a>
+                                <button type="button" className="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancel
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
