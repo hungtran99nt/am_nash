@@ -13,8 +13,7 @@ const validateForm = Yup.object().shape({
         .required("Required"),
     type: Yup.string().required("Required!")
 })
-
-const validationEdit = (values) => {
+const validation = (values) => {
     const errors = {};
     let isWeekend = moment(values.joinedDate).isoWeekday();
     if (!values.joinedDate) {
@@ -38,25 +37,12 @@ const convertDataResponse = res => (
     }
 );
 
-const convertPUTDataResponse = res => (
-    {
-        id: res.data.id,
-        staffCode: res.data.staffCode,
-        username: res.data.username,
-        firstName: res.data.firstName,
-        lastName: res.data.lastName,
-        joinedDate: moment(res.data.joinedDate).format("YYYY-MM-DD"),
-        birthDate: moment(res.data.birthDate).format("YYYY-MM-DD"),
-        gender: res.data.gender,
-        type: res.data.type,
-        disable: res.data.disable,
-        location: res.data.location
-    }
-);
+
 
 const EditUserPage = () => {
     let history = useHistory();
     const {id} = useParams();
+
     const {
         isLoading,
         data: user,
@@ -117,7 +103,7 @@ const EditUserPage = () => {
                         enableReinitialize={true}
                         initialValues={initialValues}
                         validationSchema={validateForm}
-                        validate={validationEdit}
+                        validate={validation}
                         onSubmit={submit}
                     >
                         {({
