@@ -50,7 +50,7 @@ const Header = ({header, account, token}) => {
             </div>
             <div className="modal fade" id="confirmModal" tabIndex="-1"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
+                <div className="modal-dialog modal-sm">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="exampleModalLabel" style={{color: "#f44336"}}>Are you
@@ -59,17 +59,17 @@ const Header = ({header, account, token}) => {
                                     aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <h2 className="post-title"></h2>
-                            <h3 className="post-subtitle"></h3>
+                            <h2>Log out...</h2>
+                            <h3></h3>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary"
-                                    data-bs-dismiss="modal">Close
-                            </button>
                             <a href="/login" className="btn btn-primary"
                                style={{backgroundColor: "#f44336", borderColor: "#f44336"}}
                                onClick={() => localStorage.clear()}
-                            >Confirm</a>
+                            >Log out</a>
+                            <button type="button" className="btn btn-secondary"
+                                    data-bs-dismiss="modal">Cancel
+                            </button>
                         </div>
                     </div>
                 </div>

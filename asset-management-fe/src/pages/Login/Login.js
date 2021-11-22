@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Redirect, useHistory} from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 import axios from "axios";
 
 const Login = () => {
@@ -17,7 +17,7 @@ const Login = () => {
         axios.post('http://localhost:8080/authenticate', data)
             .then(res => {
                 console.log(res);
-                if (res.status == 200) {
+                if (res.status === 200) {
                     setRedirect(true);
                     localStorage.setItem('TOKEN', res.data.jwttoken);
                     localStorage.setItem('USERNAME', res.data.username);
@@ -34,7 +34,7 @@ const Login = () => {
         <section className="vh-100">
             <div className="container-fluid h-custom">
                 <div className="row d-flex justify-content-center align-items-center h-100">
-                    <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                    <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                         <form onSubmit={handleSubmit}>
                             <h1 className="h3 mb-3 fw-normal">Please sign in first</h1>
                             <div className="form-outline mb-4 form-floating">
@@ -51,15 +51,6 @@ const Login = () => {
                                 />
                                 <label className="form-label" htmlFor="form3Example4">Password</label>
                             </div>
-                            {/*<div className="d-flex justify-content-between align-items-center">*/}
-                            {/*    <div className="form-check mb-0">*/}
-                            {/*        <input className="form-check-input me-2" type="checkbox" value=""*/}
-                            {/*               id="form2Example3"/>*/}
-                            {/*        <label className="form-check-label" htmlFor="form2Example3">*/}
-                            {/*            Remember me*/}
-                            {/*        </label>*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
                             <div className="text-center text-lg-start mt-4 pt-2">
                                 <button type="submit" className="btn btn-primary btn-lg"
                                         style={{paddingLeft: "2.5rem", paddingRight: "2.5rem"}}>Sign in
@@ -68,6 +59,7 @@ const Login = () => {
                         </form>
                     </div>
                     <div className="col-md-9 col-lg-6 col-xl-5">
+                        {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
                         <img src="https://mdbootstrap.com/img/Photos/new-templates/bootstrap-login-form/draw2.png"
                              className="img-fluid"
                              alt="Sample image"/>
