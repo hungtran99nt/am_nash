@@ -4,6 +4,8 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import moment from "moment";
 import {useHistory} from "react-router-dom";
+import axios from "axios";
+import {API_URL} from "../../../common/constants";
 
 const validateForm = Yup.object().shape({
     firstName: Yup.string()
@@ -17,22 +19,39 @@ const validateForm = Yup.object().shape({
     birthDate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
         .required("Required"),
     type: Yup.string().required("Required!")
-})
+});
+
 const validation = (values) => {
     const errors = {};
-    let isWeekend = moment(values.joinDate).isoWeekday();
-    if (!values.joinDate) {
-        errors.joinDate = "Required";
-    } else if (moment(values.joinDate).isBefore(moment(values.joinDate))) {
-        errors.joinDate = "Joined date is not later than Date of Birth. Please select a different date";
+    let isWeekend = moment(values.joinedDate).isoWeekday();
+    if (!values.joinedDate) {
+        errors.joinedDate = "Required";
+    } else if (moment(values.joinedDate).isBefore(moment(values.joinedDate))) {
+        errors.joinedDate = "Joined date is not later than Date of Birth. Please select a different date";
     } else if (isWeekend === 7 || isWeekend === 6) {
-        errors.joinDate = "Joined date is Saturday or Sunday. Please select a different date"
+        errors.joinedDate = "Joined date is Saturday or Sunday. Please select a different date"
     }
     return errors;
 }
 
+const convertPOSTDataResponse = res => (
+    {
+        id: res.data.id,
+        staffCode: res.data.staffCode,
+        username: res.data.username,
+        firstName: res.data.firstName,
+        lastName: res.data.lastName,
+        joinedDate: moment(res.data.joinedDate).format("YYYY-MM-DD"),
+        birthDate: moment(res.data.birthDate).format("YYYY-MM-DD"),
+        gender: res.data.gender,
+        type: res.data.type,
+        disable: res.data.disable,
+        location: res.data.location
+    }
+);
+
 const CreateUserPage = () => {
-    const initialValues = {firstName: "", lastName: "", birthDate: "", gender: "female", joinDate: "", type: ""};
+    const initialValues = {firstName: "", lastName: "", birthDate: "", gender: "female", joinedDate: "", type: ""};
 
     let history = useHistory();
 
@@ -41,10 +60,20 @@ const CreateUserPage = () => {
     }
     
     const submit = (values, {resetForm}) => {
-        console.log(moment(values.joinDate))
-        console.log('values =', values)
+        let createdUser;
+        axios({
+            method: 'POST',
+            url: `${API_URL}/users/`,
+            data: values
+        }).then(res => {
+            // console.log("res = ", res);
+            console.log('create user success.');
+            history.push("/user");
+        }).catch(err => {
+            console.log("err = ", err);
+            return <div style={{color: "red"}}>{err}</div>;
+        });
         resetForm();
-        history.push("/user");
     }
     return (
         <div className="app-create">
@@ -150,15 +179,15 @@ const CreateUserPage = () => {
                                     </Form.Label>
                                     <Col sm="6">
                                         <Form.Control
-                                            name="joinDate"
+                                            name="joinedDate"
                                             type="date"
-                                            value={values.joinDate}
+                                            value={values.joinedDate}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.joinDate && errors.joinDate}
+                                            isInvalid={touched.joinedDate && errors.joinedDate}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.joinDate}
+                                            {errors.joinedDate}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
@@ -184,8 +213,8 @@ const CreateUserPage = () => {
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
                                             disabled={!values.firstName || !values.lastName ||
-                                            !values.birthDate || !values.joinDate ||
-                                            errors.birthDate || errors.joinDate || !values.type}>
+                                            !values.birthDate || !values.joinedDate ||
+                                            errors.birthDate || errors.joinedDate || !values.type}>
                                         Save
                                     </Button>
                                     <Button className="btn-cancel" type="reset" onClick={handleRedirectUseManagePage}>
