@@ -5,7 +5,7 @@ import UserTable from "../../components/UserTable/UserTable";
 import useFetch from "../../hooks/useFetch";
 import {API_URL, DATE_FORMAT, FILTER_USER_OPTIONS} from "../../common/constants";
 import moment from "moment";
-import {Redirect, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 const convertDataResponse = res => res.data.map(u => (
     {

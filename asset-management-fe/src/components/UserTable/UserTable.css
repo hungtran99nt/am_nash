@@ -1,6 +1,7 @@
 .action__items {
     display: inline-block;
     padding: 0 5px;
+    cursor: pointer;
 }
 
 .page-item .page-link {
