@@ -5,24 +5,24 @@ import UserTable from "../../components/UserTable/UserTable";
 import useFetch from "../../hooks/useFetch";
 import {API_URL, DATE_FORMAT, FILTER_USER_OPTIONS} from "../../common/constants";
 import moment from "moment";
-import {Redirect, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 const convertDataResponse = res => res.data.map(u => (
-	{
-		id: u.id,
-		staffCode: u.staffCode,
-		fullName: `${u.firstName} ${u.lastName}`,
-		userName: u.username,
-		joinDate:  moment(u.joinDate).format(DATE_FORMAT.TO),
-		type: u.type,
-		location: u.location
-	}
+    {
+        id: u.id,
+        staffCode: u.staffCode,
+        fullName: `${u.firstName} ${u.lastName}`,
+        userName: u.username,
+        joinDate: moment(u.joinDate).format(DATE_FORMAT.TO),
+        type: u.type,
+        location: u.location
+    }
 ));
 
 const ManageUser = () => {
-	const [filterOption, setFilterOption] = useState(FILTER_USER_OPTIONS.NONE);
-	const [searchText, setSearchText] = useState('');
-	let history = useHistory();
+    const [filterOption, setFilterOption] = useState(FILTER_USER_OPTIONS.NONE);
+    const [searchText, setSearchText] = useState('');
+    let history = useHistory();
 
 	const handleAddNewClick = () => {
 		history.push("/create");
@@ -33,24 +33,24 @@ const ManageUser = () => {
 		errorMessage
 	} = useFetch([], `${API_URL}/users`, convertDataResponse);
 
-	if (errorMessage) window.location.reload(history.push("/login"));
+    if (errorMessage) window.location.reload(history.push("/login"));
 
-	const usersFiltered = useMemo(() => {
-		return users.filter(user =>
-			user.type.toLowerCase().includes(filterOption.toLowerCase()));
-	}, [users, filterOption]);
+    const usersFiltered = useMemo(() => {
+        return users.filter(user =>
+            user.type.toLowerCase().includes(filterOption.toLowerCase()));
+    }, [users, filterOption]);
 
-	const usersSearched = useMemo(() => {
-		return usersFiltered.filter(user => {
-			return user.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
-				user.staffCode.toLowerCase().includes(searchText.toLowerCase());
+    const usersSearched = useMemo(() => {
+        return usersFiltered.filter(user => {
+                return user.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
+                    user.staffCode.toLowerCase().includes(searchText.toLowerCase());
 
-		}
-	) }, [searchText, usersFiltered]);
+            }
+        )
+    }, [searchText, usersFiltered]);
 
-	return (
-		<div className="mt-4">
-
+    return (
+        <div className="mt-4">
 			<Container className="px-0">
 				<div className="manager-user__heading pb-3">
 					ManageUser
@@ -89,6 +89,5 @@ const ManageUser = () => {
 			{ usersSearched && <UserTable isLoading={isLoading} users={usersSearched}/>}
 		</div>
 	)
-
 }
 export default ManageUser

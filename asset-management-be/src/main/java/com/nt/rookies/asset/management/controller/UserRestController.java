@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -57,8 +57,8 @@ public class UserRestController {
     return userService.findAllByLocation();
   }
 
-  @RequestMapping(value = "/user/{username}",method = RequestMethod.GET)
-  public Optional<AccountDTO> getActiveUserByUsername(@PathVariable String username) {
+  @GetMapping("/user")
+  public Optional<AccountDTO> getActiveUserByUsername(@RequestParam String username) {
     return userService.findActiveByUsername(username);
   }
 }
