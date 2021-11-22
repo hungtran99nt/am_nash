@@ -38,22 +38,6 @@ const convertDataResponse = res => (
     }
 );
 
-const convertPUTDataResponse = res => (
-    {
-        id: res.data.id,
-        staffCode: res.data.staffCode,
-        username: res.data.username,
-        firstName: res.data.firstName,
-        lastName: res.data.lastName,
-        joinedDate: moment(res.data.joinedDate).format("YYYY-MM-DD"),
-        birthDate: moment(res.data.birthDate).format("YYYY-MM-DD"),
-        gender: res.data.gender,
-        type: res.data.type,
-        disable: res.data.disable,
-        location: res.data.location
-    }
-);
-
 const EditUserPage = () => {
     let history = useHistory();
     const {id} = useParams();
@@ -78,7 +62,6 @@ const EditUserPage = () => {
     const submit = (values, {resetForm}) => {
         console.log('Form values =', {values});
         console.log('token=',localStorage.getItem('TOKEN'));
-        let errorMsg;
         axios({
             method: 'PUT',
             url: `${API_URL}/users/${id}`,
@@ -97,7 +80,6 @@ const EditUserPage = () => {
             console.log("Edit success");
             history.push("/user");
         }).catch(err => {
-            errorMsg = err.response.data.message;
             console.log("err = ", err);
             return <div style={{color: "red"}}>{err}</div>;
         });
