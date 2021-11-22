@@ -26,7 +26,7 @@ const headerTitle = {
     Request: 'Request Of Returning',
     Report: 'Report',
 }
-const convertDataResponse = res =>(
+const convertDataResponse = res => (
     {
         fullName: `${res.data.lastName} ${res.data.firstName}`,
         userName: res.data.username,
