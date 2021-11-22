@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import moment from "moment";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
-import {API_URL} from "../../../common/constants";
+import {API_URL, USER_STATUS} from "../../../common/constants";
 
 const validateForm = Yup.object().shape({
     firstName: Yup.string()
@@ -71,7 +71,7 @@ const CreateUserPage = () => {
                 gender: values.gender,
                 joinedDate: values.joinedDate,
                 type: values.type,
-                status: -1
+                status: USER_STATUS.NEW
             }
         }).then(res => {
             // console.log("res = ", res);

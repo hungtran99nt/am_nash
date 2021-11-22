@@ -1,5 +1,6 @@
 package com.nt.rookies.asset.management.service.impl;
 
+import com.nt.rookies.asset.management.common.BaseConstants;
 import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.Location;
@@ -40,6 +41,7 @@ public class UserServiceImpl implements UserService {
   public UserDTO getUserById(Integer id) {
     User user =
         repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found."));
+    logger.info("getUserById: {}", user);
     return modelMapper.map(user, UserDTO.class);
   }
 
@@ -63,7 +65,6 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO createUser(UserDTO userDTO) {
-
     StringBuilder username = new StringBuilder(userDTO.getFirstName().toLowerCase());
     String[] lastNames = userDTO.getLastName().split(" ");
     for (String name : lastNames) {
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public Optional<AccountDTO> findActiveByUsername(String username) {
     User user = repository.findByUsername(username);
-    if (user.getStatus() != 0) {
+    if (user.getStatus() != BaseConstants.USER_STATUS_DISABLED) {
       return Optional.of(modelMapper.map(user, AccountDTO.class));
     }
     return Optional.empty();
@@ -127,8 +128,8 @@ public class UserServiceImpl implements UserService {
 
     List<User> users = repository.findAllByLocation(location);
     return users.stream()
-            .map(user -> modelMapper.map(user, UserDTO.class))
-            .collect(Collectors.toList());
+        .map(user -> modelMapper.map(user, UserDTO.class))
+        .collect(Collectors.toList());
   }
 
   private Location getUserLocation() {
@@ -139,5 +140,4 @@ public class UserServiceImpl implements UserService {
     User currentUser = repository.findByUsername(username);
     return currentUser.getLocation();
   }
-
 }

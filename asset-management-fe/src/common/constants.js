@@ -10,3 +10,9 @@ export const FILTER_USER_OPTIONS = {
 	STAFF: 'Staff',
 	ADMIN: 'Admin',
 }
+
+export const USER_STATUS = {
+	NEW: -1,
+	DISABLED: 0,
+	ACTIVE: 1
+}
