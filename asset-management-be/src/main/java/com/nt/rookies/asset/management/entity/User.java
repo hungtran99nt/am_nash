@@ -54,8 +54,8 @@ public class User {
   @Column(name = "type", length = 10, nullable = false)
   private String type;
 
-  @Column(name = "disable", nullable = false)
-  private boolean disable;
+  @Column(name = "status", nullable = false)
+  private int status;
 
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "location_id", nullable = false)
