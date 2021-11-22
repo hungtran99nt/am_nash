@@ -34,7 +34,6 @@ const useFetch = (initialData, url, convertResponseToData) => {
 			didCancel = true;
 		}
 	}, [url, convertResponseToData]);
-
 	return {
 		isLoading,
 		data,

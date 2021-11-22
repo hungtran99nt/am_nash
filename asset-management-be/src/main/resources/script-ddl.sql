@@ -36,19 +36,6 @@ CREATE TABLE asset
         FOREIGN KEY (location_id) REFERENCES location (id)
 );
 
-# generate asset code
-CREATE TRIGGER TR_ASSET_INSERT
-    BEFORE INSERT
-    ON asset
-    FOR EACH ROW
-BEGIN
-    DECLARE prefix varchar(3);
-    SET prefix = (SELECT category_prefix
-                  FROM category
-                  WHERE category.id = NEW.category_id);
-    SET NEW.asset_code = CONCAT(prefix, LPAD(NEW.id, 6, '0'));
-END;
-
 CREATE TABLE user
 (
     id          int AUTO_INCREMENT
@@ -59,7 +46,7 @@ CREATE TABLE user
     gender      varchar(10) NOT NULL,
     joined_date datetime(6) NOT NULL,
     last_name   varchar(50) NOT NULL,
-    password    varchar(30) NOT NULL,
+    password    varchar(75) NOT NULL,
     staff_code  varchar(6)  NULL,
     type        varchar(10) NOT NULL,
     username    varchar(30) NULL,
@@ -71,15 +58,6 @@ CREATE TABLE user
     CONSTRAINT FK_User_Location
         FOREIGN KEY (location_id) REFERENCES location (id)
 );
-
-# generate staff code
-CREATE TRIGGER TR_USER_INSERT
-    BEFORE INSERT
-    ON user
-    FOR EACH ROW
-BEGIN
-    SET NEW.staff_code = CONCAT('SD', LPAD(NEW.id, 4, '0'));
-END;
 
 CREATE TABLE assignment
 (
@@ -105,3 +83,43 @@ CREATE TABLE assignment
     CONSTRAINT FK_Assignment_Asset
         FOREIGN KEY (asset_id) REFERENCES asset (id)
 );
+
+# generate staff password
+CREATE TRIGGER TR_USER_INSERT_Password
+    BEFORE INSERT
+    ON user
+    FOR EACH ROW
+BEGIN
+    SET NEW.password = CONCAT(NEW.username, '@', DAY(NEW.birth_date), MONTH(NEW.birth_date),
+                              YEAR(NEW.birth_date));
+END;
+
+# generate staff code
+CREATE PROCEDURE SP_USER_INSERT_StaffCode(OUT code VARCHAR(6))
+BEGIN
+    START TRANSACTION;
+    SET code = CONCAT('SD', LPAD(LAST_INSERT_ID(), 4, '0'));
+    UPDATE user
+    SET staff_code = code
+    WHERE id = LAST_INSERT_ID();
+    COMMIT;
+END;
+
+# generate asset code
+CREATE PROCEDURE SP_ASSET_INSERT_AssetCode(OUT code VARCHAR(9))
+BEGIN
+    DECLARE prefix varchar(3);
+    START TRANSACTION;
+    SELECT category_prefix
+    INTO prefix
+    FROM category
+    WHERE category.id =
+          (SELECT category_id
+           FROM asset
+           WHERE id = LAST_INSERT_ID());
+    SET code = CONCAT(prefix, LPAD(LAST_INSERT_ID(), 6, '0'));
+    UPDATE asset
+    SET asset_code = code
+    WHERE id = LAST_INSERT_ID();
+    COMMIT;
+END;

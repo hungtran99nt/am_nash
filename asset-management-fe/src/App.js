@@ -10,11 +10,13 @@ import ManageUser from "./pages/ManageUser/ManageUser";
 import Report from "./pages/Report/Report";
 import Header from "./components/Header/Header";
 import Login from "./pages/Login/Login";
+
 import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
 import Profile from "./pages/Profile/Profile";
 import {API_URL, DATE_FORMAT} from "./common/constants";
 import useFetch from "./hooks/useFetch";
 import moment from "moment";
+import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
 
 const headerTitle = {
     Home: 'Home',
@@ -118,6 +120,9 @@ export default function App() {
                                     </Route>
                                     <Route path="/create" exact>
                                         <CreateUserPage/>
+                                    </Route>
+                                    <Route path="/edit/:id" exact>
+                                        <EditUserPage/>
                                     </Route>
                                 </Switch>
                             </div>
