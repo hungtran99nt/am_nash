@@ -31,7 +31,7 @@ const ManageUser = () => {
 		isLoading,
 		data: users,
 		errorMessage
-	} = useFetch([], `${API_URL}/users/users`, convertDataResponse);
+	} = useFetch([], `${API_URL}/users`, convertDataResponse);
 
 	if (errorMessage) window.location.reload(history.push("/login"));
 
