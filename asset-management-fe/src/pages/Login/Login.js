@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import axios from "axios";
+import {HOST_URL} from "../../common/constants";
 
 const Login = () => {
     let history = useHistory();
@@ -14,7 +15,7 @@ const Login = () => {
             password: password
         }
         console.log(data)
-        axios.post('http://localhost:8080/authenticate', data)
+        axios.post(`${HOST_URL}/authenticate`, data)
             .then(res => {
                 console.log(res);
                 if (res.status === 200) {
