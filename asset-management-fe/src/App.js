@@ -1,5 +1,5 @@
 import './App.css'
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {BrowserRouter as Router, NavLink, Route, Switch} from "react-router-dom";
 import logoimg from "./assets/images/logonashtech.png"
 import ManageAssignment from "./pages/ManageAssignment/ManageAssignment";
@@ -17,6 +17,7 @@ import {API_URL} from "./common/constants";
 import useFetch from "./hooks/useFetch";
 import moment from "moment";
 import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
+import jwt_decode from "jwt-decode";
 
 const headerTitle = {
     Home: 'Home',
@@ -37,6 +38,12 @@ export default function App() {
     const [headerInfo, setHeaderInfo] = useState(headerTitle.Home);
     const [token, setToken] = useState(localStorage.getItem("TOKEN"));
     let curUsername = localStorage.getItem("USERNAME");
+    let role = "";
+    if (token) {
+        localStorage.setItem("TOKEN", token);
+        const decode = jwt_decode(token);
+        role = decode.role;
+    }
     const {
         isLoading,
         data: account,
@@ -116,12 +123,12 @@ export default function App() {
                                     <Route path="/profile" exact>
                                         <Profile/>
                                     </Route>
-                                    <Route path="/create" exact>
-                                        <CreateUserPage/>
-                                    </Route>
-                                    <Route path="/edit/:id" exact>
+                                    {role === "Admin" && <Route path="/create" exact>
+                                       <CreateUserPage/>
+                                    </Route>}
+                                    {role=== "Admin" && <Route path="/edit/:id" exact>
                                         <EditUserPage/>
-                                    </Route>
+                                    </Route>}
                                 </Switch>
                             </div>
                         </div>

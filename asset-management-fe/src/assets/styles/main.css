@@ -20,13 +20,14 @@
     margin: 0 auto;
 }
 .header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background-color: var(--primary-color);
-}
-.headerinfo{
     font-size: 20px;
     color:var(--white-color);
-    margin-right:  32px;
 }
+
 .app-content__title{
     font-size: 20px;
     color: var(--primary-color);

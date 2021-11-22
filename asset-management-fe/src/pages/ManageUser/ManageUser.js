@@ -6,6 +6,7 @@ import useFetch from "../../hooks/useFetch";
 import {API_URL, DATE_FORMAT, FILTER_USER_OPTIONS} from "../../common/constants";
 import moment from "moment";
 import {useHistory} from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 const convertDataResponse = res => res.data.map(u => (
     {
@@ -22,7 +23,9 @@ const convertDataResponse = res => res.data.map(u => (
 const ManageUser = () => {
     const [filterOption, setFilterOption] = useState(FILTER_USER_OPTIONS.NONE);
     const [searchText, setSearchText] = useState('');
-    let history = useHistory();
+	const token = localStorage.getItem("TOKEN");
+
+	let history = useHistory();
 
 	const handleAddNewClick = () => {
 		history.push("/create");
@@ -57,7 +60,7 @@ const ManageUser = () => {
 				</div>
 				<Form className="manager-user__action mb-3">
 					<Row className="actions__wrapper">
-						<Col className='col-2 flex-grow-1'>
+						<Col className='col-2 flex-grow-1 select'>
 							<Form.Select
 								className="action__filter h-75"
 								value={filterOption}
@@ -79,7 +82,7 @@ const ManageUser = () => {
 								</Button>
 							</InputGroup>
 						</Col>
-						<Col className="col-2 h-75">
+						<Col className="col-2 h-75" >
 							<Button className="w-100 h-100" onClick={handleAddNewClick}>Create new user</Button>
 						</Col>
 					</Row>

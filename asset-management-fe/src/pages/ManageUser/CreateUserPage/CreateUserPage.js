@@ -56,7 +56,7 @@ const CreateUserPage = () => {
                 type: values.type
             }
         }).then(res => {
-            // console.log("res = ", res);
+            console.log("res = ", res);
             console.log('create user success.');
             history.push("/user");
         }).catch(err => {
