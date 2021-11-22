@@ -70,7 +70,6 @@ const UserTable = ({users, isLoading}) => {
 		}, {
 			dataField: 'userName',
 			text: 'Username',
-			sort: true
 		}, {
 			dataField: 'joinDate',
 			text: 'Join Date',
