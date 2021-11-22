@@ -30,7 +30,7 @@ const UserPopup = ({show, handleClose, userInfo}) => {
 					</tr>
 					<tr>
 						<th>Date of Birth</th>
-						<td>{convert(userInfo.joinDate)}</td> {/* TODO change to dob*/}
+						<td>{convert(userInfo.birthDate)}</td>
 					</tr>
 					<tr>
 						<th>Gender</th>

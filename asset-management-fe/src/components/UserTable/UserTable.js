@@ -8,11 +8,15 @@ import axios from "axios";
 import editImg from '../../assets/images/pen.png'
 import deleteImg from '../../assets/images/cross.png'
 import './UserTable.css'
+import {useHistory} from "react-router-dom";
+
+
 
 const columnFormatter = (cell, row, rowIndex, formatExtraData) => {
+
 	return (
 		<div className="table__actions">
-			<span className="action__items"><img src={editImg}/></span>
+			<span className="action__items" ><img src={editImg} /></span>
 			<span className="action__items"><img src={deleteImg}/></span>
 		</div>
 	)
@@ -75,14 +79,17 @@ const UserTable = ({users, isLoading}) => {
 	const [show, setShow] = useState(false);
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+	let history = useHistory();
 
+	const HandleRedirectEditUser = () => {
+		history.push("/edit");
+	}
 	// Get user detail for popup
 	useEffect(() => {
 		axios({
 			method: 'GET',
 			url: `${API_URL}/users/${userIdPopup}`
 		}).then(res => {
-			console.log(res.data)
 			setUserDetail(res.data);
 		}).catch(err => {
 			console.log(err);
@@ -91,7 +98,6 @@ const UserTable = ({users, isLoading}) => {
 
 	const getUserDetail = {
 		onClick: (e, row) => {
-			console.log(row)
 			setUserIdPopup(row.id);
 			toggleTrueFalse();
 		},
