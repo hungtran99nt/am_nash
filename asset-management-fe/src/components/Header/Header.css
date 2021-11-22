@@ -14,3 +14,10 @@
 .navbar{
     align-items: center !important;
 }
+.header-btn span{
+    font-size: 20px;
+}
+.modal-title,
+.modal-body{
+    color: var(--primary-color);
+}
