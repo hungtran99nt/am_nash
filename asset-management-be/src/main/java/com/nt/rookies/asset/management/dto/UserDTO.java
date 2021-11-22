@@ -14,6 +14,6 @@ public class UserDTO {
   private String gender;
   private Date birthDate;
   private String type;
-  private boolean disable;
+  private int status;
   private String location;
 }

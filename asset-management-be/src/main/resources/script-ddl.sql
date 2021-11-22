@@ -4,10 +4,10 @@ CREATE TABLE category
         PRIMARY KEY,
     category_name   varchar(30) NOT NULL,
     category_prefix varchar(3)  NOT NULL,
-    CONSTRAINT UK_Category_CategoryPrefix
-        UNIQUE (category_prefix),
     CONSTRAINT UK_Category_CategoryName
-        UNIQUE (category_name)
+        UNIQUE (category_name),
+    CONSTRAINT UK_Category_CategoryPrefix
+        UNIQUE (category_prefix)
 );
 
 CREATE TABLE location
@@ -41,7 +41,7 @@ CREATE TABLE user
     id          int AUTO_INCREMENT
         PRIMARY KEY,
     birth_date  datetime(6) NOT NULL,
-    disable     bit         NOT NULL,
+    status      tinyint     NOT NULL,
     first_name  varchar(50) NOT NULL,
     gender      varchar(10) NOT NULL,
     joined_date datetime(6) NOT NULL,
@@ -72,19 +72,19 @@ CREATE TABLE assignment
     assign_by     int          NOT NULL,
     assign_to     int          NOT NULL,
     request_by    int          NULL,
+    CONSTRAINT FK_Assignment_Asset
+        FOREIGN KEY (asset_id) REFERENCES asset (id),
+    CONSTRAINT FK_Assignment_User_AcceptedBy
+        FOREIGN KEY (accepted_by) REFERENCES user (id),
+    CONSTRAINT FK_Assignment_User_AssignBy
+        FOREIGN KEY (assign_by) REFERENCES user (id),
     CONSTRAINT FK_Assignment_User_AssignTo
         FOREIGN KEY (assign_to) REFERENCES user (id),
     CONSTRAINT FK_Assignment_User_RequestBy
-        FOREIGN KEY (request_by) REFERENCES user (id),
-    CONSTRAINT FK_Assignment_User_AssignBy
-        FOREIGN KEY (assign_by) REFERENCES user (id),
-    CONSTRAINT FK_Assignment_User_AcceptedBy
-        FOREIGN KEY (accepted_by) REFERENCES user (id),
-    CONSTRAINT FK_Assignment_Asset
-        FOREIGN KEY (asset_id) REFERENCES asset (id)
+        FOREIGN KEY (request_by) REFERENCES user (id)
 );
 
-# generate staff password
+# generate user default password
 CREATE TRIGGER TR_USER_INSERT_Password
     BEFORE INSERT
     ON user

@@ -35,6 +35,13 @@ public class BaseConstants {
   public static final String PATTERN_MONTH_DAY_YEAR = "MMM dd, yyyy";
   public static final String PATTERN_HMS = "HHmmss";
   public static final String PATTERN_TIMESTAMP_HM = "HH:mm";
+
+  /*---------------------------------------------------------------------
+   *                     USER STATUS
+   *-------------------------------------------------------------------*/
+  public static final int USER_STATUS_ACTIVE = 1;
+  public static final int USER_STATUS_DISABLED = 0;
+  public static final int USER_STATUS_NEW = -1;
   // ***** constructor *****
   // ***** public method *****
   // ***** protected method *****

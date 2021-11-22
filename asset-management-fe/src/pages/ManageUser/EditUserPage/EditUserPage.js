@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -6,70 +6,105 @@ import moment from "moment";
 import {useHistory, useParams} from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
 import {API_URL} from "../../../common/constants";
+import axios from "axios";
 
 const validateForm = Yup.object().shape({
     birthDate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
         .required("Required"),
     type: Yup.string().required("Required!")
 })
-const validatioedit = (values) => {
+
+const validationEdit = (values) => {
     const errors = {};
-    let isWeekend = moment(values.joinDate).isoWeekday();
-    if (!values.joinDate) {
-        errors.joinDate = "Required";
-    } else if (moment(values.joinDate).isBefore(moment(values.joinDate))) {
-        errors.joinDate = "Joined date is not later than Date of Birth. Please select a different date";
+    let isWeekend = moment(values.joinedDate).isoWeekday();
+    if (!values.joinedDate) {
+        errors.joinedDate = "Required";
+    } else if (moment(values.joinedDate).isBefore(moment(values.joinedDate))) {
+        errors.joinedDate = "Joined date is not later than Date of Birth. Please select a different date";
     } else if (isWeekend === 7 || isWeekend === 6) {
-        errors.joinDate = "Joined date is Saturday or Sunday. Please select a different date"
+        errors.joinedDate = "Joined date is Saturday or Sunday. Please select a different date"
     }
     return errors;
 }
+
 const convertDataResponse = res => (
     {
         firstName: res.data.firstName,
         lastName: res.data.lastName,
         birthDate: moment(res.data.birthDate).format("YYYY-MM-DD"),
-        joinDate: moment(res.data.joinDate).format("YYYY-MM-DD"),
+        joinedDate: moment(res.data.joinedDate).format("YYYY-MM-DD"),
         type: res.data.type,
         gender: res.data.gender
     }
 );
 
+const convertPUTDataResponse = res => (
+    {
+        id: res.data.id,
+        staffCode: res.data.staffCode,
+        username: res.data.username,
+        firstName: res.data.firstName,
+        lastName: res.data.lastName,
+        joinedDate: moment(res.data.joinedDate).format("YYYY-MM-DD"),
+        birthDate: moment(res.data.birthDate).format("YYYY-MM-DD"),
+        gender: res.data.gender,
+        type: res.data.type,
+        disable: res.data.disable,
+        location: res.data.location
+    }
+);
+
 const EditUserPage = () => {
     let history = useHistory();
-    const handleRedirectUseManagePage = () => {
-        history.push("/user");
-    }
     const {id} = useParams();
     const {
         isLoading,
         data: user,
         errorMessage,
-    } = useFetch({
-        firstName: null,
-        lastName: null,
-        birthDate: null,
-        joinDate: null,
-        type: null,
-        gender: null
-    }, `${API_URL}/users/${id}`, convertDataResponse);
-
-    console.log("user = ", user);
-
+    } = useFetch([], `${API_URL}/users/${id}`, convertDataResponse);
     const initialValues = {
         firstName: user.firstName,
         lastName: user.lastName,
         birthDate: user.birthDate,
-        joinDate: user.joinDate,
+        joinedDate: user.joinedDate,
         type: user.type,
         gender: user.gender
     }
+
     if (isLoading) return "Loading";
     if (errorMessage) return <div style={{color: "red"}}>{errorMessage}</div>;
-    console.log("user = ", user);
+    // console.log("user = ", user);
+
     const submit = (values, {resetForm}) => {
-        console.log('values =', {values})
+        console.log('Form values =', {values});
+        console.log('token=',localStorage.getItem('TOKEN'));
+        let errorMsg;
+        axios({
+            method: 'PUT',
+            url: `${API_URL}/users/${id}`,
+            header: {
+                'Content-Type': 'application/json',
+                // 'Authorization': `Bearer ${localStorage.getItem('TOKEN')}`
+            },
+            data: {
+                birthDate: values.birthDate,
+                gender: values.gender,
+                joinedDate: values.joinedDate,
+                type: values.type
+            }
+        }).then((res) => {
+            console.log("res = ", res);
+            console.log("Edit success");
+            history.push("/user");
+        }).catch(err => {
+            errorMsg = err.response.data.message;
+            console.log("err = ", err);
+            return <div style={{color: "red"}}>{err}</div>;
+        });
         resetForm();
+    }
+
+    const handleRedirectUseManagePage = () => {
         history.push("/user");
     }
     return (
@@ -77,12 +112,12 @@ const EditUserPage = () => {
             <div className="row">
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
-                    <div className="app-content__title">Edit User </div>
+                    <div className="app-content__title">Edit User</div>
                     <Formik
                         enableReinitialize={true}
                         initialValues={initialValues}
                         validationSchema={validateForm}
-                        validate={validatioedit}
+                        validate={validationEdit}
                         onSubmit={submit}
                     >
                         {({
@@ -171,15 +206,15 @@ const EditUserPage = () => {
                                     </Form.Label>
                                     <Col sm="6">
                                         <Form.Control
-                                            name="joinDate"
+                                            name="joinedDate"
                                             type="date"
-                                            value={values.joinDate}
+                                            value={values.joinedDate}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.joinDate && errors.joinDate}
+                                            isInvalid={touched.joinedDate && errors.joinedDate}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.joinDate}
+                                            {errors.joinedDate}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
@@ -207,8 +242,8 @@ const EditUserPage = () => {
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
                                             disabled={!values.firstName || !values.lastName ||
-                                            !values.birthDate || !values.joinDate ||
-                                            errors.birthDate || errors.joinDate || !values.type}
+                                            !values.birthDate || !values.joinedDate ||
+                                            errors.birthDate || errors.joinedDate || !values.type}
                                     >
                                         Save
                                     </Button>
