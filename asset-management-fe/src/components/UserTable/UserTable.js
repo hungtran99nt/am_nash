@@ -10,50 +10,6 @@ import deleteImg from '../../assets/images/cross.png'
 import './UserTable.css'
 import {useHistory} from "react-router-dom";
 
-
-
-const columnFormatter = (cell, row, rowIndex, formatExtraData) => {
-
-	return (
-		<div className="table__actions">
-			<span className="action__items" ><img src={editImg} /></span>
-			<span className="action__items"><img src={deleteImg}/></span>
-		</div>
-	)
-};
-
-const columns = [
-	{
-		dataField: 'staffCode',
-		text: 'Staff Code',
-		sort: true
-	}, {
-		dataField: 'fullName',
-		text: 'Full Name',
-		sort: true
-	}, {
-		dataField: 'userName',
-		text: 'Username',
-		sort: true
-	}, {
-		dataField: 'joinDate',
-		text: 'Join Date',
-		sort: true
-	}, {
-		dataField: 'type',
-		text: 'Type',
-		sort: true
-	}, {
-		dataField: 'action',
-		text: '',
-		width: '50',
-		formatter: columnFormatter,
-		headerStyle: () => {
-			return { width: '100px' };
-		}
-	}
-];
-
 const defaultSorted = [{
 	dataField: 'staffCode',
 	order: 'asc'
@@ -70,10 +26,76 @@ const pagination = paginationFactory({
 	alwaysShowAllBtns: true,
 });
 
-
 const UserTable = ({users, isLoading}) => {
+
+	const handleEditClicked = id => {
+		history.push(`/edit/${id}`);
+	}
+
+	const handleDeleteClicked = id => {
+		console.log("id clicked = ", id);
+	}
+
+	const columnFormatter = (cell, row) => {
+		return (
+			<div className="table__actions">
+			<span
+				className="action__items"
+				title={`Edit user ${row.userName}`}
+				onClick={() => handleEditClicked(row.id)}
+			>
+				<img src={editImg} alt="edit"/>
+			</span>
+
+			 <span
+				  className="action__items"
+				  title={`Delete user ${row.userName}`}
+				  onClick={() => handleDeleteClicked(row.id)}
+			 >
+				<img src={deleteImg} alt="delete"/>
+			</span>
+			</div>
+		)
+	};
+
+	const columns = [
+		{
+			dataField: 'staffCode',
+			text: 'Staff Code',
+			sort: true
+		}, {
+			dataField: 'fullName',
+			text: 'Full Name',
+			sort: true
+		}, {
+			dataField: 'userName',
+			text: 'Username',
+			sort: true
+		}, {
+			dataField: 'joinDate',
+			text: 'Join Date',
+			sort: true
+		}, {
+			dataField: 'type',
+			text: 'Type',
+			sort: true
+		}, {
+			dataField: 'action',
+			text: '',
+			width: '50',
+			events: {
+				onClick: (e) => {
+					e.stopPropagation();
+				}
+			},
+			formatter: columnFormatter,
+			headerStyle: () => {
+				return {width: '100px'};
+			}
+		}
+	];
+
 	const [userDetail, setUserDetail] = useState({});
-	const [showModal, setShowModal] = useState(false);
 	const [userIdPopup, setUserIdPopup] = useState(1);
 
 	const [show, setShow] = useState(false);
@@ -81,9 +103,6 @@ const UserTable = ({users, isLoading}) => {
 	const handleShow = () => setShow(true);
 	let history = useHistory();
 
-	const HandleRedirectEditUser = () => {
-		history.push("/edit");
-	}
 	// Get user detail for popup
 	useEffect(() => {
 		axios({
@@ -104,7 +123,7 @@ const UserTable = ({users, isLoading}) => {
 	}
 
 	const toggleTrueFalse = () => {
-		setShowModal(handleShow);
+		setShow(handleShow);
 	};
 
 	if (isLoading) return (<div>Loading...</div>)
