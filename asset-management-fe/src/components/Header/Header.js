@@ -56,14 +56,14 @@ const Header = ({header, account, token}) => {
                     <div className="modal-dialog modal-sm">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel" style={{color: "#f44336"}}>Are you
+                                <h5 className="modal-title" id="exampleModalLabel">Are you
                                     sure?</h5>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                                        aria-label="Close">
+                                </button>
                             </div>
                             <div className="modal-body">
                                 <h2>Log out...</h2>
-                                <h3></h3>
                             </div>
                             <div className="modal-footer">
                                 <a href="/login" className="btn btn-primary"

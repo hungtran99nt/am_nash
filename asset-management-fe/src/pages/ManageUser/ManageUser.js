@@ -57,7 +57,7 @@ const ManageUser = () => {
 				</div>
 				<Form className="manager-user__action mb-3">
 					<Row className="actions__wrapper">
-						<Col className='col-2 flex-grow-1'>
+						<Col className='col-2 flex-grow-1 select'>
 							<Form.Select
 								className="action__filter h-75"
 								value={filterOption}

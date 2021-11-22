@@ -15,6 +15,31 @@
     max-width: 150px !important;
 }
 
+/*custom for form select*/
+.form-select {
+    background-image: url("../../assets/images/filter.png") !important;
+    cursor: pointer;
+}
+
+.form-select:focus {
+    border-color: #ced4da !important;
+    box-shadow: none !important;
+}
+
+.select {
+    position: relative;
+}
+
+.select::after {
+    content: '';
+    top: 0;
+    left: 120px;
+    position: absolute;
+    border: 1px solid #ced4da;
+    height: 75%;
+}
+/*end custom for form select*/
+
 .search-bar {
     position: relative;
     height: 100%;
