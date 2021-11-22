@@ -2,17 +2,17 @@ import './Header.css'
 import {DropdownButton} from "react-bootstrap";
 import DropdownItem from "react-bootstrap/DropdownItem";
 import profileImage from "./github.png"
-const Header = ({header, user, token}) => {
+const Header = ({header, account, token}) => {
     console.log(token);
     let headerButton;
-    if (token !== null) {
+    if (account && token) {
+        console.log(account.fullName)
         headerButton = (
                 <DropdownButton id="dropdown-basic-button"
                                 style={{float: "right"}}
-
                                 title={
                                     <div className="pull-left">
-                                        <span>{user.fullName}  </span>
+                                        <span>{account.type} ◂ {account.fullName} </span>
                                         <img className="thumbnail-image"
                                              src={profileImage}
                                              alt="user pic"

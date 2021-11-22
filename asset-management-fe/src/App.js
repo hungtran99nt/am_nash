@@ -26,33 +26,28 @@ const headerTitle = {
 }
 const convertDataResponse = res =>(
     {
-        id: res.data.id,
-        staffCode: res.data.staffCode,
         fullName: `${res.data.lastName} ${res.data.firstName}`,
         userName: res.data.username,
-        joinDate:  moment(res.data.joinDate).format(DATE_FORMAT.TO),
         type: res.data.type,
-        location: res.data.location
     }
 );
 export default function App() {
     const [headerInfo, setHeaderInfo] = useState(headerTitle.Home);
     const [token, setToken] = useState(localStorage.getItem("TOKEN"));
     let curUsername = localStorage.getItem("USERNAME");
-    console.log(typeof curUsername)
     const {
         isLoading,
-        data: user,
+        data: account,
         errorMessage
-    } = useFetch({}, `${API_URL}/${curUsername}/`, convertDataResponse);
-    console.log(user)
+    } = useFetch({}, `${API_URL}/users/user/${curUsername}`, convertDataResponse);
+    console.log(account)
     console.log(token)
     return (
         <Router>
             <div>
                 <Header
                     header={headerInfo}
-                    user={user}
+                    account={account}
                     token={token}
                 />
                 <div className="appcontainer">
@@ -61,20 +56,22 @@ export default function App() {
                             <div className="col col-lg-3 col-md-4 col-sm-2 ">
                                 <img className="logo-img" src={logoimg}/>
                                 <div className="app-content__title">Online Asset Management</div>
-                                <nav className="category">
+                                {token && <nav className="category">
                                     <ul className="category-list">
                                         <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Home)}>
                                             <NavLink exact activeClassName="selected" className="category-item__link"
                                                      to="/">Home</NavLink>
                                         </li>
+                                        {account.type === "Admin" &&
                                         <li className="category-item" onClick={() => setHeaderInfo(headerTitle.User)}>
                                             <NavLink activeClassName="selected" className="category-item__link"
                                                      to="/user">Manage User</NavLink>
-                                        </li>
+                                        </li>}
+                                        {account.type === "Admin" &&
                                         <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Asset)}>
                                             <NavLink activeClassName="selected" className="category-item__link"
                                                      to="/asset">Manage Asset</NavLink>
-                                        </li>
+                                        </li>}
                                         <li className="category-item"
                                             onClick={() => setHeaderInfo(headerTitle.Assignment)}>
                                             <NavLink activeClassName="selected" className="category-item__link"
@@ -85,33 +82,34 @@ export default function App() {
                                             <NavLink activeClassName="selected" className="category-item__link"
                                                      to="/requestofreturning">Request Of Returning</NavLink>
                                         </li>
-                                        <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Report)}>
+                                        {account.type === "Admin" && <li className="category-item"
+                                                                         onClick={() => setHeaderInfo(headerTitle.Report)}>
                                             <NavLink activeClassName="selected" className="category-item__link"
                                                      to="/report">Report</NavLink>
-                                        </li>
+                                        </li>}
                                     </ul>
-                                </nav>
+                                </nav>}
                             </div>
                             <div className="col col-lg-9 col-md-8 col-sm-10">
                                 <Switch>
                                     <Route path="/" exact>
                                         <Home/>
                                     </Route>
-                                    <Route path="/user" exact>
+                                    {account.type === "Admin" && <Route path="/user" exact>
                                         <ManageUser/>
-                                    </Route>
-                                    <Route path="/asset" exact>
+                                    </Route>}
+                                    {account.type === "Admin" && <Route path="/asset" exact>
                                         <ManageAsset/>
-                                    </Route>
+                                    </Route>}
                                     <Route path="/assignment" exact>
                                         <ManageAssignment/>
                                     </Route>
                                     <Route path="/requestofreturning" exact>
                                         <RequestOfReturning/>
                                     </Route>
-                                    <Route path="/report" exact>
+                                    {account.type === "Admin" && <Route path="/report" exact>
                                         <Report/>
-                                    </Route>
+                                    </Route>}
                                     <Route path="/login" exact>
                                         <Login/>
                                     </Route>
