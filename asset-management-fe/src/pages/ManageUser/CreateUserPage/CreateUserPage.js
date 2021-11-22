@@ -6,15 +6,15 @@ import moment from "moment";
 import {useHistory} from "react-router-dom";
 
 const validateForm = Yup.object().shape({
-    firstname: Yup.string()
+    firstName: Yup.string()
         .min(2, 'Too Short!')
         .max(50, 'Too Long!')
         .required('Required'),
-    lastname: Yup.string()
+    lastName: Yup.string()
         .min(2, 'Too Short!')
         .max(50, 'Too Long!')
         .required('Required'),
-    birthdate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
+    birthDate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
         .required("Required"),
     type: Yup.string().required("Required!")
 })
@@ -32,7 +32,7 @@ const validation = (values) => {
 }
 
 const CreateUserPage = () => {
-    const initialValues = {firstname: "", lastname: "", birthdate: "", gender: "female", joinDate: "", type: ""};
+    const initialValues = {firstName: "", lastName: "", birthDate: "", gender: "female", joinDate: "", type: ""};
 
     let history = useHistory();
 
@@ -69,52 +69,52 @@ const CreateUserPage = () => {
                               resetForm,
                           }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextfirstName">
                                     <Form.Label column sm="2">First Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
                                             type="text"
-                                            name="firstname"
-                                            value={values.firstname}
+                                            name="firstName"
+                                            value={values.firstName}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.firstname && errors.firstname}
+                                            isInvalid={touched.firstName && errors.firstName}
 
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.firstname}
+                                            {errors.firstName}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextLastName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextlastName">
                                     <Form.Label column sm="2">Last Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
                                             type="text"
-                                            name="lastname"
+                                            name="lastName"
                                             onChange={handleChange}
-                                            value={values.lastname}
+                                            value={values.lastName}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.lastname && errors.lastname}
+                                            isInvalid={touched.lastName && errors.lastName}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.lastname}
+                                            {errors.lastName}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextBirthDate">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextbirthDate">
                                     <Form.Label column sm="2">Date Of Birth</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
-                                            name="birthdate"
+                                            name="birthDate"
                                             type="date"
-                                            value={values.birthdate}
+                                            value={values.birthDate}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.birthdate && errors.birthdate}
+                                            isInvalid={touched.birthDate && errors.birthDate}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.birthdate}
+                                            {errors.birthDate}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
@@ -183,9 +183,9 @@ const CreateUserPage = () => {
                                 </Form.Group>
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
-                                            disabled={!values.firstname || !values.lastname ||
-                                            !values.birthdate || !values.joinDate ||
-                                            errors.birthdate || errors.joinDate || !values.type}>
+                                            disabled={!values.firstName || !values.lastName ||
+                                            !values.birthDate || !values.joinDate ||
+                                            errors.birthDate || errors.joinDate || !values.type}>
                                         Save
                                     </Button>
                                     <Button className="btn-cancel" type="reset" onClick={handleRedirectUseManagePage}>
