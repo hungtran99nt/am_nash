@@ -41,7 +41,6 @@ const CreateUserPage = () => {
     }
     
     const submit = (values, {resetForm}) => {
-        console.log(moment(values.joinDate))
         console.log('values =', values)
         resetForm();
         history.push("/user");
