@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Button, Col,Form, Row} from "react-bootstrap";
+import React, {useEffect, useState} from "react";
+import {Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import moment from "moment";
@@ -8,7 +8,7 @@ import useFetch from "../../../hooks/useFetch";
 import {API_URL} from "../../../common/constants";
 
 const validateForm = Yup.object().shape({
-    birthdate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
+    birthDate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
         .required("Required"),
     type: Yup.string().required("Required!")
 })
@@ -26,10 +26,10 @@ const validatioedit = (values) => {
 }
 const convertDataResponse = res => (
     {
-        firstname: res.data.firstName,
-        lastname: res.data.lastName,
-        birthdate: moment(res.data.birthDate).format("MM/DD/YYYY"),
-        joinDate: moment(res.data.joinDate).format("MM/DD/YYYY"),
+        firstName: res.data.firstName,
+        lastName: res.data.lastName,
+        birthDate: moment(res.data.birthDate).format("YYYY-MM-DD"),
+        joinDate: moment(res.data.joinDate).format("YYYY-MM-DD"),
         type: res.data.type,
         gender: res.data.gender
     }
@@ -45,14 +45,30 @@ const EditUserPage = () => {
         isLoading,
         data: user,
         errorMessage,
-    } = useFetch([], `${API_URL}/users/${id}`, convertDataResponse);
-    if (isLoading) return "Loading";
-
-    if (errorMessage) return <div style={{color: "red"}}>{errorMessage}</div>;
+    } = useFetch({
+        firstName: null,
+        lastName: null,
+        birthDate: null,
+        joinDate: null,
+        type: null,
+        gender: null
+    }, `${API_URL}/users/${id}`, convertDataResponse);
 
     console.log("user = ", user);
+
+    const initialValues = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        birthDate: user.birthDate,
+        joinDate: user.joinDate,
+        type: user.type,
+        gender: user.gender
+    }
+    if (isLoading) return "Loading";
+    if (errorMessage) return <div style={{color: "red"}}>{errorMessage}</div>;
+    console.log("user = ", user);
     const submit = (values, {resetForm}) => {
-        console.log('values =', values)
+        console.log('values =', {values})
         resetForm();
         history.push("/user");
     }
@@ -61,16 +77,10 @@ const EditUserPage = () => {
             <div className="row">
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
-                    <div className="app-content__title">Edit User {user.firstname} {user.lastname}</div>
+                    <div className="app-content__title">Edit User </div>
                     <Formik
-                        initialValues={{
-                            firstname: user.firstname,
-                            lastname: user.lastname,
-                            type:user.type,
-                            gender:user.gender,
-                            joinDate:user.joinDate,
-                            birthdate:user.birthdate
-                        }}
+                        enableReinitialize={true}
+                        initialValues={initialValues}
                         validationSchema={validateForm}
                         validate={validatioedit}
                         onSubmit={submit}
@@ -84,47 +94,47 @@ const EditUserPage = () => {
                               handleSubmit,
                           }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextfirstName">
                                     <Form.Label column sm="2">First Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
                                             type="text"
-                                            name="firstname"
-                                            defaultValue={values.firstname}
+                                            name="firstName"
+                                            defaultValue={values.firstName}
                                             disabled={true}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.firstname}
+                                            {errors.firstName}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextLastName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextlastName">
                                     <Form.Label column sm="2">Last Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
                                             type="text"
-                                            name="lastname"
-                                            defaultValue={values.lastname}
+                                            name="lastName"
+                                            defaultValue={values.lastName}
                                             disabled={true}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.lastname}
+                                            {errors.lastName}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextBirthDate">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextbirthDate">
                                     <Form.Label column sm="2">Date Of Birth</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
-                                            name="birthdate"
+                                            name="birthDate"
                                             type="date"
-                                            value={values.birthdate}
+                                            value={values.birthDate}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.birthdate && errors.birthdate}
+                                            isInvalid={touched.birthDate && errors.birthDate}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.birthdate}
+                                            {errors.birthDate}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
@@ -140,8 +150,7 @@ const EditUserPage = () => {
                                                 name="gender"
                                                 type="radio"
                                                 value="Female"
-                                                defaultChecked={values.gender ==="Female"}
-                                                checked={values.gender}
+                                                checked={values.gender === "Female"}
                                                 onChange={handleChange}
                                             />
                                             <Form.Check
@@ -150,7 +159,7 @@ const EditUserPage = () => {
                                                 name="gender"
                                                 type="radio"
                                                 value="Male"
-                                                defaultChecked={values.gender ==="Male"}
+                                                checked={values.gender === "Male"}
                                                 onChange={handleChange}
                                             />
                                         </div>
@@ -164,7 +173,7 @@ const EditUserPage = () => {
                                         <Form.Control
                                             name="joinDate"
                                             type="date"
-                                            defaultChecked={user.joinDate}
+                                            value={values.joinDate}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             isInvalid={touched.joinDate && errors.joinDate}
@@ -179,14 +188,16 @@ const EditUserPage = () => {
                                     <Col sm="6">
                                         <Form.Select
                                             name="type"
-                                            defaultValue={values.type}
+                                            value={values.type}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             isInvalid={touched.type && errors.type}
                                         >
                                             <option value=""/>
-                                            <option value="Staff" defaultChecked={values.type === "Staff"} label="Staff"/>
-                                            <option value="Admin" defaultChecked={values.type ==="Admin"} label="Admin"/>
+                                            <option value="Staff" defaultChecked={values.type === "Staff"}
+                                                    label="Staff"/>
+                                            <option value="Admin" defaultChecked={values.type === "Admin"}
+                                                    label="Admin"/>
                                         </Form.Select>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.type}
@@ -195,9 +206,9 @@ const EditUserPage = () => {
                                 </Form.Group>
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
-                                            // disabled={!values.firstname || !values.lastname ||
-                                            // !values.birthdate || !values.joinDate ||
-                                            // errors.birthdate || errors.joinDate || !values.type}
+                                            disabled={!values.firstName || !values.lastName ||
+                                            !values.birthDate || !values.joinDate ||
+                                            errors.birthDate || errors.joinDate || !values.type}
                                     >
                                         Save
                                     </Button>
