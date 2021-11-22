@@ -2,28 +2,28 @@ import './Header.css'
 import {DropdownButton} from "react-bootstrap";
 import DropdownItem from "react-bootstrap/DropdownItem";
 import profileImage from "./github.png"
+
 const Header = ({header, account, token}) => {
-    console.log(token);
     let headerButton;
     if (account && token) {
         console.log(account.fullName)
         headerButton = (
-                <DropdownButton id="dropdown-basic-button"
-                                style={{float: "right"}}
-                                title={
-                                    <div className="pull-left">
-                                        <span>{account.type} ◂ {account.fullName} </span>
-                                        <img className="thumbnail-image"
-                                             src={profileImage}
-                                             alt="user pic"
-                                        />
-                                    </div>
-                                }
-                >
-                    <DropdownItem href="/profile">Profile</DropdownItem>
-                    <DropdownItem type="button" className="btn del-button btn-outline-secondary" data-bs-toggle="modal"
-                                  data-bs-target="#confirmModal">Logout</DropdownItem>
-                </DropdownButton>
+            <DropdownButton id="dropdown-basic-button"
+                            style={{float: "right"}}
+                            title={
+                                <div className="pull-left">
+                                    <span>{account.type} ◂ {account.fullName} </span>
+                                    <img className="thumbnail-image"
+                                         src={profileImage}
+                                         alt="user pic"
+                                    />
+                                </div>
+                            }
+            >
+                <DropdownItem href="/profile">Profile</DropdownItem>
+                <DropdownItem type="button" className="btn del-button btn-outline-secondary" data-bs-toggle="modal"
+                              data-bs-target="#confirmModal">Logout</DropdownItem>
+            </DropdownButton>
         )
     } else {
         headerButton = (
@@ -42,7 +42,6 @@ const Header = ({header, account, token}) => {
             </DropdownButton>
         )
     }
-    console.log(token);
     return (
         <nav className="header navbar w-100">
             <div className="headerinfo nav-item">{header}</div>
