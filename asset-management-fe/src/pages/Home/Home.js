@@ -1,10 +1,7 @@
 import {Button} from "react-bootstrap";
 import "../../assets/styles/main.css"
 import React from "react";
-<<<<<<< HEAD
-=======
 import {Redirect} from "react-router-dom";
->>>>>>> b050828edf77ef809a89740f905f42259cb133f7
 
 const Home = ({token}) => {
     if (!token){

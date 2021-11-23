@@ -27,16 +27,18 @@ const validation = (values) => {
     let isWeekend = moment(values.joinedDate).isoWeekday();
     if (!values.joinedDate) {
         errors.joinedDate = "Required";
-    } else if (moment(values.joinedDate).isBefore(moment(values.joinedDate))) {
+    } else if (moment(values.joinedDate).isBefore(moment(values.birthDate))) {
         errors.joinedDate = "Joined date is not later than Date of Birth. Please select a different date";
     } else if (isWeekend === 7 || isWeekend === 6) {
         errors.joinedDate = "Joined date is Saturday or Sunday. Please select a different date"
+    } else if (moment(values.joinedDate).isAfter(new Date(Date.now()))){
+        errors.joinedDate ="Joined date is not future day. Please select a different date"
     }
     return errors;
 }
 
 const CreateUserPage = () => {
-    const initialValues = {firstName: "", lastName: "", birthDate: "", gender: "female", joinedDate: "", type: ""};
+    const initialValues = {firstName: "", lastName: "", birthDate: "", gender: "Female", joinedDate: "", type: ""};
 
     let history = useHistory();
 
@@ -86,8 +88,6 @@ const CreateUserPage = () => {
                               handleBlur,
                               handleChange,
                               handleSubmit,
-                              isSubmitting,
-                              resetForm,
                           }) => (
                             <Form onSubmit={handleSubmit}>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextfirstName">
@@ -150,7 +150,7 @@ const CreateUserPage = () => {
                                                 label="Female"
                                                 name="gender"
                                                 type="radio"
-                                                value="female"
+                                                value="Female"
                                                 defaultChecked={true}
                                                 onChange={handleChange}
                                             />
@@ -159,7 +159,7 @@ const CreateUserPage = () => {
                                                 label="Male"
                                                 name="gender"
                                                 type="radio"
-                                                value="male"
+                                                value="Male"
                                                 onChange={handleChange}
                                             />
                                         </div>
