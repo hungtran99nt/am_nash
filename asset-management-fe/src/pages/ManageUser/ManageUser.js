@@ -13,7 +13,7 @@ const convertDataResponse = res => res.data.map(u => (
         staffCode: u.staffCode,
         fullName: `${u.firstName} ${u.lastName}`,
         userName: u.username,
-        joinDate: moment(u.joinDate).format(DATE_FORMAT.TO),
+        joinedDate: moment(u.joinedDate).format(DATE_FORMAT.TO),
         type: u.type,
         location: u.location
     }
@@ -22,7 +22,9 @@ const convertDataResponse = res => res.data.map(u => (
 const ManageUser = () => {
     const [filterOption, setFilterOption] = useState(FILTER_USER_OPTIONS.NONE);
     const [searchText, setSearchText] = useState('');
-    let history = useHistory();
+	const token = localStorage.getItem("TOKEN");
+
+	let history = useHistory();
 
 	const handleAddNewClick = () => {
 		history.push("/create");
@@ -79,7 +81,7 @@ const ManageUser = () => {
 								</Button>
 							</InputGroup>
 						</Col>
-						<Col className="col-2 h-75">
+						<Col className="col-2 h-75" >
 							<Button className="w-100 h-100" onClick={handleAddNewClick}>Create new user</Button>
 						</Col>
 					</Row>

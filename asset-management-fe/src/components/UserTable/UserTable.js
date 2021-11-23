@@ -3,26 +3,26 @@ import { useEffect, useState } from "react";
 import UserPopup from "./UserModal/UserPopup";
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
 import paginationFactory from "react-bootstrap-table2-paginator";
-import { API_URL } from "../../common/constants";
+import { API_URL, DATE_FORMAT, SORT_ORDERS } from "../../common/constants";
 import axios from "axios";
 import editImg from "../../assets/images/pen.png";
 import deleteImg from "../../assets/images/cross.png";
 import "./UserTable.css";
 import { useHistory } from "react-router-dom";
-import useFetch from "../../hooks/useFetch";
+import moment from "moment";
 import UserDisableError from "./UserModal/UserDisableError";
 
 const defaultSorted = [
   {
     dataField: "staffCode",
-    order: "asc",
+    order: SORT_ORDERS.ASC,
   },
 ];
 
 //  config for pagination
 const pagination = paginationFactory({
   page: 1,
-  sizePerPage: 19,
+  sizePerPage: 10,
   nextPageText: "Next",
   prePageText: "Prev",
   hideSizePerPage: true,
@@ -30,17 +30,13 @@ const pagination = paginationFactory({
   alwaysShowAllBtns: true,
 });
 
-const convertDataResponse = (response) => response.data;
-
 const UserTable = ({ users, isLoading }) => {
   const handleEditClicked = (id) => {
     history.push(`/edit/${id}`);
   };
-
   const [showErr, setShowErr] = useState(true);
   const handleCloseErr = () => setShowErr(false);
   const handleShowErr = () => setShowErr(true);
-
   const handleDeleteClicked = (id) => {
     axios
       .put(`${API_URL}/users/disable/${id}`)
@@ -48,6 +44,8 @@ const UserTable = ({ users, isLoading }) => {
         console.log(response.data.message);
       })
       .catch(handleShowErr());
+
+    console.log("id clicked = ", id);
   };
 
   const columnFormatter = (cell, row) => {
@@ -88,9 +86,14 @@ const UserTable = ({ users, isLoading }) => {
       text: "Username",
     },
     {
-      dataField: "joinDate",
+      dataField: "joinedDate",
       text: "Join Date",
       sort: true,
+      sortFunc: (a, b, order) => {
+        if (order === SORT_ORDERS.ASC)
+          return moment(a, DATE_FORMAT.TO) - moment(b, DATE_FORMAT.TO);
+        return moment(b, DATE_FORMAT.TO) - moment(a, DATE_FORMAT.TO);
+      },
     },
     {
       dataField: "type",
@@ -119,7 +122,6 @@ const UserTable = ({ users, isLoading }) => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
   let history = useHistory();
 
   // Get user detail for popup
