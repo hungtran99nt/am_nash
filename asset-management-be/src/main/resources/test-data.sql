@@ -23,7 +23,7 @@ values
 (12, 'PC000012', 'Dell XPS 8940', '2021-07-15 00:00:00', 'Team-oriented solution-oriented solution', 'Not Available', 4, 3);
 
 -- user data
-insert into user (id, birth_date, disable, first_name, gender, joined_date, last_name, staff_code, type, password, username, location_id) 
+insert into user (id, birth_date, status, first_name, gender, joined_date, last_name, staff_code, type, password, username, location_id)
 values
 (1, '1991-12-22 03:59:31', 0, 'An', 'Female', '2019-09-11 12:56:54', 'Nguyen Thuy', 'SD001', 'Staff', 'staff', 'annt', 1),
 (2, '1991-10-10 00:54:30', 1, 'An', 'Female', '2019-08-21 19:18:44', 'Tran Van', 'SD002','Staff',  'staff', 'antv', 2),

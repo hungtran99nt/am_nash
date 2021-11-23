@@ -39,7 +39,7 @@ public class User {
   @Column(name = "username", unique = true, length = 30)
   private String username;
 
-  @Column(name = "password", length = 30, nullable = false)
+  @Column(name = "password", length = 75, nullable = false)
   private String password;
 
   @Column(name = "joined_date", nullable = false)
@@ -54,8 +54,8 @@ public class User {
   @Column(name = "type", length = 10, nullable = false)
   private String type;
 
-  @Column(name = "disable", nullable = false)
-  private boolean disable;
+  @Column(name = "status", nullable = false)
+  private int status;
 
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "location_id", nullable = false)

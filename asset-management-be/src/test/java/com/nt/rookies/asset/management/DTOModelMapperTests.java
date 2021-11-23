@@ -51,7 +51,7 @@ public class DTOModelMapperTests {
         () -> assertEquals(user.getGender(), userDTO.getGender()),
         () -> assertEquals(user.getBirthDate(), userDTO.getBirthDate()),
         () -> assertEquals(user.getType(), userDTO.getType()),
-        () -> assertEquals(user.isDisable(), userDTO.isDisable()),
+        () -> assertEquals(user.getStatus(), userDTO.getStatus()),
         // important
         () -> assertEquals(user.getLocation().getLocationName(), userDTO.getLocation()));
   }
