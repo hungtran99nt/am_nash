@@ -5,7 +5,8 @@ import * as Yup from 'yup';
 import moment from "moment";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
-import {API_URL, USER_STATUS} from "../../../common/constants";
+import {API_URL} from "../../../common/constants";
+import Error from "../../Error/Error";
 
 const validateForm = Yup.object().shape({
     firstName: Yup.string()
@@ -42,7 +43,7 @@ const CreateUserPage = () => {
     const handleRedirectUseManagePage = () => {
         history.push("/user");
     }
-    
+
     const submit = (values, {resetForm}) => {
         axios({
             method: 'POST',
@@ -58,12 +59,13 @@ const CreateUserPage = () => {
         }).then(res => {
             console.log("res = ", res);
             console.log('create user success.');
-            history.push("/user");
+            history.push(`/user?f=${res.data.id}`);
         }).catch(err => {
             console.log("err = ", err);
-            return <div style={{color: "red"}}>{err}</div>;
-        });
-        resetForm();
+            return <Error message={err.response.data.message}/>
+        }).finally(
+            resetForm()
+        );
     }
     return (
         <div className="app-create">

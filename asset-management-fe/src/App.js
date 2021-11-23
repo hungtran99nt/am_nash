@@ -1,5 +1,5 @@
 import './App.css'
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {BrowserRouter as Router, NavLink, Route, Switch} from "react-router-dom";
 import logoimg from "./assets/images/logonashtech.png"
 import ManageAssignment from "./pages/ManageAssignment/ManageAssignment";
@@ -15,9 +15,9 @@ import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
 import Profile from "./pages/Profile/Profile";
 import {API_URL} from "./common/constants";
 import useFetch from "./hooks/useFetch";
-import moment from "moment";
 import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
 import jwt_decode from "jwt-decode";
+import Error from "./pages/Error/Error";
 
 const headerTitle = {
     Home: 'Home',
@@ -37,12 +37,17 @@ const convertDataResponse = res => (
 export default function App() {
     const [headerInfo, setHeaderInfo] = useState(headerTitle.Home);
     const [token, setToken] = useState(localStorage.getItem("TOKEN"));
+
     let curUsername = localStorage.getItem("USERNAME");
     let role = "";
     if (token) {
         localStorage.setItem("TOKEN", token);
         const decode = jwt_decode(token);
         role = decode.role;
+        if (decode.exp * 1000 <= Date.now()) {
+            localStorage.removeItem("TOKEN");
+            setToken(null);
+        }
     }
     const {
         isLoading,
@@ -123,12 +128,12 @@ export default function App() {
                                     <Route path="/profile" exact>
                                         <Profile/>
                                     </Route>
-                                    {role === "Admin" && <Route path="/create" exact>
-                                       <CreateUserPage/>
-                                    </Route>}
-                                    {role=== "Admin" && <Route path="/edit/:id" exact>
-                                        <EditUserPage/>
-                                    </Route>}
+                                    <Route path="/create" exact>
+                                        {role === "Admin" ? <CreateUserPage/> : <Error message={`Access denied`}/>}
+                                    </Route>
+                                    <Route path="/edit/:id" exact>
+                                        {role === "Admin" ? <EditUserPage/> : <Error message={`Access denied`}/>}
+                                    </Route>
                                 </Switch>
                             </div>
                         </div>
