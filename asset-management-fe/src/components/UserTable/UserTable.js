@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import UserPopup from "./UserModal/UserPopup";
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import {API_URL, DATE_FORMAT} from "../../common/constants";
+import {API_URL, DATE_FORMAT, SORT_ORDERS} from "../../common/constants";
 import axios from "axios";
 import editImg from '../../assets/images/pen.png'
 import deleteImg from '../../assets/images/cross.png'
@@ -13,7 +13,7 @@ import moment from "moment";
 
 const defaultSorted = [{
 	dataField: 'staffCode',
-	order: 'asc'
+	order: SORT_ORDERS.ASC
 }]
 
 //  config for pagination
@@ -48,11 +48,11 @@ const UserTable = ({users, isLoading}) => {
 				<img src={editImg} alt="edit"/>
 			</span>
 
-			 <span
-				  className="action__items"
-				  title={`Delete user ${row.userName}`}
-				  onClick={() => handleDeleteClicked(row.id)}
-			 >
+				<span
+					className="action__items"
+					title={`Delete user ${row.userName}`}
+					onClick={() => handleDeleteClicked(row.id)}
+				>
 				<img src={deleteImg} alt="delete"/>
 			</span>
 			</div>
@@ -76,12 +76,9 @@ const UserTable = ({users, isLoading}) => {
 			text: 'Join Date',
 			sort: true,
 			sortFunc: (a, b, order) => {
-				if (order === 'asc') {
+				if (order === SORT_ORDERS.ASC)
 					return moment(a, DATE_FORMAT.TO) - moment(b, DATE_FORMAT.TO);
-				}
-				if(order === 'desc') {
-					return moment(b, DATE_FORMAT.TO) - moment(a, DATE_FORMAT.TO);
-				}
+				return moment(b, DATE_FORMAT.TO) - moment(a, DATE_FORMAT.TO);
 			}
 		}, {
 			dataField: 'type',

@@ -18,3 +18,9 @@ export const USER_STATUS = {
 	DISABLED: 0,
 	ACTIVE: 1
 }
+
+
+export const SORT_ORDERS = {
+	ASC: 'asc',
+	DESC: 'desc'
+}
