@@ -8,9 +8,7 @@ const useFetch = (initialData, url, convertResponseToData) => {
 
 	const token = localStorage.getItem("TOKEN");
 
-	// const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJiaW5obnY0Iiwib3JnIjoibmFzaHRlY2giLCJleHAiOjE2MzczMDY0NjgsImlhdCI6MTYzNzI4ODQ2OH0.zPMBRkRq08V6PJ3bkF8HT7tDhSvt8OzqIdB8mbrzQW4gAhtYM4N0OLOhddL_vVTPD3LeR--M27rwkP3U7NTwDw";
-
-	if (token !== null && token !== "") {
+	if (token) {
 		axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 	}
 
@@ -22,7 +20,6 @@ const useFetch = (initialData, url, convertResponseToData) => {
 			url: url,
 		}).then(response => {
 			if (!didCancel) {
-				console.log(response);
 				setIsLoading(false);
 				setData(convertResponseToData(response));
 			}
@@ -36,7 +33,6 @@ const useFetch = (initialData, url, convertResponseToData) => {
 			didCancel = true;
 		}
 	}, [url, convertResponseToData]);
-
 	return {
 		isLoading,
 		data,

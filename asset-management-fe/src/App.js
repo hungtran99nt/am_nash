@@ -10,11 +10,14 @@ import ManageUser from "./pages/ManageUser/ManageUser";
 import Report from "./pages/Report/Report";
 import Header from "./components/Header/Header";
 import Login from "./pages/Login/Login";
+
 import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
 import Profile from "./pages/Profile/Profile";
-import {API_URL, DATE_FORMAT} from "./common/constants";
+import {API_URL} from "./common/constants";
 import useFetch from "./hooks/useFetch";
 import moment from "moment";
+import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
+import DenyPage from "./pages/DenyPage/DenyPage";
 
 const headerTitle = {
     Home: 'Home',
@@ -24,7 +27,7 @@ const headerTitle = {
     Request: 'Request Of Returning',
     Report: 'Report',
 }
-const convertDataResponse = res =>(
+const convertDataResponse = res => (
     {
         fullName: `${res.data.lastName} ${res.data.firstName}`,
         userName: res.data.username,
@@ -39,9 +42,7 @@ export default function App() {
         isLoading,
         data: account,
         errorMessage
-    } = useFetch({}, `${API_URL}/users/user/${curUsername}`, convertDataResponse);
-    console.log(account)
-    console.log(token)
+    } = useFetch({}, `${API_URL}/users/user?username=${curUsername}`, convertDataResponse);
     return (
         <Router>
             <div>
@@ -49,6 +50,7 @@ export default function App() {
                     header={headerInfo}
                     account={account}
                     token={token}
+                    setToken={setToken}
                 />
                 <div className="appcontainer">
                     <div className="grid wide">
@@ -56,7 +58,7 @@ export default function App() {
                             <div className="col col-lg-3 col-md-4 col-sm-2 ">
                                 <img className="logo-img" src={logoimg}/>
                                 <div className="app-content__title">Online Asset Management</div>
-                                {token && <nav className="category">
+                                {account && <nav className="category">
                                     <ul className="category-list">
                                         <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Home)}>
                                             <NavLink exact activeClassName="selected" className="category-item__link"
@@ -95,21 +97,21 @@ export default function App() {
                                     <Route path="/" exact>
                                         <Home/>
                                     </Route>
-                                    {account.type === "Admin" && <Route path="/user" exact>
-                                        <ManageUser/>
-                                    </Route>}
-                                    {account.type === "Admin" && <Route path="/asset" exact>
-                                        <ManageAsset/>
-                                    </Route>}
+                                    <Route path="/user" exact
+                                           render={() => account.type === "Admin" ? <ManageUser/> : <DenyPage/>}
+                                    />
+                                    <Route path="/asset" exact
+                                           render={() => account.type === "Admin" ? <ManageAsset/> : <DenyPage/>}
+                                    />
                                     <Route path="/assignment" exact>
                                         <ManageAssignment/>
                                     </Route>
                                     <Route path="/requestofreturning" exact>
                                         <RequestOfReturning/>
                                     </Route>
-                                    {account.type === "Admin" && <Route path="/report" exact>
-                                        <Report/>
-                                    </Route>}
+                                    <Route path="/report" exact
+                                           render={() => account.type === "Admin" ? <Report/> : <DenyPage/>}
+                                    />
                                     <Route path="/login" exact>
                                         <Login/>
                                     </Route>
@@ -118,6 +120,9 @@ export default function App() {
                                     </Route>
                                     <Route path="/create" exact>
                                         <CreateUserPage/>
+                                    </Route>
+                                    <Route path="/edit/:id" exact>
+                                        <EditUserPage/>
                                     </Route>
                                 </Switch>
                             </div>

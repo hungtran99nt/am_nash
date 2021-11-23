@@ -1,5 +1,6 @@
 package com.nt.rookies.asset.management.service.impl;
 
+import com.nt.rookies.asset.management.common.BaseConstants;
 import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.Location;
@@ -7,6 +8,7 @@ import com.nt.rookies.asset.management.entity.User;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.UserService;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,17 +27,21 @@ public class UserServiceImpl implements UserService {
   private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
   private final UserRepository repository;
   private final ModelMapper modelMapper;
+  private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserServiceImpl(UserRepository repository, ModelMapper modelMapper) {
+  public UserServiceImpl(
+      UserRepository repository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
     this.repository = repository;
     this.modelMapper = modelMapper;
+    this.passwordEncoder = passwordEncoder;
   }
 
   @Override
   public UserDTO getUserById(Integer id) {
     User user =
         repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found."));
+    logger.info("getUserById: {}", user);
     return modelMapper.map(user, UserDTO.class);
   }
 
@@ -57,9 +64,47 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public UserDTO createUser(UserDTO userDTO) {
+    StringBuilder username = new StringBuilder(userDTO.getFirstName().toLowerCase());
+    String[] lastNames = userDTO.getLastName().split(" ");
+    for (String name : lastNames) {
+      username.append(Character.toLowerCase(name.charAt(0)));
+    }
+    Optional<Integer> maxPostfix = repository.findMaxUsernamePostfix(username.toString());
+    logger.info("maxPostfix: {}", maxPostfix.orElse(0));
+    //  if username existed => username = username + countUsername
+    maxPostfix.ifPresent(postfix -> username.append(++postfix));
+    SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
+    String password = username + "@" + formatter.format(userDTO.getBirthDate());
+    String encodedPassword = passwordEncoder.encode(password);
+    logger.info("username: {}", username);
+    logger.info("password: {}", password);
+    logger.info("encoded password: {}", encodedPassword);
+    Location location = getUserLocation();
+    logger.info("location: {}", location);
+    User user = new User();
+    user.setFirstName(userDTO.getFirstName());
+    user.setLastName(userDTO.getLastName());
+    user.setUsername(username.toString());
+    user.setPassword(encodedPassword);
+    user.setJoinedDate(userDTO.getJoinedDate());
+    user.setGender(userDTO.getGender());
+    user.setBirthDate(userDTO.getBirthDate());
+    user.setType(userDTO.getType());
+    user.setStatus(-1); // account initial
+    user.setLocation(location);
+    logger.info("New User:{}", user);
+    User createdUser = repository.save(user);
+    String generatedCode = repository.generateStaffCode();
+    createdUser.setStaffCode(generatedCode);
+    logger.info("Created User:{}", createdUser);
+    return modelMapper.map(createdUser, UserDTO.class);
+  }
+
+  @Override
   public Optional<AccountDTO> findActiveByUsername(String username) {
     User user = repository.findByUsername(username);
-    if (!user.isDisable()) {
+    if (user.getStatus() != BaseConstants.USER_STATUS_DISABLED) {
       return Optional.of(modelMapper.map(user, AccountDTO.class));
     }
     return Optional.empty();
@@ -83,8 +128,8 @@ public class UserServiceImpl implements UserService {
 
     List<User> users = repository.findAllByLocation(location);
     return users.stream()
-            .map(user -> modelMapper.map(user, UserDTO.class))
-            .collect(Collectors.toList());
+        .map(user -> modelMapper.map(user, UserDTO.class))
+        .collect(Collectors.toList());
   }
 
   private Location getUserLocation() {
@@ -93,8 +138,6 @@ public class UserServiceImpl implements UserService {
         (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
     User currentUser = repository.findByUsername(username);
-
     return currentUser.getLocation();
   }
-
 }
