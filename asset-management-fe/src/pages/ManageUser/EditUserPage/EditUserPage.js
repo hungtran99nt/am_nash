@@ -90,11 +90,11 @@ const EditUserPage = () => {
         resetForm();
     }
 
-    const handleRedirectUseManagePage = () => {
+    const handleRedirectUserManagePage = () => {
         history.push("/user");
     }
     return (
-        <div className="app-create">
+        <div className="app-page">
             <div className="row">
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
@@ -233,7 +233,7 @@ const EditUserPage = () => {
                                     >
                                         Save
                                     </Button>
-                                    <Button className="btn-cancel" type="reset" onClick={handleRedirectUseManagePage}>
+                                    <Button className="btn-cancel" type="reset" onClick={handleRedirectUserManagePage}>
                                         Cancel
                                     </Button>
                                 </div>

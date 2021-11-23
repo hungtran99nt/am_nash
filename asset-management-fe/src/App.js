@@ -15,9 +15,9 @@ import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
 import Profile from "./pages/Profile/Profile";
 import {API_URL} from "./common/constants";
 import useFetch from "./hooks/useFetch";
-import moment from "moment";
 import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
 import jwt_decode from "jwt-decode";
+import EditAssetPage from "./pages/ManageAsset/EditAssetPage/EditAssetPage";
 
 const headerTitle = {
     Home: 'Home',
@@ -128,6 +128,9 @@ export default function App() {
                                     </Route>}
                                     {role=== "Admin" && <Route path="/edit/:id" exact>
                                         <EditUserPage/>
+                                    </Route>}
+                                    {role=== "Admin" && <Route path="/edit/asset/:id" exact>
+                                        <EditAssetPage/>
                                     </Route>}
                                 </Switch>
                             </div>

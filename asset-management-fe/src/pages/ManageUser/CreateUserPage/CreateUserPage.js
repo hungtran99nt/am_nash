@@ -83,7 +83,7 @@ const CreateUserPage = () => {
         resetForm();
     }
     return (
-        <div className="app-create">
+        <div className="app-page">
             <div className="row">
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
