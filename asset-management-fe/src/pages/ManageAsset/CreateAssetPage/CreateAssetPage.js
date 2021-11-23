@@ -2,11 +2,17 @@ import React from "react";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from "formik";
 import {useHistory} from "react-router-dom";
+import * as Yup from 'yup';
 
 
-const validateForm = {
+const validateForm = Yup.object().shape({
+    name:Yup.string().required("Required!"),
+    category:Yup.string().required("Required!"),
+    specification:Yup.string().required("Required!"),
+    installDate:Yup.date().required("Required!"),
+})
 
-}
+
 const CreateAssetPage = () =>{
     let history = useHistory();
     const handleRedirectAssetManagePage = () =>{
@@ -126,7 +132,7 @@ const CreateAssetPage = () =>{
                                                 name="state"
                                                 type="radio"
                                                 value="Female"
-                                                checked={values.state === "Available"}
+                                                defaultChecked={true}
                                                 onChange={handleChange}
                                             />
                                             <Form.Check
@@ -134,10 +140,9 @@ const CreateAssetPage = () =>{
                                                 name="state"
                                                 type="radio"
                                                 value="Female"
-                                                checked={values.state === "Not Available"}
                                                 onChange={handleChange}
                                             />
-                                            
+
                                         </div>
                                     </Col>
                                 </Form.Group>
