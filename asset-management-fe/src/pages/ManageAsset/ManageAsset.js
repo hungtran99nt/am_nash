@@ -7,9 +7,13 @@ const ManageAsset = () =>{
     const HandleRedirectEditAssetPage = () => {
         history.push("/edit/asset/1");
     }
+    const HandleRedirectCreateAssetPage = () => {
+        history.push("/create/asset");
+    }
     return(
         <div>
             <Button onClick={HandleRedirectEditAssetPage}>Edit Asset</Button>
+            <Button onClick={HandleRedirectCreateAssetPage}>Create New Asset</Button>
         </div>
     )
 }

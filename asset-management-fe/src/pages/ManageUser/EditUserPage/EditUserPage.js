@@ -64,7 +64,6 @@ const EditUserPage = () => {
     const submit = (values, {resetForm}) => {
         console.log('Form values =', {values});
         console.log('token=',localStorage.getItem('TOKEN'));
-        let errorMsg;
         axios({
             method: 'PUT',
             url: `${API_URL}/users/${id}`,
@@ -83,7 +82,6 @@ const EditUserPage = () => {
             console.log("Edit success");
             history.push("/user");
         }).catch(err => {
-            errorMsg = err.response.data.message;
             console.log("err = ", err);
             return <div style={{color: "red"}}>{err}</div>;
         });

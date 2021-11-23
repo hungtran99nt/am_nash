@@ -1,7 +1,6 @@
 import {Button} from "react-bootstrap";
 import "../../assets/styles/main.css"
 import React from "react";
-import {useHistory} from "react-router-dom";
 
 const Home = () => {
     return (

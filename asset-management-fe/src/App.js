@@ -1,5 +1,5 @@
 import './App.css'
-import React, {useEffect, useState} from "react";
+import React, { useState} from "react";
 import {BrowserRouter as Router, NavLink, Route, Switch} from "react-router-dom";
 import logoimg from "./assets/images/logonashtech.png"
 import ManageAssignment from "./pages/ManageAssignment/ManageAssignment";
@@ -18,6 +18,7 @@ import useFetch from "./hooks/useFetch";
 import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
 import jwt_decode from "jwt-decode";
 import EditAssetPage from "./pages/ManageAsset/EditAssetPage/EditAssetPage";
+import CreateAssetPage from "./pages/ManageAsset/CreateAssetPage/CreateAssetPage";
 
 const headerTitle = {
     Home: 'Home',
@@ -128,6 +129,9 @@ export default function App() {
                                     </Route>}
                                     {role=== "Admin" && <Route path="/edit/:id" exact>
                                         <EditUserPage/>
+                                    </Route>}
+                                    {role=== "Admin" && <Route path="/create/asset" exact>
+                                        <CreateAssetPage/>
                                     </Route>}
                                     {role=== "Admin" && <Route path="/edit/asset/:id" exact>
                                         <EditAssetPage/>

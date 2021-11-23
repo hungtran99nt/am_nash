@@ -7,7 +7,7 @@ import {useHistory} from "react-router-dom";
 const validateForm = {
 
 }
-const EditAssetPage = () =>{
+const CreateAssetPage = () =>{
     let history = useHistory();
     const handleRedirectAssetManagePage = () =>{
         history.push("/asset")
@@ -29,7 +29,7 @@ const EditAssetPage = () =>{
             <div className="row">
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
-                    <div className="app-content__title">Edit Asset</div>
+                    <div className="app-content__title">Create New Asset</div>
                     <Formik
                         enableReinitialize={true}
                         initialValues={initialValues}
@@ -73,13 +73,12 @@ const EditAssetPage = () =>{
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             isInvalid={touched.category && errors.category}
-                                            disabled={true}
                                         >
                                             <option value={values.category}/>
-                                            {/*<option value="Staff" defaultChecked={values.type === "Staff"}*/}
-                                            {/*        label="Staff"/>*/}
-                                            {/*<option value="Admin" defaultChecked={values.type === "Admin"}*/}
-                                            {/*        label="Admin"/>*/}
+                                            <option value="Staff" defaultChecked={values.category === "Staff"}
+                                                    label="Staff"/>
+                                            <option value="Admin" defaultChecked={values.category === "Admin"}
+                                                    label="Admin"/>
                                         </Form.Select>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.category}
@@ -90,12 +89,12 @@ const EditAssetPage = () =>{
                                     <Form.Label column sm="3">Specification</Form.Label>
                                     <Col sm="6">
                                         <Form.Control rows={4}
-                                            as="textarea"
-                                            name="specification"
-                                            value={values.specification}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            isInvalid={touched.specification && errors.specification}
+                                                      as="textarea"
+                                                      name="specification"
+                                                      value={values.specification}
+                                                      onChange={handleChange}
+                                                      onBlur={handleBlur}
+                                                      isInvalid={touched.specification && errors.specification}
                                         />
                                         <Form.Control.Feedback type="invalid">
                                             {errors.specification}
@@ -138,22 +137,7 @@ const EditAssetPage = () =>{
                                                 checked={values.state === "Not Available"}
                                                 onChange={handleChange}
                                             />
-                                            <Form.Check
-                                                label="Waiting for recycling"
-                                                name="state"
-                                                type="radio"
-                                                value="Female"
-                                                checked={values.state === "Waiting for recycling"}
-                                                onChange={handleChange}
-                                            />
-                                            <Form.Check
-                                                label="Recycled"
-                                                name="state"
-                                                type="radio"
-                                                value="Female"
-                                                checked={values.state === "Recycled"}
-                                                onChange={handleChange}
-                                            />
+                                            
                                         </div>
                                     </Col>
                                 </Form.Group>
@@ -178,4 +162,4 @@ const EditAssetPage = () =>{
         </div>
     )
 }
-export default EditAssetPage
+export default CreateAssetPage
