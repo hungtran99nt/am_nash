@@ -37,8 +37,6 @@ const convertDataResponse = res => (
     }
 );
 
-
-
 const EditUserPage = () => {
     let history = useHistory();
     const {id} = useParams();

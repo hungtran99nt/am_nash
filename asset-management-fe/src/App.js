@@ -1,5 +1,5 @@
 import './App.css'
-import React, { useState} from "react";
+import React, {useState} from "react";
 import {BrowserRouter as Router, NavLink, Route, Switch} from "react-router-dom";
 import logoimg from "./assets/images/logonashtech.png"
 import ManageAssignment from "./pages/ManageAssignment/ManageAssignment";
@@ -10,7 +10,6 @@ import ManageUser from "./pages/ManageUser/ManageUser";
 import Report from "./pages/Report/Report";
 import Header from "./components/Header/Header";
 import Login from "./pages/Login/Login";
-
 import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
 import Profile from "./pages/Profile/Profile";
 import {API_URL} from "./common/constants";
@@ -19,6 +18,7 @@ import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
 import jwt_decode from "jwt-decode";
 import EditAssetPage from "./pages/ManageAsset/EditAssetPage/EditAssetPage";
 import CreateAssetPage from "./pages/ManageAsset/CreateAssetPage/CreateAssetPage";
+import Error from "./pages/Error/Error";
 
 const headerTitle = {
     Home: 'Home',
@@ -38,12 +38,17 @@ const convertDataResponse = res => (
 export default function App() {
     const [headerInfo, setHeaderInfo] = useState(headerTitle.Home);
     const [token, setToken] = useState(localStorage.getItem("TOKEN"));
+
     let curUsername = localStorage.getItem("USERNAME");
     let role = "";
     if (token) {
         localStorage.setItem("TOKEN", token);
         const decode = jwt_decode(token);
         role = decode.role;
+        if (decode.exp * 1000 <= Date.now()) {
+            localStorage.removeItem("TOKEN");
+            setToken(null);
+        }
     }
     const {
         isLoading,
@@ -124,12 +129,12 @@ export default function App() {
                                     <Route path="/profile" exact>
                                         <Profile/>
                                     </Route>
-                                    {role === "Admin" && <Route path="/create" exact>
-                                       <CreateUserPage/>
-                                    </Route>}
-                                    {role=== "Admin" && <Route path="/edit/:id" exact>
-                                        <EditUserPage/>
-                                    </Route>}
+                                    <Route path="/create" exact>
+                                        {role === "Admin" ? <CreateUserPage/> : <Error message={`Access denied`}/>}
+                                    </Route>
+                                    <Route path="/edit/:id" exact>
+                                        {role === "Admin" ? <EditUserPage/> : <Error message={`Access denied`}/>}
+                                    </Route>
                                     {role=== "Admin" && <Route path="/create/asset" exact>
                                         <CreateAssetPage/>
                                     </Route>}
