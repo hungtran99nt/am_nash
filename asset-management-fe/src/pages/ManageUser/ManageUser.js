@@ -6,7 +6,6 @@ import useFetch from "../../hooks/useFetch";
 import {API_URL, DATE_FORMAT, FILTER_USER_OPTIONS} from "../../common/constants";
 import moment from "moment";
 import {useHistory} from "react-router-dom";
-import jwt_decode from "jwt-decode";
 
 const convertDataResponse = res => res.data.map(u => (
     {
@@ -14,7 +13,7 @@ const convertDataResponse = res => res.data.map(u => (
         staffCode: u.staffCode,
         fullName: `${u.firstName} ${u.lastName}`,
         userName: u.username,
-        joinDate: moment(u.joinDate).format(DATE_FORMAT.TO),
+        joinedDate: moment(u.joinedDate).format(DATE_FORMAT.TO),
         type: u.type,
         location: u.location
     }
