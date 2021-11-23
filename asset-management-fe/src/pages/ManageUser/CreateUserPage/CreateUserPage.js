@@ -34,22 +34,6 @@ const validation = (values) => {
     return errors;
 }
 
-const convertPOSTDataResponse = res => (
-    {
-        id: res.data.id,
-        staffCode: res.data.staffCode,
-        username: res.data.username,
-        firstName: res.data.firstName,
-        lastName: res.data.lastName,
-        joinedDate: moment(res.data.joinedDate).format("YYYY-MM-DD"),
-        birthDate: moment(res.data.birthDate).format("YYYY-MM-DD"),
-        gender: res.data.gender,
-        type: res.data.type,
-        disable: res.data.disable,
-        location: res.data.location
-    }
-);
-
 const CreateUserPage = () => {
     const initialValues = {firstName: "", lastName: "", birthDate: "", gender: "female", joinedDate: "", type: ""};
 
@@ -69,8 +53,7 @@ const CreateUserPage = () => {
                 birthDate: values.birthDate,
                 gender: values.gender,
                 joinedDate: values.joinedDate,
-                type: values.type,
-                status: USER_STATUS.NEW
+                type: values.type
             }
         }).then(res => {
             console.log("res = ", res);

@@ -1,9 +1,12 @@
 import {Button} from "react-bootstrap";
 import "../../assets/styles/main.css"
 import React from "react";
-import {useHistory} from "react-router-dom";
+import {Redirect} from "react-router-dom";
 
-const Home = () => {
+const Home = ({token}) => {
+    if (!token){
+        return <Redirect to="/login"/>
+    }
     return (
     <div>
         <Button className="btn-change">Save</Button><br/>

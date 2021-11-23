@@ -3,10 +3,9 @@ import {DropdownButton} from "react-bootstrap";
 import DropdownItem from "react-bootstrap/DropdownItem";
 import profileImage from "./github.png"
 
-const Header = ({header, account, token}) => {
+const Header = ({header, account, token, setToken}) => {
     let headerButton;
     if (account && token) {
-        console.log(account.fullName)
         headerButton = (
             <DropdownButton id="dropdown-basic-button"
                             style={{float: "right"}}
@@ -56,19 +55,22 @@ const Header = ({header, account, token}) => {
                     <div className="modal-dialog modal-sm">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Are you
+                                <h5 className="modal-title logout" id="exampleModalLabel">Are you
                                     sure?</h5>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close">
                                 </button>
                             </div>
-                            <div className="modal-body">
+                            <div className="modal-body logout">
                                 <h2>Log out...</h2>
                             </div>
                             <div className="modal-footer">
                                 <a href="/login" className="btn btn-primary"
                                    style={{backgroundColor: "#f44336", borderColor: "#f44336"}}
-                                   onClick={() => localStorage.clear()}
+                                   onClick={() => {
+                                       localStorage.clear();
+                                       setToken("");
+                                   }}
                                 >Log out</a>
                                 <button type="button" className="btn btn-secondary"
                                         data-bs-dismiss="modal">Cancel

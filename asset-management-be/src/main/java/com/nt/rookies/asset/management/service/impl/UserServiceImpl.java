@@ -110,17 +110,7 @@ public class UserServiceImpl implements UserService {
     return Optional.empty();
   }
 
-  @Override
-  public List<UserDTO> getAllUser() {
-    return repository.findAll().stream()
-        .map(user -> modelMapper.map(user, UserDTO.class))
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public UserDTO findByUsernameTest(String username) {
-    return null;
-  }
+  
 
   @Override
   public List<UserDTO> findAllByLocation() {

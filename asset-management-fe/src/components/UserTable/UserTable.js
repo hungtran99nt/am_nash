@@ -18,7 +18,7 @@ const defaultSorted = [{
 //  config for pagination
 const pagination = paginationFactory({
 	page: 1,
-	sizePerPage: 19,
+	sizePerPage: 10,
 	nextPageText: 'Next',
 	prePageText: 'Prev',
 	hideSizePerPage: true,
