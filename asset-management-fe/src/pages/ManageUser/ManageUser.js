@@ -7,13 +7,14 @@ import {API_URL, DATE_FORMAT, FILTER_USER_OPTIONS} from "../../common/constants"
 import moment from "moment";
 import {useHistory, useLocation} from "react-router-dom";
 
+
 const convertDataResponse = res => res.data.map(u => (
     {
         id: u.id,
         staffCode: u.staffCode,
         fullName: `${u.firstName} ${u.lastName}`,
         userName: u.username,
-        joinDate: moment(u.joinDate).format(DATE_FORMAT.TO),
+        joinedDate: moment(u.joinedDate).format(DATE_FORMAT.TO),
         type: u.type,
         location: u.location
     }

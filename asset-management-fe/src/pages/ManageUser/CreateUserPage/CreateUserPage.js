@@ -18,7 +18,7 @@ const validateForm = Yup.object().shape({
         .max(50, 'Too Long!')
         .required('Required'),
     birthDate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
-        .required("Required"),
+        .required("Invalid date. Please select a different date"),
     type: Yup.string().required("Required!")
 });
 
@@ -26,17 +26,19 @@ const validation = (values) => {
     const errors = {};
     let isWeekend = moment(values.joinedDate).isoWeekday();
     if (!values.joinedDate) {
-        errors.joinedDate = "Required";
-    } else if (moment(values.joinedDate).isBefore(moment(values.joinedDate))) {
+        errors.joinedDate = "Invalid date. Please select a different date";
+    } else if (moment(values.joinedDate).isBefore(moment(values.birthDate))) {
         errors.joinedDate = "Joined date is not later than Date of Birth. Please select a different date";
     } else if (isWeekend === 7 || isWeekend === 6) {
         errors.joinedDate = "Joined date is Saturday or Sunday. Please select a different date"
+    } else if (moment(values.joinedDate).isAfter(new Date(Date.now()))){
+        errors.joinedDate ="Joined date is not future day. Please select a different date"
     }
     return errors;
 }
 
 const CreateUserPage = () => {
-    const initialValues = {firstName: "", lastName: "", birthDate: "", gender: "female", joinedDate: "", type: ""};
+    const initialValues = {firstName: "", lastName: "", birthDate: "", gender: "Female", joinedDate: "", type: ""};
 
     let history = useHistory();
 
@@ -68,7 +70,7 @@ const CreateUserPage = () => {
         );
     }
     return (
-        <div className="app-create">
+        <div className="app-page">
             <div className="row">
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
@@ -86,8 +88,6 @@ const CreateUserPage = () => {
                               handleBlur,
                               handleChange,
                               handleSubmit,
-                              isSubmitting,
-                              resetForm,
                           }) => (
                             <Form onSubmit={handleSubmit}>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextfirstName">
@@ -150,7 +150,7 @@ const CreateUserPage = () => {
                                                 label="Female"
                                                 name="gender"
                                                 type="radio"
-                                                value="female"
+                                                value="Female"
                                                 defaultChecked={true}
                                                 onChange={handleChange}
                                             />
@@ -159,7 +159,7 @@ const CreateUserPage = () => {
                                                 label="Male"
                                                 name="gender"
                                                 type="radio"
-                                                value="male"
+                                                value="Male"
                                                 onChange={handleChange}
                                             />
                                         </div>

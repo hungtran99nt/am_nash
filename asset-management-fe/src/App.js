@@ -10,13 +10,14 @@ import ManageUser from "./pages/ManageUser/ManageUser";
 import Report from "./pages/Report/Report";
 import Header from "./components/Header/Header";
 import Login from "./pages/Login/Login";
-
 import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
 import Profile from "./pages/Profile/Profile";
 import {API_URL} from "./common/constants";
 import useFetch from "./hooks/useFetch";
 import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
 import jwt_decode from "jwt-decode";
+import EditAssetPage from "./pages/ManageAsset/EditAssetPage/EditAssetPage";
+import CreateAssetPage from "./pages/ManageAsset/CreateAssetPage/CreateAssetPage";
 import Error from "./pages/Error/Error";
 
 const headerTitle = {
@@ -54,6 +55,7 @@ export default function App() {
         data: account,
         errorMessage
     } = useFetch({}, `${API_URL}/users/user?username=${curUsername}`, convertDataResponse);
+    console.log(account)
     return (
         <Router>
             <div>
@@ -61,6 +63,7 @@ export default function App() {
                     header={headerInfo}
                     account={account}
                     token={token}
+                    setToken={setToken}
                 />
                 <div className="appcontainer">
                     <div className="grid wide">
@@ -105,23 +108,25 @@ export default function App() {
                             <div className="col col-lg-9 col-md-8 col-sm-10">
                                 <Switch>
                                     <Route path="/" exact>
-                                        <Home/>
+                                        <Home
+                                            token={token}
+                                        />
                                     </Route>
-                                    {account.type === "Admin" && <Route path="/user" exact>
-                                        <ManageUser/>
-                                    </Route>}
-                                    {account.type === "Admin" && <Route path="/asset" exact>
-                                        <ManageAsset/>
-                                    </Route>}
-                                    <Route path="/assignment" exact>
-                                        <ManageAssignment/>
-                                    </Route>
-                                    <Route path="/requestofreturning" exact>
-                                        <RequestOfReturning/>
-                                    </Route>
-                                    {account.type === "Admin" && <Route path="/report" exact>
-                                        <Report/>
-                                    </Route>}
+                                    <Route path="/user" exact
+                                           render={() => role === "Admin" ? <ManageUser/> : <Login message="Admin only"/>}
+                                    />
+                                    <Route path="/asset" exact
+                                           render={() => role === "Admin" ? <ManageAsset/> : <Login message="Admin only"/>}
+                                    />
+                                    <Route path="/assignment" exact
+                                           render={() => token ? <ManageAssignment/> : <Login/>}
+                                    />
+                                    <Route path="/requestofreturning" exact
+                                           render={() => token ? <RequestOfReturning/> : <Login/>}
+                                    />
+                                    <Route path="/report" exact
+                                           render={() => role === "Admin" ? <Report/> : <Login message="Admin only"/>}
+                                    />
                                     <Route path="/login" exact>
                                         <Login/>
                                     </Route>
@@ -134,6 +139,12 @@ export default function App() {
                                     <Route path="/edit/:id" exact>
                                         {role === "Admin" ? <EditUserPage/> : <Error message={`Access denied`}/>}
                                     </Route>
+                                    {role=== "Admin" && <Route path="/create/asset" exact>
+                                        <CreateAssetPage/>
+                                    </Route>}
+                                    {role=== "Admin" && <Route path="/edit/asset/:id" exact>
+                                        <EditAssetPage/>
+                                    </Route>}
                                 </Switch>
                             </div>
                         </div>

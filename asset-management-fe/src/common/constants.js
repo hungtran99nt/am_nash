@@ -1,3 +1,5 @@
+export const HOST_URL = 'http://localhost:8080';
+
 export const API_URL = 'http://localhost:8080/api/v1.0';
 
 export const DATE_FORMAT = {
@@ -15,4 +17,10 @@ export const USER_STATUS = {
 	NEW: -1,
 	DISABLED: 0,
 	ACTIVE: 1
+}
+
+
+export const SORT_ORDERS = {
+	ASC: 'asc',
+	DESC: 'desc'
 }
