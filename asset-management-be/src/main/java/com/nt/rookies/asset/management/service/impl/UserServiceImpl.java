@@ -159,14 +159,18 @@ public class UserServiceImpl implements UserService {
 
     System.out.println("*****Day la user id: " + assignList.size());
 
-    if (assignList.size() <= 0) {
-      throw new UserDisabledException(" khong the tat thang nay duoc ");
-    } else {
+    if (assignList.isEmpty()) {
       user.setStatus(0);
       repository.save(user);
       return modelMapper.map(user, UserDTO.class);
     }
 
+    else
+
+    {
+      throw new UserDisabledException(" khong the tat thang nay duoc ");
+
+    }
   }
 
   @Override

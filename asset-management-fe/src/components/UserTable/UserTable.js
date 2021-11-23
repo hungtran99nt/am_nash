@@ -37,13 +37,18 @@ const UserTable = ({ users, isLoading }) => {
   const [showErr, setShowErr] = useState(true);
   const handleCloseErr = () => setShowErr(false);
   const handleShowErr = () => setShowErr(true);
+
   const handleDeleteClicked = (id) => {
     axios
       .put(`${API_URL}/users/disable/${id}`)
       .then((response) => {
         console.log(response.data.message);
       })
-      .catch(handleShowErr());
+      .catch((error) => {
+        if (error.response) {
+          handleShowErr(true);
+        }
+      });
 
     console.log("id clicked = ", id);
   };

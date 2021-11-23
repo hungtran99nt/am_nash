@@ -1,50 +1,17 @@
 import { Modal } from "react-bootstrap";
 import "./UserPopup.css";
 
-const UserPopup = ({ show, handleClose, userInfo }) => {
+const UserDisableConfirmation = ({ showConfirm, handleCloseConfirm }) => {
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal show={showConfirm} onHide={handleCloseConfirm} centered>
       <Modal.Header closeButton className="text-danger">
-        <Modal.Title>Detail User Information</Modal.Title>
+        <Modal.Title>Can not disable user</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <table className="user__detail">
-          <tbody>
-            <tr>
-              <th>Staff Code</th>
-              <td>{userInfo.staffCode}</td>
-            </tr>
-            <tr>
-              <th>Full Name</th>
-              <td>
-                {userInfo.firstName} {userInfo.lastName}
-              </td>
-            </tr>
-            <tr>
-              <th>UserName</th>
-              <td>{userInfo.username}</td>
-            </tr>
-            <tr>
-              <th>Date of Birth</th>
-              <td>{convert(userInfo.birthDate)}</td>
-            </tr>
-            <tr>
-              <th>Gender</th>
-              <td>{userInfo.gender}</td>
-            </tr>
-            <tr>
-              <th>Type</th>
-              <td>{userInfo.type}</td>
-            </tr>
-            <tr>
-              <th>Location</th>
-              <td>{userInfo.location}</td>
-            </tr>
-          </tbody>
-        </table>
+        <p>There are valid assignment belonging to </p>
       </Modal.Body>
     </Modal>
   );
 };
 
-export default UserPopup;
+export default UserDisableConfirmation;
