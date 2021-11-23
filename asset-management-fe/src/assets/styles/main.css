@@ -5,9 +5,8 @@
     --text-color:#333;
     --background-color:#F3F5F7;
 }
-*{
-    /* giúp tất cả các element kế thừa trong html */
-    box-sizing: inherit;
+*, ::before, :after{
+    box-sizing: border-box !important;
 }
 .grid {
     width: 100%;

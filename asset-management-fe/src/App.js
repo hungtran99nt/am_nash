@@ -1,5 +1,5 @@
 import './App.css'
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {BrowserRouter as Router, NavLink, Route, Switch} from "react-router-dom";
 import logoimg from "./assets/images/logonashtech.png"
 import ManageAssignment from "./pages/ManageAssignment/ManageAssignment";
@@ -16,6 +16,7 @@ import Profile from "./pages/Profile/Profile";
 import {API_URL} from "./common/constants";
 import useFetch from "./hooks/useFetch";
 import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
+import jwt_decode from "jwt-decode";
 
 const headerTitle = {
     Home: 'Home',
@@ -36,6 +37,12 @@ export default function App() {
     const [headerInfo, setHeaderInfo] = useState(headerTitle.Home);
     const [token, setToken] = useState(localStorage.getItem("TOKEN"));
     let curUsername = localStorage.getItem("USERNAME");
+    let role = "";
+    if (token) {
+        localStorage.setItem("TOKEN", token);
+        const decode = jwt_decode(token);
+        role = decode.role;
+    }
     const {
         isLoading,
         data: account,
@@ -99,10 +106,10 @@ export default function App() {
                                         />
                                     </Route>
                                     <Route path="/user" exact
-                                           render={() => token && account.type === "Admin" ? <ManageUser/> : <Login message="Admin only"/>}
+                                           render={() => role === "Admin" ? <ManageUser/> : <Login message="Admin only"/>}
                                     />
                                     <Route path="/asset" exact
-                                           render={() => token && account.type === "Admin" ? <ManageAsset/> : <Login message="Admin only"/>}
+                                           render={() => role === "Admin" ? <ManageAsset/> : <Login message="Admin only"/>}
                                     />
                                     <Route path="/assignment" exact
                                            render={() => token ? <ManageAssignment/> : <Login/>}
@@ -111,7 +118,7 @@ export default function App() {
                                            render={() => token ? <RequestOfReturning/> : <Login/>}
                                     />
                                     <Route path="/report" exact
-                                           render={() => token && account.type === "Admin" ? <Report/> : <Login message="Admin only"/>}
+                                           render={() => role === "Admin" ? <Report/> : <Login message="Admin only"/>}
                                     />
                                     <Route path="/login" exact>
                                         <Login/>
@@ -120,10 +127,10 @@ export default function App() {
                                            render={() => token ? <Profile/> : <Login/>}
                                     />
                                     <Route path="/create" exact
-                                           render={() => token ? <CreateUserPage/> : <Login/>}
+                                           render={() => role === "Admin" ? <CreateUserPage/> : <Login message="Admin only"/>}
                                     />
                                     <Route path="/edit/:id" exact
-                                           render={() => token ? <EditUserPage/> : <Login/>}
+                                           render={() => role === "Admin" ? <EditUserPage/> : <Login message="Admin only"/>}
                                     />
                                 </Switch>
                             </div>
