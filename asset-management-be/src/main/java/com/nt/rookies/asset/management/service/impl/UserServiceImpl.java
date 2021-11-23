@@ -8,10 +8,12 @@ import com.nt.rookies.asset.management.entity.User;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.UserService;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,38 +67,25 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO createUser(UserDTO userDTO) {
-    StringBuilder username = new StringBuilder(userDTO.getFirstName().toLowerCase());
-    String[] lastNames = userDTO.getLastName().split(" ");
-    for (String name : lastNames) {
-      username.append(Character.toLowerCase(name.charAt(0)));
-    }
-    Optional<Integer> maxPostfix = repository.findMaxUsernamePostfix(username.toString());
-    logger.info("maxPostfix: {}", maxPostfix.orElse(0));
-    //  if username existed => username = username + countUsername
-    maxPostfix.ifPresent(postfix -> username.append(++postfix));
-    SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
-    String password = username + "@" + formatter.format(userDTO.getBirthDate());
-    String encodedPassword = passwordEncoder.encode(password);
-    logger.info("username: {}", username);
-    logger.info("password: {}", password);
-    logger.info("encoded password: {}", encodedPassword);
+    String username = generateUsername(userDTO);
+    String encodedPassword = generatePassword(userDTO, username);
     Location location = getUserLocation();
-    logger.info("location: {}", location);
     User user = new User();
     user.setFirstName(userDTO.getFirstName());
     user.setLastName(userDTO.getLastName());
-    user.setUsername(username.toString());
+    user.setUsername(username);
     user.setPassword(encodedPassword);
     user.setJoinedDate(userDTO.getJoinedDate());
     user.setGender(userDTO.getGender());
     user.setBirthDate(userDTO.getBirthDate());
     user.setType(userDTO.getType());
-    user.setStatus(-1); // account initial
+    user.setStatus(BaseConstants.USER_STATUS_NEW);
     user.setLocation(location);
     logger.info("New User:{}", user);
-    User createdUser = repository.save(user);
-    String generatedCode = repository.generateStaffCode();
-    createdUser.setStaffCode(generatedCode);
+    User createdUser = repository.save(user); // insert user to db
+    String staffCode = generateStaffCode(createdUser.getId());
+    createdUser.setStaffCode(staffCode);
+    createdUser = repository.save(createdUser); // update user with staff code
     logger.info("Created User:{}", createdUser);
     return modelMapper.map(createdUser, UserDTO.class);
   }
@@ -110,8 +99,11 @@ public class UserServiceImpl implements UserService {
     return Optional.empty();
   }
 
+<<<<<<< HEAD
   
 
+=======
+>>>>>>> b050828edf77ef809a89740f905f42259cb133f7
   @Override
   public List<UserDTO> findAllByLocation() {
     Location location = getUserLocation();
@@ -128,6 +120,46 @@ public class UserServiceImpl implements UserService {
         (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
     User currentUser = repository.findByUsername(username);
+    logger.info("location: {}", currentUser.getLocation());
     return currentUser.getLocation();
+  }
+
+  private String generateUsername(UserDTO userDTO) {
+    StringBuilder username = new StringBuilder();
+    username.append(removeAccent(userDTO.getFirstName()).toLowerCase());
+    String[] lastNames = userDTO.getLastName().split(" ");
+    for (String name : lastNames) {
+      username.append(Character.toLowerCase(name.charAt(0)));
+    }
+    Optional<Integer> maxPostfix = repository.findMaxUsernamePostfix(username.toString());
+    logger.info("maxPostfix: {}", maxPostfix.orElse(0));
+    //  if username existed => username = username + countUsername
+    maxPostfix.ifPresent(postfix -> username.append(++postfix));
+    logger.info("username: {}", username);
+    return username.toString();
+  }
+
+  private String removeAccent(String text) {
+    return Normalizer.normalize(text, Normalizer.Form.NFD)
+        .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+        .replaceAll("Đ", "D")
+        .replaceAll("đ", "d");
+  }
+
+  private String generatePassword(UserDTO userDTO, String username) {
+    SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
+    StringBuilder password = new StringBuilder();
+    password.append(username).append("@");
+    password.append(formatter.format(userDTO.getBirthDate()));
+    String encodedPassword = passwordEncoder.encode(password);
+    logger.info("password: {}", password);
+    logger.info("encoded password: {}", encodedPassword);
+    return encodedPassword;
+  }
+
+  private String generateStaffCode(Integer userId) {
+    String staffCode = "SD" + StringUtils.leftPad(userId.toString(), 4, "0");
+    logger.info("staffCode: {}", staffCode);
+    return staffCode;
   }
 }
