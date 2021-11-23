@@ -1,146 +1,177 @@
-import BootstrapTable from 'react-bootstrap-table-next';
-import {useEffect, useState} from "react";
+import BootstrapTable from "react-bootstrap-table-next";
+import { useEffect, useState } from "react";
 import UserPopup from "./UserModal/UserPopup";
-import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-import paginationFactory from 'react-bootstrap-table2-paginator';
-import {API_URL} from "../../common/constants";
+import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
+import paginationFactory from "react-bootstrap-table2-paginator";
+import { API_URL } from "../../common/constants";
 import axios from "axios";
-import editImg from '../../assets/images/pen.png'
-import deleteImg from '../../assets/images/cross.png'
-import './UserTable.css'
-import {useHistory} from "react-router-dom";
+import editImg from "../../assets/images/pen.png";
+import deleteImg from "../../assets/images/cross.png";
+import "./UserTable.css";
+import { useHistory } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
+import UserDisableError from "./UserModal/UserDisableError";
 
-const defaultSorted = [{
-	dataField: 'staffCode',
-	order: 'asc'
-}]
+const defaultSorted = [
+  {
+    dataField: "staffCode",
+    order: "asc",
+  },
+];
 
 //  config for pagination
 const pagination = paginationFactory({
-	page: 1,
-	sizePerPage: 19,
-	nextPageText: 'Next',
-	prePageText: 'Prev',
-	hideSizePerPage: true,
-	withFirstAndLast: false,
-	alwaysShowAllBtns: true,
+  page: 1,
+  sizePerPage: 19,
+  nextPageText: "Next",
+  prePageText: "Prev",
+  hideSizePerPage: true,
+  withFirstAndLast: false,
+  alwaysShowAllBtns: true,
 });
 
-const UserTable = ({users, isLoading}) => {
+const convertDataResponse = (response) => response.data;
 
-	const handleEditClicked = id => {
-		history.push(`/edit/${id}`);
-	}
+const UserTable = ({ users, isLoading }) => {
+  const handleEditClicked = (id) => {
+    history.push(`/edit/${id}`);
+  };
 
-	const handleDeleteClicked = id => {
-		console.log("id clicked = ", id);
-	}
+  const [showErr, setShowErr] = useState(true);
+  const handleCloseErr = () => setShowErr(false);
+  const handleShowErr = () => setShowErr(true);
 
-	const columnFormatter = (cell, row) => {
-		return (
-			<div className="table__actions">
-			<span
-				className="action__items"
-				title={`Edit user ${row.userName}`}
-				onClick={() => handleEditClicked(row.id)}
-			>
-				<img src={editImg} alt="edit"/>
-			</span>
+  const handleDeleteClicked = (id) => {
+    axios
+      .put(`${API_URL}/users/disable/${id}`)
+      .then((response) => {
+        console.log(response.data.message);
+      })
+      .catch(handleShowErr());
+  };
 
-			 <span
-				  className="action__items"
-				  title={`Delete user ${row.userName}`}
-				  onClick={() => handleDeleteClicked(row.id)}
-			 >
-				<img src={deleteImg} alt="delete"/>
-			</span>
-			</div>
-		)
-	};
+  const columnFormatter = (cell, row) => {
+    return (
+      <div className="table__actions">
+        <span
+          className="action__items"
+          title={`Edit user ${row.userName}`}
+          onClick={() => handleEditClicked(row.id)}
+        >
+          <img src={editImg} alt="edit" />
+        </span>
 
-	const columns = [
-		{
-			dataField: 'staffCode',
-			text: 'Staff Code',
-			sort: true
-		}, {
-			dataField: 'fullName',
-			text: 'Full Name',
-			sort: true
-		}, {
-			dataField: 'userName',
-			text: 'Username',
-		}, {
-			dataField: 'joinDate',
-			text: 'Join Date',
-			sort: true
-		}, {
-			dataField: 'type',
-			text: 'Type',
-			sort: true
-		}, {
-			dataField: 'action',
-			text: '',
-			width: '50',
-			events: {
-				onClick: (e) => {
-					e.stopPropagation();
-				}
-			},
-			formatter: columnFormatter,
-			headerStyle: () => {
-				return {width: '100px'};
-			}
-		}
-	];
+        <span
+          className="action__items"
+          title={`Delete user ${row.userName}`}
+          onClick={() => handleDeleteClicked(row.id)}
+        >
+          <img src={deleteImg} alt="delete" />
+        </span>
+      </div>
+    );
+  };
 
-	const [userDetail, setUserDetail] = useState({});
-	const [userIdPopup, setUserIdPopup] = useState(1);
+  const columns = [
+    {
+      dataField: "staffCode",
+      text: "Staff Code",
+      sort: true,
+    },
+    {
+      dataField: "fullName",
+      text: "Full Name",
+      sort: true,
+    },
+    {
+      dataField: "userName",
+      text: "Username",
+    },
+    {
+      dataField: "joinDate",
+      text: "Join Date",
+      sort: true,
+    },
+    {
+      dataField: "type",
+      text: "Type",
+      sort: true,
+    },
+    {
+      dataField: "action",
+      text: "",
+      width: "50",
+      events: {
+        onClick: (e) => {
+          e.stopPropagation();
+        },
+      },
+      formatter: columnFormatter,
+      headerStyle: () => {
+        return { width: "100px" };
+      },
+    },
+  ];
 
-	const [show, setShow] = useState(false);
-	const handleClose = () => setShow(false);
-	const handleShow = () => setShow(true);
-	let history = useHistory();
+  const [userDetail, setUserDetail] = useState({});
+  const [userIdPopup, setUserIdPopup] = useState(1);
 
-	// Get user detail for popup
-	useEffect(() => {
-		axios({
-			method: 'GET',
-			url: `${API_URL}/users/${userIdPopup}`
-		}).then(res => {
-			setUserDetail(res.data);
-		}).catch(err => {
-			console.log(err);
-		})
-	}, [userIdPopup])
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
-	const getUserDetail = {
-		onClick: (e, row) => {
-			setUserIdPopup(row.id);
-			toggleTrueFalse();
-		},
-	}
+  let history = useHistory();
 
-	const toggleTrueFalse = () => {
-		setShow(handleShow);
-	};
+  // Get user detail for popup
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `${API_URL}/users/${userIdPopup}`,
+    })
+      .then((res) => {
+        setUserDetail(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [userIdPopup]);
 
-	if (isLoading) return (<div>Loading...</div>)
-	return (
-		<>
-			<BootstrapTable
-				keyField='id'
-				data={users}
-				columns={columns}
-				hover
-				rowEvents={getUserDetail}
-				formatter={columnFormatter}
-				defaultSorted={defaultSorted}
-				pagination={pagination}
-			/>
-			{show ? <UserPopup show={show} handleClose={handleClose} userInfo={userDetail}/> : null}
-		</>
-	)
-}
+  const getUserDetail = {
+    onClick: (e, row) => {
+      setUserIdPopup(row.id);
+      toggleTrueFalse();
+    },
+  };
+
+  const toggleTrueFalse = () => {
+    setShow(handleShow);
+  };
+
+  if (isLoading) return <div>Loading...</div>;
+  return (
+    <>
+      <BootstrapTable
+        keyField="id"
+        data={users}
+        columns={columns}
+        hover
+        rowEvents={getUserDetail}
+        formatter={columnFormatter}
+        defaultSorted={defaultSorted}
+        pagination={pagination}
+      />
+      {show ? (
+        <UserPopup
+          show={show}
+          handleClose={handleClose}
+          userInfo={userDetail}
+        />
+      ) : null}
+      {showErr ? (
+        <UserDisableError show={showErr} handleClose={handleCloseErr} />
+      ) : null}
+    </>
+  );
+};
 
 export default UserTable;
