@@ -54,10 +54,10 @@ const ManageUser = () => {
     return (
         <div className="mt-4">
 			<Container className="px-0">
-				<div className="manager-user__heading pb-3">
+				<div className="manager__heading pb-3">
 					ManageUser
 				</div>
-				<Form className="manager-user__action mb-3">
+				<Form className="manager__action mb-3">
 					<Row className="actions__wrapper">
 						<Col className='col-2 flex-grow-1 select'>
 							<Form.Select

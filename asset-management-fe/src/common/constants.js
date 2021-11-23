@@ -19,6 +19,13 @@ export const USER_STATUS = {
 	ACTIVE: 1
 }
 
+export const FILTER_STATE_OPTIONS = {
+	AVAILABLE: 'Available',
+	NOT_AVAILABLE: 'Not available',
+	ASSIGNED: 'Assigned',
+	WAITING_FOR_RECYCLING: 'Waiting for recycling',
+	RECYCLED: 'Recycled'
+}
 
 export const SORT_ORDERS = {
 	ASC: 'asc',
