@@ -7,7 +7,6 @@ const convert = date => moment(date).format(DATE_FORMAT.TO);
 
 const UserPopup = ({show, handleClose, userInfo}) => {
 
-
 	return (
 		<Modal show={show} onHide={handleClose} centered>
 			<Modal.Header closeButton className="text-danger">

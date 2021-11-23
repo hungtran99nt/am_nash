@@ -55,6 +55,7 @@ export default function App() {
         data: account,
         errorMessage
     } = useFetch({}, `${API_URL}/users/user?username=${curUsername}`, convertDataResponse);
+    console.log(account)
     return (
         <Router>
             <div>
@@ -62,6 +63,7 @@ export default function App() {
                     header={headerInfo}
                     account={account}
                     token={token}
+                    setToken={setToken}
                 />
                 <div className="appcontainer">
                     <div className="grid wide">
@@ -106,23 +108,25 @@ export default function App() {
                             <div className="col col-lg-9 col-md-8 col-sm-10">
                                 <Switch>
                                     <Route path="/" exact>
-                                        <Home/>
+                                        <Home
+                                            token={token}
+                                        />
                                     </Route>
-                                    {account.type === "Admin" && <Route path="/user" exact>
-                                        <ManageUser/>
-                                    </Route>}
-                                    {account.type === "Admin" && <Route path="/asset" exact>
-                                        <ManageAsset/>
-                                    </Route>}
-                                    <Route path="/assignment" exact>
-                                        <ManageAssignment/>
-                                    </Route>
-                                    <Route path="/requestofreturning" exact>
-                                        <RequestOfReturning/>
-                                    </Route>
-                                    {account.type === "Admin" && <Route path="/report" exact>
-                                        <Report/>
-                                    </Route>}
+                                    <Route path="/user" exact
+                                           render={() => role === "Admin" ? <ManageUser/> : <Login message="Admin only"/>}
+                                    />
+                                    <Route path="/asset" exact
+                                           render={() => role === "Admin" ? <ManageAsset/> : <Login message="Admin only"/>}
+                                    />
+                                    <Route path="/assignment" exact
+                                           render={() => token ? <ManageAssignment/> : <Login/>}
+                                    />
+                                    <Route path="/requestofreturning" exact
+                                           render={() => token ? <RequestOfReturning/> : <Login/>}
+                                    />
+                                    <Route path="/report" exact
+                                           render={() => role === "Admin" ? <Report/> : <Login message="Admin only"/>}
+                                    />
                                     <Route path="/login" exact>
                                         <Login/>
                                     </Route>
