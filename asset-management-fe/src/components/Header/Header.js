@@ -3,9 +3,9 @@ import {DropdownButton} from "react-bootstrap";
 import DropdownItem from "react-bootstrap/DropdownItem";
 import profileImage from "./github.png"
 
-const Header = ({header, account, token}) => {
+const Header = ({header, account}) => {
     let headerButton;
-    if (account && token) {
+    if (account) {
         console.log(account.fullName)
         headerButton = (
             <DropdownButton id="dropdown-basic-button"

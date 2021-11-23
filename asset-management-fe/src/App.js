@@ -17,6 +17,7 @@ import {API_URL} from "./common/constants";
 import useFetch from "./hooks/useFetch";
 import moment from "moment";
 import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
+import DenyPage from "./pages/DenyPage/DenyPage";
 
 const headerTitle = {
     Home: 'Home',
@@ -48,7 +49,6 @@ export default function App() {
                 <Header
                     header={headerInfo}
                     account={account}
-                    token={token}
                 />
                 <div className="appcontainer">
                     <div className="grid wide">
@@ -56,7 +56,7 @@ export default function App() {
                             <div className="col col-lg-3 col-md-4 col-sm-2 ">
                                 <img className="logo-img" src={logoimg}/>
                                 <div className="app-content__title">Online Asset Management</div>
-                                {token && <nav className="category">
+                                {account && <nav className="category">
                                     <ul className="category-list">
                                         <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Home)}>
                                             <NavLink exact activeClassName="selected" className="category-item__link"
@@ -95,21 +95,21 @@ export default function App() {
                                     <Route path="/" exact>
                                         <Home/>
                                     </Route>
-                                    {account.type === "Admin" && <Route path="/user" exact>
-                                        <ManageUser/>
-                                    </Route>}
-                                    {account.type === "Admin" && <Route path="/asset" exact>
-                                        <ManageAsset/>
-                                    </Route>}
+                                    <Route path="/user" exact
+                                    render={ () => account.type === "Admin" ? <ManageUser/> : <DenyPage/>}
+                                    />
+                                    <Route path="/asset" exact
+                                           render={ () => account.type === "Admin" ? <ManageAsset/> : <DenyPage/>}
+                                    />
                                     <Route path="/assignment" exact>
                                         <ManageAssignment/>
                                     </Route>
                                     <Route path="/requestofreturning" exact>
                                         <RequestOfReturning/>
                                     </Route>
-                                    {account.type === "Admin" && <Route path="/report" exact>
-                                        <Report/>
-                                    </Route>}
+                                    <Route path="/report" exact
+                                            render={ () => account.type === "Admin" ? <Report/> : <DenyPage/>}
+                                    />
                                     <Route path="/login" exact>
                                         <Login/>
                                     </Route>
