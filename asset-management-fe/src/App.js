@@ -49,6 +49,8 @@ export default function App() {
                 <Header
                     header={headerInfo}
                     account={account}
+                    token={token}
+                    setToken={setToken}
                 />
                 <div className="appcontainer">
                     <div className="grid wide">
@@ -96,10 +98,10 @@ export default function App() {
                                         <Home/>
                                     </Route>
                                     <Route path="/user" exact
-                                    render={ () => account.type === "Admin" ? <ManageUser/> : <DenyPage/>}
+                                           render={() => account.type === "Admin" ? <ManageUser/> : <DenyPage/>}
                                     />
                                     <Route path="/asset" exact
-                                           render={ () => account.type === "Admin" ? <ManageAsset/> : <DenyPage/>}
+                                           render={() => account.type === "Admin" ? <ManageAsset/> : <DenyPage/>}
                                     />
                                     <Route path="/assignment" exact>
                                         <ManageAssignment/>
@@ -108,7 +110,7 @@ export default function App() {
                                         <RequestOfReturning/>
                                     </Route>
                                     <Route path="/report" exact
-                                            render={ () => account.type === "Admin" ? <Report/> : <DenyPage/>}
+                                           render={() => account.type === "Admin" ? <Report/> : <DenyPage/>}
                                     />
                                     <Route path="/login" exact>
                                         <Login/>

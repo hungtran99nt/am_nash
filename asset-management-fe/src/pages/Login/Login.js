@@ -14,10 +14,8 @@ const Login = () => {
             username: username,
             password: password
         }
-        console.log(data)
         axios.post(`${HOST_URL}/authenticate`, data)
             .then(res => {
-                console.log(res);
                 if (res.status === 200) {
                     setRedirect(true);
                     localStorage.setItem('TOKEN', res.data.jwttoken);
@@ -28,7 +26,6 @@ const Login = () => {
                 console.log(err)
             })
     }
-    console.log(localStorage)
     if (redirect) window.location.reload(history.push("/"));
 
     return (
