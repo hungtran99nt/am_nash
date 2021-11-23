@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import moment from "moment";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
-import {API_URL} from "../../../common/constants";
+import {AGE_LIMIT, API_URL, ISO_WEEKEND} from "../../../common/constants";
 import Error from "../../Error/Error";
 
 const validateForm = Yup.object().shape({
@@ -17,22 +17,25 @@ const validateForm = Yup.object().shape({
         .min(2, 'Too Short!')
         .max(50, 'Too Long!')
         .required('Required'),
-    birthDate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
+    birthDate: Yup.date().max(new Date(Date.now() - AGE_LIMIT), "User is under 18. Please select a different date")
         .required("Invalid date. Please select a different date"),
     type: Yup.string().required("Required!")
 });
 
-const validation = (values) => {
+const validation = ({birthDate, joinedDate}) => {
     const errors = {};
-    let isWeekend = moment(values.joinedDate).isoWeekday();
-    if (!values.joinedDate) {
+
+    if (!joinedDate) {
         errors.joinedDate = "Invalid date. Please select a different date";
-    } else if (moment(values.joinedDate).isBefore(moment(values.birthDate))) {
+        return errors;
+    }
+    let isoWeekday = moment(joinedDate).isoWeekday();
+    if (moment(joinedDate).isBefore(birthDate)) {
         errors.joinedDate = "Joined date is not later than Date of Birth. Please select a different date";
-    } else if (isWeekend === 7 || isWeekend === 6) {
+    } else if (ISO_WEEKEND.includes(isoWeekday)) {
         errors.joinedDate = "Joined date is Saturday or Sunday. Please select a different date"
-    } else if (moment(values.joinedDate).isAfter(new Date(Date.now()))){
-        errors.joinedDate ="Joined date is not future day. Please select a different date"
+    } else if (moment(joinedDate).isAfter(Date.now())) {
+        errors.joinedDate = "Joined date is not future day. Please select a different date"
     }
     return errors;
 }
@@ -59,9 +62,9 @@ const CreateUserPage = () => {
                 type: values.type
             }
         }).then(res => {
-            console.log("res = ", res);
+            // console.log("res = ", res);
             console.log('create user success.');
-            history.push(`/user?f=${res.data.id}`);
+            history.push("/user", {firstId: res.data.id});
         }).catch(err => {
             console.log("err = ", err);
             return <Error message={err.response.data.message}/>
@@ -90,7 +93,7 @@ const CreateUserPage = () => {
                               handleSubmit,
                           }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextfirstName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
                                     <Form.Label column sm="2">First Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
@@ -107,7 +110,7 @@ const CreateUserPage = () => {
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextlastName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextLastName">
                                     <Form.Label column sm="2">Last Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
@@ -123,7 +126,7 @@ const CreateUserPage = () => {
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextbirthDate">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextBirthDate">
                                     <Form.Label column sm="2">Date Of Birth</Form.Label>
                                     <Col sm="6">
                                         <Form.Control

@@ -49,7 +49,7 @@ const EditAssetPage = () =>{
                               handleSubmit,
                           }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextfirstName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
                                     <Form.Label column sm="3">Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
