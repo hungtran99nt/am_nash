@@ -8,7 +8,7 @@ const useFetch = (initialData, url, convertResponseToData) => {
 
 	const token = localStorage.getItem("TOKEN");
 
-	if (token !== null && token !== "") {
+	if (token) {
 		axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 	}
 
