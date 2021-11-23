@@ -18,7 +18,7 @@ const validateForm = Yup.object().shape({
         .max(50, 'Too Long!')
         .required('Required'),
     birthDate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
-        .required("Required"),
+        .required("Invalid date. Please select a different date"),
     type: Yup.string().required("Required!")
 });
 
@@ -26,7 +26,7 @@ const validation = (values) => {
     const errors = {};
     let isWeekend = moment(values.joinedDate).isoWeekday();
     if (!values.joinedDate) {
-        errors.joinedDate = "Required";
+        errors.joinedDate = "Invalid date. Please select a different date";
     } else if (moment(values.joinedDate).isBefore(moment(values.birthDate))) {
         errors.joinedDate = "Joined date is not later than Date of Birth. Please select a different date";
     } else if (isWeekend === 7 || isWeekend === 6) {
