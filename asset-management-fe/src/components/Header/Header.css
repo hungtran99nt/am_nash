@@ -17,7 +17,7 @@
 .header-btn span{
     font-size: 20px;
 }
-.modal-title,
-.modal-body{
+.modal-title.logout,
+.modal-body.logout {
     color: var(--primary-color);
 }
