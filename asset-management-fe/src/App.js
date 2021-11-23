@@ -15,9 +15,7 @@ import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
 import Profile from "./pages/Profile/Profile";
 import {API_URL} from "./common/constants";
 import useFetch from "./hooks/useFetch";
-import moment from "moment";
 import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
-import DenyPage from "./pages/DenyPage/DenyPage";
 
 const headerTitle = {
     Home: 'Home',
@@ -43,6 +41,7 @@ export default function App() {
         data: account,
         errorMessage
     } = useFetch({}, `${API_URL}/users/user?username=${curUsername}`, convertDataResponse);
+    console.log(account)
     return (
         <Router>
             <div>
@@ -58,7 +57,7 @@ export default function App() {
                             <div className="col col-lg-3 col-md-4 col-sm-2 ">
                                 <img className="logo-img" src={logoimg}/>
                                 <div className="app-content__title">Online Asset Management</div>
-                                {account && <nav className="category">
+                                {token && <nav className="category">
                                     <ul className="category-list">
                                         <li className="category-item" onClick={() => setHeaderInfo(headerTitle.Home)}>
                                             <NavLink exact activeClassName="selected" className="category-item__link"
@@ -95,35 +94,37 @@ export default function App() {
                             <div className="col col-lg-9 col-md-8 col-sm-10">
                                 <Switch>
                                     <Route path="/" exact>
-                                        <Home/>
+                                        <Home
+                                            token={token}
+                                        />
                                     </Route>
                                     <Route path="/user" exact
-                                           render={() => account.type === "Admin" ? <ManageUser/> : <DenyPage/>}
+                                           render={() => token && account.type === "Admin" ? <ManageUser/> : <Login message="Admin only"/>}
                                     />
                                     <Route path="/asset" exact
-                                           render={() => account.type === "Admin" ? <ManageAsset/> : <DenyPage/>}
+                                           render={() => token && account.type === "Admin" ? <ManageAsset/> : <Login message="Admin only"/>}
                                     />
-                                    <Route path="/assignment" exact>
-                                        <ManageAssignment/>
-                                    </Route>
-                                    <Route path="/requestofreturning" exact>
-                                        <RequestOfReturning/>
-                                    </Route>
+                                    <Route path="/assignment" exact
+                                           render={() => token ? <ManageAssignment/> : <Login/>}
+                                    />
+                                    <Route path="/requestofreturning" exact
+                                           render={() => token ? <RequestOfReturning/> : <Login/>}
+                                    />
                                     <Route path="/report" exact
-                                           render={() => account.type === "Admin" ? <Report/> : <DenyPage/>}
+                                           render={() => token && account.type === "Admin" ? <Report/> : <Login message="Admin only"/>}
                                     />
                                     <Route path="/login" exact>
                                         <Login/>
                                     </Route>
-                                    <Route path="/profile" exact>
-                                        <Profile/>
-                                    </Route>
-                                    <Route path="/create" exact>
-                                        <CreateUserPage/>
-                                    </Route>
-                                    <Route path="/edit/:id" exact>
-                                        <EditUserPage/>
-                                    </Route>
+                                    <Route path="/profile" exact
+                                           render={() => token ? <Profile/> : <Login/>}
+                                    />
+                                    <Route path="/create" exact
+                                           render={() => token ? <CreateUserPage/> : <Login/>}
+                                    />
+                                    <Route path="/edit/:id" exact
+                                           render={() => token ? <EditUserPage/> : <Login/>}
+                                    />
                                 </Switch>
                             </div>
                         </div>
