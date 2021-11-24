@@ -23,15 +23,13 @@ const convertDataResponse = res => res.data.map(u => (
 const ManageUser = () => {
     const [filterOption, setFilterOption] = useState(FILTER_USER_OPTIONS.NONE);
     const [searchText, setSearchText] = useState('');
-    const token = localStorage.getItem("TOKEN");
     const history = useHistory();
     let recentUserId = history.location.state ? history.location.state.firstId : null;
-    // console.log('history:')
-    // console.log(history);
-    // console.log(`firstId: ${recentUserId}`);
+
     const handleAddNewClick = () => {
         history.push("/create");
     }
+
     const {
         isLoading,
         data: users,
@@ -58,6 +56,7 @@ const ManageUser = () => {
             }
         );
     }, [searchText, usersFiltered]);
+
     return (
         <div className="mt-4">
 			<Container className="px-0">
