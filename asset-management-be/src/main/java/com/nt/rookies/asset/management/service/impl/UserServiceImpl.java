@@ -99,11 +99,6 @@ public class UserServiceImpl implements UserService {
     return Optional.empty();
   }
 
-<<<<<<< HEAD
-  
-
-=======
->>>>>>> b050828edf77ef809a89740f905f42259cb133f7
   @Override
   public List<UserDTO> findAllByLocation() {
     Location location = getUserLocation();

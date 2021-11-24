@@ -19,6 +19,7 @@ import jwt_decode from "jwt-decode";
 import EditAssetPage from "./pages/ManageAsset/EditAssetPage/EditAssetPage";
 import CreateAssetPage from "./pages/ManageAsset/CreateAssetPage/CreateAssetPage";
 import Error from "./pages/Error/Error";
+import EditAssignmentPage from "./pages/ManageAssignment/EditAssignmentPage/EditAssignmentPage";
 
 const headerTitle = {
     Home: 'Home',
@@ -145,6 +146,9 @@ export default function App() {
                                     </Route>}
                                     {role=== "Admin" && <Route path="/edit/asset/:id" exact>
                                         <EditAssetPage/>
+                                    </Route>}
+                                    {role=== "Admin" && <Route path="/edit/assignment/:id" exact>
+                                        <EditAssignmentPage/>
                                     </Route>}
                                 </Switch>
                             </div>
