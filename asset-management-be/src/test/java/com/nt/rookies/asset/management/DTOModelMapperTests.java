@@ -17,6 +17,7 @@ import com.nt.rookies.asset.management.repository.AssignmentRepository;
 import com.nt.rookies.asset.management.repository.CategoryRepository;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.UserService;
+import java.util.Calendar;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ public class DTOModelMapperTests {
   @Autowired private UserService userService;
 
   @Test
-  void testUserMapper() {
+  void testUserMapper_EntityToDTO() {
     User user = userRepository.findById(3).get();
     logger.info("User: {}", user);
     UserDTO userDTO = modelMapper.map(user, UserDTO.class);
@@ -54,6 +55,33 @@ public class DTOModelMapperTests {
         () -> assertEquals(user.getStatus(), userDTO.getStatus()),
         // important
         () -> assertEquals(user.getLocation().getLocationName(), userDTO.getLocation()));
+  }
+
+  @Test
+  void testUserMapper_DTOToEntity() {
+    UserDTO userDTO = new UserDTO();
+    userDTO.setFirstName("Phuong");
+    userDTO.setLastName("Ngo Van");
+    userDTO.setBirthDate(Calendar.getInstance().getTime());
+    userDTO.setGender("Male");
+    userDTO.setJoinedDate(Calendar.getInstance().getTime());
+    userDTO.setType("Admin");
+    logger.info("UserDTO: {}", userDTO);
+    User user = modelMapper.map(userDTO, User.class);
+    logger.info("User: {}", user);
+
+    assertAll(
+        () -> assertEquals(user.getId(), userDTO.getId()),
+        () -> assertEquals(user.getStaffCode(), userDTO.getStaffCode()),
+        () -> assertEquals(user.getFirstName(), userDTO.getFirstName()),
+        () -> assertEquals(user.getLastName(), userDTO.getLastName()),
+        () -> assertEquals(user.getUsername(), userDTO.getUsername()),
+        () -> assertEquals(user.getJoinedDate(), userDTO.getJoinedDate()),
+        () -> assertEquals(user.getGender(), userDTO.getGender()),
+        () -> assertEquals(user.getBirthDate(), userDTO.getBirthDate()),
+        () -> assertEquals(user.getType(), userDTO.getType()),
+        () -> assertEquals(user.getStatus(), userDTO.getStatus())
+    );
   }
 
   @Test
@@ -76,11 +104,26 @@ public class DTOModelMapperTests {
   }
 
   @Test
-  void testCategoryMapper() {
+  void testCategoryMapper_EntityToDTO() {
     Category category = categoryRepository.findById(2).get();
     logger.info("Category: {}", category);
     CategoryDTO categoryDTO = modelMapper.map(category, CategoryDTO.class);
     logger.info("CategoryDTO: {}", categoryDTO);
+    assertAll(
+        () -> assertEquals(category.getId(), categoryDTO.getId()),
+        () -> assertEquals(category.getCategoryPrefix(), categoryDTO.getCategoryPrefix()),
+        () -> assertEquals(category.getCategoryName(), categoryDTO.getCategoryName()));
+  }
+
+  @Test
+  void testCategoryMapper_DTOtoEntity() {
+    CategoryDTO categoryDTO = new CategoryDTO();
+    categoryDTO.setCategoryName("Laptop");
+    categoryDTO.setCategoryPrefix("LA");
+    logger.info("CategoryDTO: {}", categoryDTO);
+    Category category = modelMapper.map(categoryDTO, Category.class);
+    logger.info("Category: {}", category);
+
     assertAll(
         () -> assertEquals(category.getId(), categoryDTO.getId()),
         () -> assertEquals(category.getCategoryPrefix(), categoryDTO.getCategoryPrefix()),
@@ -122,7 +165,6 @@ public class DTOModelMapperTests {
     assertAll(
         () -> assertEquals(user.getUsername(), account.getUsername()),
         () -> assertEquals(user.getPassword(), account.getPassword()),
-        () -> assertEquals(user.getType(), account.getType())
-    );
+        () -> assertEquals(user.getType(), account.getType()));
   }
 }
