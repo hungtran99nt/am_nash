@@ -11,7 +11,7 @@ import "./UserTable.css";
 import { useHistory } from "react-router-dom";
 import moment from "moment";
 import UserDisableError from "./UserModal/UserDisableError";
-
+import UserDisableConfirmation from "./UserModal/UserDisableConfirmation";
 const defaultSorted = [
   {
     dataField: "staffCode",
@@ -34,23 +34,27 @@ const UserTable = ({ users, isLoading }) => {
   const handleEditClicked = (id) => {
     history.push(`/edit/${id}`);
   };
-  const [showErr, setShowErr] = useState(true);
+  const [showErr, setShowErr] = useState(false);
   const handleCloseErr = () => setShowErr(false);
   const handleShowErr = () => setShowErr(true);
 
+  const [showConfirm, setShowConfirm] = useState(false);
+  const handleCloseConfirm = () => setShowConfirm(false);
+  const handleShowConfirm = () => setShowConfirm(true);
+  const [disableUser, setDisableUser] = useState(false);
+
   const handleDeleteClicked = (id) => {
     axios
-      .put(`${API_URL}/users/disable/${id}`)
-      .then((response) => {
-        console.log(response.data.message);
-      })
-      .catch((error) => {
-        if (error.response) {
-          handleShowErr(true);
+      .get(`${API_URL}/users/${id}/valid`)
+      .then((res) => {
+        handleShowConfirm();
+        if (disableUser) {
+          axios.put(`${API_URL}/users/disable/${id}`);
         }
+      })
+      .catch((err) => {
+        handleShowErr();
       });
-
-    console.log("id clicked = ", id);
   };
 
   const columnFormatter = (cell, row) => {
@@ -174,8 +178,17 @@ const UserTable = ({ users, isLoading }) => {
           userInfo={userDetail}
         />
       ) : null}
+
       {showErr ? (
-        <UserDisableError show={showErr} handleClose={handleCloseErr} />
+        <UserDisableError showErr={showErr} handleCloseErr={handleCloseErr} />
+      ) : null}
+
+      {showConfirm ? (
+        <UserDisableConfirmation
+          showConfirm={showConfirm}
+          handleCloseConfirm={handleCloseConfirm}
+          setDisableUser={setDisableUser}
+        />
       ) : null}
     </>
   );

@@ -23,4 +23,6 @@ public interface UserService {
   UserDTO findByUsernameTest(String username);
 
   List<UserDTO> findAllByLocation();
+
+  boolean isValidToDisable(Integer id);
 }

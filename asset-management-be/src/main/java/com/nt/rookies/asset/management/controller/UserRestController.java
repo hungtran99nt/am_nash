@@ -66,4 +66,10 @@ public class UserRestController {
   public ResponseEntity<UserDTO> disableUser(@PathVariable(name = "id") Integer id) {
     return new ResponseEntity<>(userService.disableUser(id), HttpStatus.OK);
   }
+
+  @GetMapping("/{id}/valid")
+  public ResponseEntity<Boolean> isValidToDisable(@PathVariable(name = "id") Integer id) {
+    return new ResponseEntity<>(userService.isValidToDisable(id), HttpStatus.OK);
+  }
+
 }

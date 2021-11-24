@@ -156,21 +156,25 @@ public class UserServiceImpl implements UserService {
   public UserDTO disableUser(Integer id) {
     User user = repository.getById(id);
     List<Assignment> assignList = assignmentRepository.findByAssignTo(user);
-
-    System.out.println("*****Day la user id: " + assignList.size());
-
     if (assignList.isEmpty()) {
       user.setStatus(0);
       repository.save(user);
       return modelMapper.map(user, UserDTO.class);
-    }
-
-    else
-
-    {
+    } else {
       throw new UserDisabledException(" khong the tat thang nay duoc ");
 
     }
+  }
+
+  @Override
+  public boolean isValidToDisable(Integer id) {
+    User user = repository.getById(id);
+    List<Assignment> assignList = assignmentRepository.findByAssignTo(user);
+
+    if (assignList.isEmpty())
+      return true;
+    throw new UserDisabledException(" khong the tat thang nay duoc ");
+
   }
 
   @Override
@@ -184,4 +188,5 @@ public class UserServiceImpl implements UserService {
     // TODO Auto-generated method stub
     return null;
   }
+
 }
