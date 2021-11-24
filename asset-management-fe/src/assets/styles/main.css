@@ -33,7 +33,7 @@
     font-weight: 700;
     margin-bottom: 32px;
 }
-.app-create{
+.app-page{
     margin-top: 36px;
 }
 .app-create__input{
@@ -64,4 +64,13 @@
 .group-btn{
     text-align: center;
     margin-left: 64px;
+}
+.form-check-input:checked {
+    background-color:var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+.form-check-input:focus {
+    border-color: hsl(11deg 80% 45% / 94%) !important;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgb(253 13 53 / 25%) !important;
 }

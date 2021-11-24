@@ -10,18 +10,20 @@ import axios from "axios";
 
 const validateForm = Yup.object().shape({
     birthDate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
-        .required("Required"),
+        .required("Invalid date. Please select a different date"),
     type: Yup.string().required("Required!")
 })
 const validation = (values) => {
     const errors = {};
     let isWeekend = moment(values.joinedDate).isoWeekday();
     if (!values.joinedDate) {
-        errors.joinedDate = "Required";
-    } else if (moment(values.joinedDate).isBefore(moment(values.joinedDate))) {
+        errors.joinedDate = "Invalid date. Please select a different date";
+    } else if (moment(values.joinedDate).isBefore(moment(values.birthDate))) {
         errors.joinedDate = "Joined date is not later than Date of Birth. Please select a different date";
     } else if (isWeekend === 7 || isWeekend === 6) {
         errors.joinedDate = "Joined date is Saturday or Sunday. Please select a different date"
+    } else if (moment(values.joinedDate).isAfter(new Date(Date.now()))){
+        errors.joinedDate ="Joined date is not future day. Please select a different date"
     }
     return errors;
 }
@@ -86,11 +88,11 @@ const EditUserPage = () => {
         resetForm();
     }
 
-    const handleRedirectUseManagePage = () => {
+    const handleRedirectUserManagePage = () => {
         history.push("/user");
     }
     return (
-        <div className="app-create">
+        <div className="app-page">
             <div className="row">
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
@@ -229,7 +231,7 @@ const EditUserPage = () => {
                                     >
                                         Save
                                     </Button>
-                                    <Button className="btn-cancel" type="reset" onClick={handleRedirectUseManagePage}>
+                                    <Button className="btn-cancel" type="reset" onClick={handleRedirectUserManagePage}>
                                         Cancel
                                     </Button>
                                 </div>
