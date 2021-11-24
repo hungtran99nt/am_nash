@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from "react";
 import {Button, Col, Container, Form, FormControl, InputGroup, Row} from "react-bootstrap";
-import {FILTER_STATE_OPTIONS} from "../../common/constants";
+import {API_URL, FILTER_STATE_OPTIONS} from "../../common/constants";
 import AssetTable from "../../components/AssetTable/AssetTable";
 import './ManageAsset.css'
 import useFetch from "../../hooks/useFetch";
@@ -20,11 +20,11 @@ const ManageAsset = () => {
 		isLoading,
 		data: assets,
 		errorMessage
-	} = useFetch([], `http://localhost:3000/assets`, convertDataResponse);
+	} = useFetch([], `${API_URL}/assets`, convertDataResponse);
 
 	const {
 		data: categories,
-	} = useFetch([], `http://localhost:3000/categories`, convertDataResponse);
+	} = useFetch([], `${API_URL}/categories`, convertDataResponse);
 
 	const stateKeys = Object.keys(FILTER_STATE_OPTIONS);
 	const listStates = stateKeys.map(key => <option key={FILTER_STATE_OPTIONS[key]} value={FILTER_STATE_OPTIONS[key]}>{FILTER_STATE_OPTIONS[key]}</option>)
