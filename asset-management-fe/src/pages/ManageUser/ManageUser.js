@@ -7,6 +7,7 @@ import {API_URL, DATE_FORMAT, FILTER_USER_OPTIONS} from "../../common/constants"
 import moment from "moment";
 import {useHistory} from "react-router-dom";
 
+
 const convertDataResponse = res => res.data.map(u => (
     {
         id: u.id,
@@ -22,20 +23,28 @@ const convertDataResponse = res => res.data.map(u => (
 const ManageUser = () => {
     const [filterOption, setFilterOption] = useState(FILTER_USER_OPTIONS.NONE);
     const [searchText, setSearchText] = useState('');
-	const token = localStorage.getItem("TOKEN");
-
-	let history = useHistory();
-
-	const handleAddNewClick = () => {
-		history.push("/create");
-	}
-	const {
-		isLoading,
-		data: users,
-		errorMessage
-	} = useFetch([], `${API_URL}/users`, convertDataResponse);
-
+    const token = localStorage.getItem("TOKEN");
+    const history = useHistory();
+    let recentUserId = history.location.state ? history.location.state.firstId : null;
+    // console.log('history:')
+    // console.log(history);
+    // console.log(`firstId: ${recentUserId}`);
+    const handleAddNewClick = () => {
+        history.push("/create");
+    }
+    const {
+        isLoading,
+        data: users,
+        errorMessage
+    } = useFetch([], `${API_URL}/users`, convertDataResponse);
     if (errorMessage) window.location.reload(history.push("/login"));
+
+    if (recentUserId) { // user created/edited: move it to the top of the list
+        users.sort((a, b) => a.id === recentUserId ? -1 : b.id === recentUserId ? 1 : 0);
+        window.history.replaceState(null, '');
+    } else { // default: sort by user id
+        users.sort((a, b) => a.id - b.id);
+    }
 
     const usersFiltered = useMemo(() => {
         return users.filter(user =>
@@ -46,11 +55,9 @@ const ManageUser = () => {
         return usersFiltered.filter(user => {
                 return user.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
                     user.staffCode.toLowerCase().includes(searchText.toLowerCase());
-
             }
-        )
+        );
     }, [searchText, usersFiltered]);
-
     return (
         <div className="mt-4">
 			<Container className="px-0">

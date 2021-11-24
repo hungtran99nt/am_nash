@@ -42,8 +42,8 @@ const ManageAsset = () => {
 	const listStates = stateKeys.map(key => <option value={FILTER_STATE_OPTIONS[key]}>{FILTER_STATE_OPTIONS[key]}</option> )
 	const listCategories = categories.map(cate => <option key={cate.id} value={cate.id}>{cate.categoryName}</option>);
 
-	const handleAddNewClick = () => {
-		history.push("asset/create");
+	const handleRedirectCreateAssetPage = () => {
+		history.push("/create/asset");
 	}
 
 	return (
@@ -89,7 +89,7 @@ const ManageAsset = () => {
 							</InputGroup>
 						</Col>
 						<Col className="h-75">
-							<Button className="w-100 h-100" onClick={handleAddNewClick}>Create new
+							<Button className="w-100 h-100" onClick={handleRedirectCreateAssetPage}>Create new
 								asset</Button>
 						</Col>
 					</Row>
