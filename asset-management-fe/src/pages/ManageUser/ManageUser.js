@@ -41,7 +41,7 @@ const ManageUser = () => {
         users.sort((a, b) => a.id === recentUserId ? -1 : b.id === recentUserId ? 1 : 0);
         window.history.replaceState(null, '');
     } else { // default: sort by user id
-        users.sort((a, b) => a.id - b.id);
+        users.sort((a, b) => a.id - b.id); // TODO change logic sort - sort by staffCode
     }
 
     const usersFiltered = useMemo(() => {

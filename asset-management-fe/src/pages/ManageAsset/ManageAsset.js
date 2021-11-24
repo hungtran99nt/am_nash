@@ -1,16 +1,20 @@
-import React from "react";
+import React, {useMemo, useState} from "react";
 import {Button, Col, Container, Form, FormControl, InputGroup, Row} from "react-bootstrap";
 import {FILTER_STATE_OPTIONS} from "../../common/constants";
 import AssetTable from "../../components/AssetTable/AssetTable";
 import './ManageAsset.css'
 import useFetch from "../../hooks/useFetch";
 import {useHistory} from "react-router-dom";
+import {isMatchExact} from "../../common/config";
 
 const convertDataResponse = res => res.data;
 
-
 const ManageAsset = () => {
 	const history = useHistory();
+
+	const handleRedirectCreateAssetPage = () => {
+		history.push("/create/asset");
+	}
 
 	const {
 		isLoading,
@@ -24,11 +28,33 @@ const ManageAsset = () => {
 
 	const stateKeys = Object.keys(FILTER_STATE_OPTIONS);
 	const listStates = stateKeys.map(key => <option key={FILTER_STATE_OPTIONS[key]} value={FILTER_STATE_OPTIONS[key]}>{FILTER_STATE_OPTIONS[key]}</option>)
-	const listCategories = categories.map(cate => <option key={cate.id} value={cate.id}>{cate.categoryName}</option>);
+	const listCategories = categories.map(cate => <option key={cate.id} value={cate.categoryName}>{cate.categoryName}</option>);
 
-	const handleRedirectCreateAssetPage = () => {
-		history.push("/create/asset");
-	}
+	const [filterStateOption, setFilterStateOption] = useState('');
+	const [filterCategoryOption, setFilterCategoryOption] = useState('');
+	const [searchText, setSearchText] = useState('');
+
+	const assetsDefault = useMemo(() => {
+		return assets.filter(asset => {
+			return !isMatchExact((FILTER_STATE_OPTIONS.RECYCLED).toLowerCase(), asset.state.toLowerCase()) &&
+				!isMatchExact((FILTER_STATE_OPTIONS.WAITING_FOR_RECYCLING).toLowerCase(), asset.state.toLowerCase());
+		});
+	}, [assets]);
+
+	const assetsFiltered = useMemo(() => {
+		return assets.filter(asset => {
+			return isMatchExact(filterStateOption.toLowerCase(),asset.state.toLowerCase()) &&
+				asset.categoryName.toLowerCase().includes(filterCategoryOption.toLowerCase());
+		});
+	}, [assets, filterStateOption, filterCategoryOption]);
+
+	const assetsSearched = useMemo(() => {
+		return assetsFiltered.filter(asset => {
+				return asset.assetCode.toLowerCase().includes(searchText.toLowerCase()) ||
+					asset.assetName.toLowerCase().includes(searchText.toLowerCase());
+			}
+		);
+	}, [searchText, assetsFiltered]);
 
 	return (
 		<div className="mt-4">
@@ -42,9 +68,8 @@ const ManageAsset = () => {
 						<Col className='asset select'>
 							<Form.Select
 								className="h-75"
-								// value={filterOption}
-								onChange={evt => {
-									// setFilterOption(evt.target.value)
+								value={filterStateOption}
+								onChange={evt => { setFilterStateOption(evt.target.value)
 								}}
 							>
 								<option value="">State</option>
@@ -54,9 +79,8 @@ const ManageAsset = () => {
 						<Col className='asset select'>
 							<Form.Select
 								className="h-75"
-								// value={filterOption}
-								onChange={evt => {
-									// setFilterOption(evt.target.value)
+								value={filterCategoryOption}
+								onChange={evt => {setFilterCategoryOption(evt.target.value)
 								}}
 							>
 								<option value="">Category</option>
@@ -65,8 +89,7 @@ const ManageAsset = () => {
 						</Col>
 						<Col className="">
 							<InputGroup className="h-75 search-group">
-								<FormControl className="search-input"/>
-								{/*// onChange={evt => setSearchText(evt.target.value)}/>*/}
+								<FormControl className="search-input" onChange={evt => setSearchText(evt.target.value)}/>
 								<Button className="search-button btn-cancel" id="button-addon2" disabled>
 									<img src="https://img.icons8.com/ios/25/000000/search--v1.png" alt="search"/>
 								</Button>
@@ -79,7 +102,7 @@ const ManageAsset = () => {
 					</Row>
 				</Form>
 			</Container>
-			<AssetTable assets={assets} isLoading={isLoading} errorMessage ={errorMessage}/>
+			<AssetTable assets={filterStateOption === "" ? assetsDefault : assetsSearched} isLoading={isLoading} errorMessage ={errorMessage}/>
 		</div>
 	)
 }

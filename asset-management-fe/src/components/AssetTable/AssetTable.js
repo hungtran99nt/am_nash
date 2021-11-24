@@ -4,7 +4,7 @@ import {SORT_ORDERS} from "../../common/constants";
 import editImg from "../../assets/images/pen.png";
 import deleteImg from "../../assets/images/cross.png";
 import BootstrapTable from "react-bootstrap-table-next";
-import {pagination, sortCode} from "../../common/config";
+import {pagination} from "../../common/config";
 
 const defaultSorted = [{
 	dataField: 'assetCode',
@@ -13,14 +13,6 @@ const defaultSorted = [{
 
 const AssetTable = ({assets, isLoading, errorMessage}) => {
 	const history = useHistory();
-
-	const handleEditClicked = (id) => {
-		history.push(`/edit/asset/${id}`);
-	}
-
-	const handleDeleteClicked = (id) => {
-		console.log("Delete id = ", id)
-	}
 
 	const columnFormatter = (cell, row) => {
 		return (
@@ -44,10 +36,10 @@ const AssetTable = ({assets, isLoading, errorMessage}) => {
 		)
 	};
 
-	const getAssetDetail = {
-		onClick: (e, row) => {
-			console.log("row id = ", row.id);
-		},
+	const sortAssetCode = (a, b, order) => {
+		if (order === SORT_ORDERS.ASC)
+			return a < b ? -1 : 1;
+		return a > b ? -1 : 1;
 	}
 
 	const columns = [
@@ -56,8 +48,12 @@ const AssetTable = ({assets, isLoading, errorMessage}) => {
 			text: 'Asset Code',
 			sort: true,
 			sortFunc: (a, b, order) => {
-				return sortCode(a, b, order);
+				return sortAssetCode(a, b, order);
 			}
+		}, {
+			dataField: 'assetName',
+			text: 'Asset Name',
+			sort: true
 		}, {
 			dataField: 'categoryName',
 			text: 'Category Name',
@@ -81,6 +77,28 @@ const AssetTable = ({assets, isLoading, errorMessage}) => {
 			}
 		}
 	];
+
+	const handleEditClicked = (id) => {
+		history.push(`/edit/asset/${id}`);
+	}
+
+	const handleDeleteClicked = (id) => {
+		console.log("Delete id = ", id)
+	}
+
+	/*	const [userDetail, setUserDetail] = useState({});
+		const [userIdPopup, setUserIdPopup] = useState(1);
+
+		const [show, setShow] = useState(false);
+		const handleClose = () => setShow(false);
+		const handleShow = () => setShow(true);
+		*/
+
+	const getAssetDetail = {
+		onClick: (e, row) => {
+			console.log("Clicked row id = ", row.id);
+		},
+	}
 
 	return (
 		<>

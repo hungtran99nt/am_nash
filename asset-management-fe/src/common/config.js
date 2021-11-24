@@ -17,3 +17,9 @@ export const sortCode = (a, b, order) => {
 	let number_b = Number(b.split(/(\d+)/)[1]);
 	return order === SORT_ORDERS.ASC ? number_a - number_b : number_b - number_a;
 }
+
+export const isMatchExact = (str1, str2) => {
+	let re = new RegExp('^' + str1 + '$');
+	if (str1 === "") return true;
+	return re.test(str2);
+}
