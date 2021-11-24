@@ -5,31 +5,37 @@ import * as Yup from 'yup';
 import moment from "moment";
 import {useHistory, useParams} from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
-import {API_URL} from "../../../common/constants";
+import {AGE_LIMIT, API_URL, ISO_WEEKEND} from "../../../common/constants";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 const validateForm = Yup.object().shape({
-    birthDate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
+    birthDate: Yup.date().max(new Date(Date.now() - AGE_LIMIT), "User is under 18. Please select a different date")
         .required("Invalid date. Please select a different date"),
     type: Yup.string().required("Required!")
-})
-const validation = (values) => {
+});
+
+const validation = ({birthDate, joinedDate}) => {
     const errors = {};
-    let isWeekend = moment(values.joinedDate).isoWeekday();
-    if (!values.joinedDate) {
+
+    if (!joinedDate) {
         errors.joinedDate = "Invalid date. Please select a different date";
-    } else if (moment(values.joinedDate).isBefore(moment(values.birthDate))) {
+        return errors;
+    }
+    let isoWeekday = moment(joinedDate).isoWeekday();
+    if (moment(joinedDate).isBefore(birthDate)) {
         errors.joinedDate = "Joined date is not later than Date of Birth. Please select a different date";
-    } else if (isWeekend === 7 || isWeekend === 6) {
+    } else if (ISO_WEEKEND.includes(isoWeekday)) {
         errors.joinedDate = "Joined date is Saturday or Sunday. Please select a different date"
-    } else if (moment(values.joinedDate).isAfter(new Date(Date.now()))){
-        errors.joinedDate ="Joined date is not future day. Please select a different date"
+    } else if (moment(joinedDate).isAfter(Date.now())) {
+        errors.joinedDate = "Joined date is not future day. Please select a different date"
     }
     return errors;
 }
 
 const convertDataResponse = res => (
     {
+        username: res.data.username,
         firstName: res.data.firstName,
         lastName: res.data.lastName,
         birthDate: moment(res.data.birthDate).format("YYYY-MM-DD"),
@@ -39,7 +45,7 @@ const convertDataResponse = res => (
     }
 );
 
-const EditUserPage = () => {
+const EditUserPage = ({token}) => {
     let history = useHistory();
     const {id} = useParams();
 
@@ -49,6 +55,7 @@ const EditUserPage = () => {
         errorMessage,
     } = useFetch([], `${API_URL}/users/${id}`, convertDataResponse);
     const initialValues = {
+        username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
         birthDate: user.birthDate,
@@ -60,10 +67,10 @@ const EditUserPage = () => {
     if (isLoading) return "Loading";
     if (errorMessage) return <div style={{color: "red"}}>{errorMessage}</div>;
     // console.log("user = ", user);
-
+    // console.log(history)
     const submit = (values, {resetForm}) => {
-        console.log('Form values =', {values});
-        console.log('token=',localStorage.getItem('TOKEN'));
+        // console.log('Form values =', {values});
+        // console.log('token=',localStorage.getItem('TOKEN'));
         axios({
             method: 'PUT',
             url: `${API_URL}/users/${id}`,
@@ -78,9 +85,9 @@ const EditUserPage = () => {
                 type: values.type
             }
         }).then((res) => {
-            console.log("res = ", res);
+            // console.log("res = ", res);
             console.log("Edit success");
-            history.push("/user");
+            history.push("/user", {firstId: res.data.id});
         }).catch(err => {
             console.log("err = ", err);
             return <div style={{color: "red"}}>{err}</div>;
@@ -113,7 +120,7 @@ const EditUserPage = () => {
                               handleSubmit,
                           }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextfirstName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
                                     <Form.Label column sm="2">First Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
@@ -127,7 +134,7 @@ const EditUserPage = () => {
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextlastName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextLastName">
                                     <Form.Label column sm="2">Last Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
@@ -141,7 +148,7 @@ const EditUserPage = () => {
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextbirthDate">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextBirthDate">
                                     <Form.Label column sm="2">Date Of Birth</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
@@ -211,6 +218,7 @@ const EditUserPage = () => {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             isInvalid={touched.type && errors.type}
+                                            disabled={jwt_decode(token).sub === values.username}
                                         >
                                             <option value=""/>
                                             <option value="Staff" defaultChecked={values.type === "Staff"}

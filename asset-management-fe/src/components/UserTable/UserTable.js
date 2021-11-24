@@ -141,7 +141,7 @@ const UserTable = ({users, isLoading}) => {
 				hover
 				rowEvents={getUserDetail}
 				formatter={columnFormatter}
-				defaultSorted={defaultSorted}
+				// defaultSorted={defaultSorted}
 				pagination={pagination}
 			/>
 			{show ? <UserPopup show={show} handleClose={handleClose} userInfo={userDetail}/> : null}

@@ -5,7 +5,7 @@ import UserTable from "../../components/UserTable/UserTable";
 import useFetch from "../../hooks/useFetch";
 import {API_URL, DATE_FORMAT, FILTER_USER_OPTIONS} from "../../common/constants";
 import moment from "moment";
-import {useHistory, useLocation} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 
 const convertDataResponse = res => res.data.map(u => (
@@ -24,10 +24,11 @@ const ManageUser = () => {
     const [filterOption, setFilterOption] = useState(FILTER_USER_OPTIONS.NONE);
     const [searchText, setSearchText] = useState('');
     const token = localStorage.getItem("TOKEN");
-    const first = parseInt(new URLSearchParams(useLocation().search).get('f'));
-
-    let history = useHistory();
-
+    const history = useHistory();
+    let recentUserId = history.location.state ? history.location.state.firstId : null;
+    // console.log('history:')
+    // console.log(history);
+    // console.log(`firstId: ${recentUserId}`);
     const handleAddNewClick = () => {
         history.push("/create");
     }
@@ -36,8 +37,15 @@ const ManageUser = () => {
         data: users,
         errorMessage
     } = useFetch([], `${API_URL}/users`, convertDataResponse);
-
     if (errorMessage) window.location.reload(history.push("/login"));
+
+    if (recentUserId) { // user created/edited: move it to the top of the list
+        users.sort((a, b) => a.id === recentUserId ? -1 : b.id === recentUserId ? 1 : 0);
+        window.history.replaceState(null, '');
+    } else { // default: sort by user id
+        users.sort((a, b) => a.id - b.id);
+    }
+
     const usersFiltered = useMemo(() => {
         return users.filter(user =>
             user.type.toLowerCase().includes(filterOption.toLowerCase()));
@@ -48,14 +56,7 @@ const ManageUser = () => {
                 return user.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
                     user.staffCode.toLowerCase().includes(searchText.toLowerCase());
             }
-        )
-        //     .sort((a, b) => {
-        //     if (first) {
-        //         return a.id === first ? -1 : b.id === first ? 1 : 0;
-        //     } else {
-        //         return a.id - b.id;
-        //     }
-        // });
+        );
     }, [searchText, usersFiltered]);
     return (
         <div className="mt-4">

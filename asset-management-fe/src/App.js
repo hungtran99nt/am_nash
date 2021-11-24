@@ -44,6 +44,7 @@ export default function App() {
     if (token) {
         localStorage.setItem("TOKEN", token);
         const decode = jwt_decode(token);
+        // console.log(decode);
         role = decode.role;
         if (decode.exp * 1000 <= Date.now()) {
             localStorage.removeItem("TOKEN");
@@ -137,7 +138,7 @@ export default function App() {
                                         {role === "Admin" ? <CreateUserPage/> : <Error message={`Access denied`}/>}
                                     </Route>
                                     <Route path="/edit/:id" exact>
-                                        {role === "Admin" ? <EditUserPage/> : <Error message={`Access denied`}/>}
+                                        {role === "Admin" ? <EditUserPage token={token}/> : <Error message={`Access denied`}/>}
                                     </Route>
                                     {role=== "Admin" && <Route path="/create/asset" exact>
                                         <CreateAssetPage/>

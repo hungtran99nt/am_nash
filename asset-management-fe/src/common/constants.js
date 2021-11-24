@@ -24,3 +24,7 @@ export const SORT_ORDERS = {
 	ASC: 'asc',
 	DESC: 'desc'
 }
+
+export const AGE_LIMIT = 567648000000; // 18 years in milliseconds
+
+export const ISO_WEEKEND = [6, 7];
