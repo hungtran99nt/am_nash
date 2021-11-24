@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Col, Container, Form, FormControl, InputGroup, Row} from "react-bootstrap";
-import {API_URL, FILTER_STATE_OPTIONS, FILTER_USER_OPTIONS} from "../../common/constants";
+import {FILTER_STATE_OPTIONS} from "../../common/constants";
 import AssetTable from "../../components/AssetTable/AssetTable";
 import './ManageAsset.css'
 import useFetch from "../../hooks/useFetch";
@@ -8,38 +8,22 @@ import {useHistory} from "react-router-dom";
 
 const convertDataResponse = res => res.data;
 
-const categories = [
-	{
-		id: "1",
-		categoryName: "Laptop"
-	},
-	{
-		id: "2",
-		categoryName: "Monitor"
-	},
-	{
-		id: "3",
-		categoryName: "Personal computer"
-	},
-	{
-		id: "4",
-		categoryName: "Iphone"
-	}
-]
 
 const ManageAsset = () => {
 	const history = useHistory();
 
-	/*
-		const {
-			isLoading,
-			data: categories,
-			errorMessage
-		} = useFetch([], `${API_URL}/categories`, convertDataResponse);
-	*/
+	const {
+		isLoading,
+		data: assets,
+		errorMessage
+	} = useFetch([], `http://localhost:3000/assets`, convertDataResponse);
 
-	const  stateKeys = Object.keys(FILTER_STATE_OPTIONS);
-	const listStates = stateKeys.map(key => <option value={FILTER_STATE_OPTIONS[key]}>{FILTER_STATE_OPTIONS[key]}</option> )
+	const {
+		data: categories,
+	} = useFetch([], `http://localhost:3000/categories`, convertDataResponse);
+
+	const stateKeys = Object.keys(FILTER_STATE_OPTIONS);
+	const listStates = stateKeys.map(key => <option key={FILTER_STATE_OPTIONS[key]} value={FILTER_STATE_OPTIONS[key]}>{FILTER_STATE_OPTIONS[key]}</option>)
 	const listCategories = categories.map(cate => <option key={cate.id} value={cate.id}>{cate.categoryName}</option>);
 
 	const handleRedirectCreateAssetPage = () => {
@@ -95,8 +79,7 @@ const ManageAsset = () => {
 					</Row>
 				</Form>
 			</Container>
-
-			<AssetTable/>
+			<AssetTable assets={assets} isLoading={isLoading} errorMessage ={errorMessage}/>
 		</div>
 	)
 }

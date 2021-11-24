@@ -1,8 +1,7 @@
 import BootstrapTable from 'react-bootstrap-table-next';
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import UserPopup from "./UserModal/UserPopup";
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-import paginationFactory from 'react-bootstrap-table2-paginator';
 import {API_URL, DATE_FORMAT, SORT_ORDERS} from "../../common/constants";
 import axios from "axios";
 import editImg from '../../assets/images/pen.png'
@@ -10,22 +9,13 @@ import deleteImg from '../../assets/images/cross.png'
 import './UserTable.css'
 import {useHistory} from "react-router-dom";
 import moment from "moment";
+import {pagination, sortCode} from "../../common/config";
 
 const defaultSorted = [{
 	dataField: 'staffCode',
 	order: SORT_ORDERS.ASC
 }]
 
-//  config for pagination
-const pagination = paginationFactory({
-	page: 1,
-	sizePerPage: 10,
-	nextPageText: 'Next',
-	prePageText: 'Prev',
-	hideSizePerPage: true,
-	withFirstAndLast: false,
-	alwaysShowAllBtns: true,
-});
 
 const UserTable = ({users, isLoading}) => {
 
@@ -63,7 +53,10 @@ const UserTable = ({users, isLoading}) => {
 		{
 			dataField: 'staffCode',
 			text: 'Staff Code',
-			sort: true
+			sort: true,
+			sortFunc: (a, b, order) => {
+				return sortCode(a, b, order);
+			}
 		}, {
 			dataField: 'fullName',
 			text: 'Full Name',
@@ -131,7 +124,6 @@ const UserTable = ({users, isLoading}) => {
 		setShow(handleShow);
 	};
 
-	if (isLoading) return (<div>Loading...</div>)
 	return (
 		<>
 			<BootstrapTable
@@ -144,6 +136,7 @@ const UserTable = ({users, isLoading}) => {
 				// defaultSorted={defaultSorted}
 				pagination={pagination}
 			/>
+			{isLoading && <div>Loading...</div>}
 			{show ? <UserPopup show={show} handleClose={handleClose} userInfo={userDetail}/> : null}
 		</>
 	)
