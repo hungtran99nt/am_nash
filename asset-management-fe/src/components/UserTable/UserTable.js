@@ -27,7 +27,7 @@ const pagination = paginationFactory({
 	alwaysShowAllBtns: true,
 });
 
-const UserTable = ({users, isLoading}) => {
+const UserTable = ({users, isLoading, isRecentUser}) => {
 
 	const handleEditClicked = id => {
 		history.push(`/edit/${id}`);
@@ -141,7 +141,7 @@ const UserTable = ({users, isLoading}) => {
 				hover
 				rowEvents={getUserDetail}
 				formatter={columnFormatter}
-				// defaultSorted={defaultSorted}
+				defaultSorted={isRecentUser ? [] : defaultSorted}
 				pagination={pagination}
 			/>
 			{show ? <UserPopup show={show} handleClose={handleClose} userInfo={userDetail}/> : null}
