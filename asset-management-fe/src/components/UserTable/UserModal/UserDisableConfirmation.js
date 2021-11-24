@@ -1,7 +1,10 @@
 import { Modal, Button } from "react-bootstrap";
 import "./UserPopup.css";
+import axios from "axios";
+import { API_URL } from "../../../common/constants";
 
 const UserDisableConfirmation = ({
+  idDisable,
   showConfirm,
   handleCloseConfirm,
   setDisableUser,
@@ -18,6 +21,7 @@ const UserDisableConfirmation = ({
         <Button
           variant="danger"
           onClick={() => {
+            axios.put(`${API_URL}/users/disable/${idDisable}`);
             setDisableUser(true);
             handleCloseConfirm(false);
           }}

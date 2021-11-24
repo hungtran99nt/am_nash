@@ -42,15 +42,14 @@ const UserTable = ({ users, isLoading }) => {
   const handleCloseConfirm = () => setShowConfirm(false);
   const handleShowConfirm = () => setShowConfirm(true);
   const [disableUser, setDisableUser] = useState(false);
+  const [idDisable, setIdDisable] = useState(null);
 
   const handleDeleteClicked = (id) => {
     axios
       .get(`${API_URL}/users/${id}/valid`)
       .then((res) => {
+        setIdDisable(id);
         handleShowConfirm();
-        if (disableUser) {
-          axios.put(`${API_URL}/users/disable/${id}`);
-        }
       })
       .catch((err) => {
         handleShowErr();
@@ -185,6 +184,7 @@ const UserTable = ({ users, isLoading }) => {
 
       {showConfirm ? (
         <UserDisableConfirmation
+          idDisable={idDisable}
           showConfirm={showConfirm}
           handleCloseConfirm={handleCloseConfirm}
           setDisableUser={setDisableUser}
