@@ -34,6 +34,7 @@ const UserTable = ({ users, isLoading }) => {
   const handleEditClicked = (id) => {
     history.push(`/edit/${id}`);
   };
+
   const [showErr, setShowErr] = useState(false);
   const handleCloseErr = () => setShowErr(false);
   const handleShowErr = () => setShowErr(true);
@@ -168,7 +169,7 @@ const UserTable = ({ users, isLoading }) => {
         hover
         rowEvents={getUserDetail}
         formatter={columnFormatter}
-        defaultSorted={defaultSorted}
+        // defaultSorted={defaultSorted}
         pagination={pagination}
       />
       {show ? (
@@ -178,7 +179,6 @@ const UserTable = ({ users, isLoading }) => {
           userInfo={userDetail}
         />
       ) : null}
-
       {showErr ? (
         <UserDisableError showErr={showErr} handleCloseErr={handleCloseErr} />
       ) : null}
