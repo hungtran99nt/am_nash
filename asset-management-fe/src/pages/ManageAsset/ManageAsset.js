@@ -42,11 +42,12 @@ const ManageAsset = () => {
 	}, [assets]);
 
 	const assetsFiltered = useMemo(() => {
-		return assets.filter(asset => {
+		const assetSource = filterStateOption === "" ? assetsDefault : assets;
+		return assetSource.filter(asset => {
 			return isMatchExact(filterStateOption.toLowerCase(),asset.state.toLowerCase()) &&
 				asset.categoryName.toLowerCase().includes(filterCategoryOption.toLowerCase());
 		});
-	}, [assets, filterStateOption, filterCategoryOption]);
+	}, [assets, assetsDefault, filterStateOption, filterCategoryOption]);
 
 	const assetsSearched = useMemo(() => {
 		return assetsFiltered.filter(asset => {
@@ -102,7 +103,7 @@ const ManageAsset = () => {
 					</Row>
 				</Form>
 			</Container>
-			<AssetTable assets={filterStateOption === "" ? assetsDefault : assetsSearched} isLoading={isLoading} errorMessage ={errorMessage}/>
+			<AssetTable assets={assetsSearched} isLoading={isLoading} errorMessage ={errorMessage}/>
 		</div>
 	)
 }
