@@ -44,7 +44,6 @@ export default function App() {
     if (token) {
         localStorage.setItem("TOKEN", token);
         const decode = jwt_decode(token);
-        // console.log(decode);
         role = decode.role;
         if (decode.exp * 1000 <= Date.now()) {
             localStorage.removeItem("TOKEN");
@@ -52,9 +51,7 @@ export default function App() {
         }
     }
     const {
-        isLoading,
         data: account,
-        errorMessage
     } = useFetch({}, `${API_URL}/users/user?username=${curUsername}`, convertDataResponse);
 
     return (
@@ -70,7 +67,7 @@ export default function App() {
                     <div className="grid wide">
                         <div className="row app-content">
                             <div className="col col-lg-3 col-md-4 col-sm-2 ">
-                                <img className="logo-img" src={logoimg}/>
+                                <img className="logo-img" src={logoimg} alt="logo"/>
                                 <div className="app-content__title">Online Asset Management</div>
                                 {token && <nav className="category">
                                     <ul className="category-list">

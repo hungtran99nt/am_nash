@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useHistory} from "react-router-dom";
 import {SORT_ORDERS} from "../../common/constants";
 import editImg from "../../assets/images/pen.png";
 import deleteImg from "../../assets/images/cross.png";
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
+import AssetDetail from "./AssetDetail/AssetDetail";
 
 const defaultSorted = [{
 	dataField: 'assetCode',
@@ -86,17 +87,15 @@ const AssetTable = ({assets, isLoading, errorMessage}) => {
 		console.log("Delete id = ", id)
 	}
 
-	/*	const [userDetail, setUserDetail] = useState({});
-		const [userIdPopup, setUserIdPopup] = useState(1);
-
-		const [show, setShow] = useState(false);
-		const handleClose = () => setShow(false);
-		const handleShow = () => setShow(true);
-		*/
+	const [assetIdPopup, setAssetIdPopup] = useState("");
+	const [showDetail, setShowDetail] = useState(false);
+	const handleCloseDetail = () => setShowDetail(false);
+	const handleShowDetail = () => setShowDetail(true);
 
 	const getAssetDetail = {
 		onClick: (e, row) => {
-			console.log("Clicked row id = ", row.id);
+			setAssetIdPopup(row.id);
+			handleShowDetail();
 		},
 	}
 
@@ -114,7 +113,7 @@ const AssetTable = ({assets, isLoading, errorMessage}) => {
 			/>
 			{isLoading && <div>Loading...</div>}
 			{errorMessage && <div>{errorMessage}</div>}
-			{/*{show ? <UserPopup show={show} handleClose={handleClose} userInfo={userDetail}/> : null}*/}
+			{showDetail ? <AssetDetail show={showDetail} handleClose={handleCloseDetail} assetId={assetIdPopup}/> : null}
 		</>
 	);
 };

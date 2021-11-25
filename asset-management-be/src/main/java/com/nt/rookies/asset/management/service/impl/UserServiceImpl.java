@@ -70,18 +70,14 @@ public class UserServiceImpl implements UserService {
     String username = generateUsername(userDTO);
     String encodedPassword = generatePassword(userDTO, username);
     Location location = getUserLocation();
-    User user = new User();
-    user.setFirstName(userDTO.getFirstName());
-    user.setLastName(userDTO.getLastName());
+
+    User user = modelMapper.map(userDTO, User.class);
     user.setUsername(username);
     user.setPassword(encodedPassword);
-    user.setJoinedDate(userDTO.getJoinedDate());
-    user.setGender(userDTO.getGender());
-    user.setBirthDate(userDTO.getBirthDate());
-    user.setType(userDTO.getType());
     user.setStatus(BaseConstants.USER_STATUS_NEW);
     user.setLocation(location);
     logger.info("New User:{}", user);
+
     User createdUser = repository.save(user); // insert user to db
     String staffCode = generateStaffCode(createdUser.getId());
     createdUser.setStaffCode(staffCode);
