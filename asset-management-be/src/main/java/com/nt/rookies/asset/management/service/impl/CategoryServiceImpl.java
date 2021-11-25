@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 /** Implementation of <code>CategoryService</code>. */
@@ -51,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
       Category createdCategory = repository.save(categoryEntity);
       logger.info("Created category: {}", createdCategory);
       return modelMapper.map(createdCategory, CategoryDTO.class);
-    } catch (Exception e) {
+    } catch (DataIntegrityViolationException e) {
       logger.error("Exception occurred while creating category: {}", e.getMessage());
       throw new ResourceAlreadyExistsException("Category name or prefix is already exists");
     }
