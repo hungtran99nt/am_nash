@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
       repository.save(user);
       return modelMapper.map(user, UserDTO.class);
     } else {
-      throw new UserDisabledException(" khong the tat thang nay duoc ");
+      throw new UserDisabledException("You can not disable this user due to their existing assignments!");
 
     }
   }
@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService {
 
     if (assignList.isEmpty())
       return true;
-    throw new UserDisabledException("You can not disable this user due to their existing assignments!");
+    throw new UserDisabledException("This user is invalid to perform disabling!");
 
   }
 
