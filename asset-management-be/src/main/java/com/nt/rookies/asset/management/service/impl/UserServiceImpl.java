@@ -172,20 +172,10 @@ public class UserServiceImpl implements UserService {
 
     if (assignList.isEmpty())
       return true;
-    throw new UserDisabledException(" khong the tat thang nay duoc ");
+    throw new UserDisabledException("You can not disable this user due to their existing assignments!");
 
   }
 
-  @Override
-  public List<UserDTO> getAllUser() {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
-  @Override
-  public UserDTO findByUsernameTest(String username) {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
 }
