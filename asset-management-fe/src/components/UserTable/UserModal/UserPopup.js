@@ -13,7 +13,7 @@ const UserPopup = ({show, handleClose, userInfo}) => {
 				<Modal.Title>Detail User Information</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<table className='user__detail'>
+				<table className='popup__detail'>
 					<tbody>
 					<tr>
 						<th>Staff Code</th>
