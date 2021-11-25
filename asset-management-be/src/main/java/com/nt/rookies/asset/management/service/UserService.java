@@ -3,11 +3,8 @@ package com.nt.rookies.asset.management.service;
 import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.Location;
-
 import java.util.List;
 import java.util.Optional;
-import com.nt.rookies.asset.management.dto.AccountDTO;
-import com.nt.rookies.asset.management.dto.UserDTO;
 
 public interface UserService {
 
