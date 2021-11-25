@@ -17,7 +17,7 @@ const defaultSorted = [{
 }]
 
 
-const UserTable = ({users, isLoading}) => {
+const UserTable = ({users, isLoading, isRecentUser}) => {
 
 	const handleEditClicked = id => {
 		history.push(`/edit/${id}`);
@@ -133,7 +133,7 @@ const UserTable = ({users, isLoading}) => {
 				hover
 				rowEvents={getUserDetail}
 				formatter={columnFormatter}
-				// defaultSorted={defaultSorted}
+				defaultSorted={isRecentUser ? [] : defaultSorted}
 				pagination={pagination}
 			/>
 			{isLoading && <div>Loading...</div>}
