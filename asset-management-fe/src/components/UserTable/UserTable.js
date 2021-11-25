@@ -39,11 +39,13 @@ const UserTable = ({users, isLoading, isRecentUser}) => {
 		axios
 		.get(`${API_URL}/users/${id}/valid`)
 		.then((res) => {
-			setIdDisable(id);
-			handleShowConfirm();
+      if (res.data === true) {
+        setIdDisable(id);
+        handleShowConfirm();}
+        else handleShowErr();
 		})
 		.catch((err) => {
-			handleShowErr();
+			console.error("Delete error: ", err);
 		});
 	};
 

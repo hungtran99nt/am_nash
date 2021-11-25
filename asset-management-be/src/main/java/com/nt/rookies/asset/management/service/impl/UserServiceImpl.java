@@ -166,12 +166,9 @@ public class UserServiceImpl implements UserService {
     User user = repository.getById(id);
     List<Assignment> assignList = assignmentRepository.findByAssignTo(user);
 
-    if (assignList.isEmpty())
+    if (assignList.isEmpty()) {
       return true;
-    throw new UserDisabledException("This user is invalid to perform disabling!");
-
+    } else
+      return false;
   }
-
-
-
 }
