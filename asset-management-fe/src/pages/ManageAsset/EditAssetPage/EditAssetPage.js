@@ -130,7 +130,7 @@ const EditAssetPage = () =>{
                                                 label="Available"
                                                 name="state"
                                                 type="radio"
-                                                value="Female"
+                                                value="Available"
                                                 checked={values.state === "Available"}
                                                 onChange={handleChange}
                                             />
@@ -138,7 +138,7 @@ const EditAssetPage = () =>{
                                                 label="Not Available"
                                                 name="state"
                                                 type="radio"
-                                                value="Female"
+                                                value="Not Available"
                                                 checked={values.state === "Not Available"}
                                                 onChange={handleChange}
                                             />
@@ -146,7 +146,7 @@ const EditAssetPage = () =>{
                                                 label="Waiting for recycling"
                                                 name="state"
                                                 type="radio"
-                                                value="Female"
+                                                value="Waiting for recycling"
                                                 checked={values.state === "Waiting for recycling"}
                                                 onChange={handleChange}
                                             />
@@ -154,7 +154,7 @@ const EditAssetPage = () =>{
                                                 label="Recycled"
                                                 name="state"
                                                 type="radio"
-                                                value="Female"
+                                                value="Recycled"
                                                 checked={values.state === "Recycled"}
                                                 onChange={handleChange}
                                             />
