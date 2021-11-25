@@ -85,7 +85,7 @@ public class DTOModelMapperTests {
   }
 
   @Test
-  void testAssetMapper() {
+  void testAssetMapper_EntityToDTO() {
     Asset asset = assetRepository.findById(2).get();
     logger.info("Asset: {}", asset);
     AssetDTO assetDTO = modelMapper.map(asset, AssetDTO.class);

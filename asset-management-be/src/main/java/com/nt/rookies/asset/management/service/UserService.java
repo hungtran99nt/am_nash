@@ -3,7 +3,6 @@ package com.nt.rookies.asset.management.service;
 import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.Location;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -19,12 +18,20 @@ public interface UserService {
   // Find Active(isDisable=false) Staff by username
   Optional<AccountDTO> findActiveByUsername(String username);
 
+  UserDTO disableUser(Integer id);
+
+  List<UserDTO> getAllUser();
+
+  UserDTO findByUsernameTest(String username);
+
   List<UserDTO> findAllByLocation();
 
+  boolean isValidToDisable(Integer id);
+
   /**
-  * Get user's location follow current user login
-  *
-  * @return {@link Location}
-  * */
+   * Get user's location follow current user login
+   *
+   * @return {@link Location}
+   */
   Location getUserLocation();
 }
