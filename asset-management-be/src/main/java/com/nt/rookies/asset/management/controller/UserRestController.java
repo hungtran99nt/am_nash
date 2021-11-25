@@ -16,13 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.service.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
+/** REST controller for user. */
 @RestController
 @RequestMapping("/api/v1.0/users")
-
-@Api(tags = "User controller using REST API")
 public class UserRestController {
   private final UserService userService;
 
@@ -31,30 +28,24 @@ public class UserRestController {
     this.userService = userService;
   }
 
-  @GetMapping("/{id}")
-  @ApiOperation("Get user by id")
-  public ResponseEntity<UserDTO> getUserById(@PathVariable(name = "id") Integer id) {
-    UserDTO user = userService.getUserById(id);
-    return ResponseEntity.ok().body(user);
-  }
-
-  @PutMapping("/{id}")
-  @ApiOperation("Edit user by id")
-  public ResponseEntity<UserDTO> updateUser(@PathVariable(name = "id") Integer id, @RequestBody UserDTO user) {
-    UserDTO updatedUser = userService.updateUser(id, user);
-    return ResponseEntity.ok().body(updatedUser);
-  }
-
-  @PostMapping(value = "/")
-  @ApiOperation("Create new user")
-  public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
-    UserDTO createdUser = userService.createUser(user);
-    return ResponseEntity.ok().body(createdUser);
-  }
-
   @GetMapping()
   public List<UserDTO> getAllUserByLocation() {
     return userService.findAllByLocation();
+  }
+
+  @PostMapping()
+  public UserDTO createUser(@RequestBody UserDTO user) {
+    return userService.createUser(user);
+  }
+
+  @GetMapping("/{id}")
+  public UserDTO getUserById(@PathVariable(name = "id") Integer id) {
+    return userService.getUserById(id);
+  }
+
+  @PutMapping("/{id}")
+  public UserDTO updateUser(@PathVariable(name = "id") Integer id, @RequestBody UserDTO user) {
+    return userService.updateUser(id, user);
   }
 
   @GetMapping("/user")

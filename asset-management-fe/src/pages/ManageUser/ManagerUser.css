@@ -1,10 +1,10 @@
-.manager-user__heading {
+.manager__heading {
     font-size: 20px;
     color: var(--primary-color);
     font-weight: 600;
 }
 
-.manager-user__action {
+.manager__action {
 }
 
 .actions__wrapper {

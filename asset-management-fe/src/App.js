@@ -56,7 +56,7 @@ export default function App() {
         data: account,
         errorMessage
     } = useFetch({}, `${API_URL}/users/user?username=${curUsername}`, convertDataResponse);
-    console.log(account)
+
     return (
         <Router>
             <div>

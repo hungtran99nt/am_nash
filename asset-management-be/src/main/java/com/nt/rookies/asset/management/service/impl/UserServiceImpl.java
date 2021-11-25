@@ -102,17 +102,15 @@ public class UserServiceImpl implements UserService {
   @Override
   public List<UserDTO> findAllByLocation() {
     Location location = getUserLocation();
-
     List<User> users = repository.findAllByLocation(location);
     return users.stream().map(user -> modelMapper.map(user, UserDTO.class)).collect(Collectors.toList());
   }
 
-  private Location getUserLocation() {
-    // get user location from token
+  @Override
+  public Location getUserLocation() {
     UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
     User currentUser = repository.findByUsername(username);
-    logger.info("location: {}", currentUser.getLocation());
     return currentUser.getLocation();
   }
 

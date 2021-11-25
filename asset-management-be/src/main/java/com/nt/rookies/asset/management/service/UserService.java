@@ -1,5 +1,9 @@
 package com.nt.rookies.asset.management.service;
 
+import com.nt.rookies.asset.management.dto.AccountDTO;
+import com.nt.rookies.asset.management.dto.UserDTO;
+import com.nt.rookies.asset.management.entity.Location;
+
 import java.util.List;
 import java.util.Optional;
 import com.nt.rookies.asset.management.dto.AccountDTO;
@@ -25,4 +29,11 @@ public interface UserService {
   List<UserDTO> findAllByLocation();
 
   boolean isValidToDisable(Integer id);
+
+  /**
+   * Get user's location follow current user login
+   *
+   * @return {@link Location}
+   */
+  Location getUserLocation();
 }
