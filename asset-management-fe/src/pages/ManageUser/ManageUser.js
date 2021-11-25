@@ -42,8 +42,6 @@ const ManageUser = () => {
     if (recentUserId) { // user created/edited: move it to the top of the list
         users.sort((a, b) => a.id === recentUserId ? -1 : b.id === recentUserId ? 1 : 0);
         window.history.replaceState(null, '');
-    } else { // default: sort by user id
-        users.sort((a, b) => a.id - b.id);
     }
 
     const usersFiltered = useMemo(() => {
@@ -95,7 +93,7 @@ const ManageUser = () => {
                 </Form>
             </Container>
             {errorMessage && <div>errorMessage</div>}
-            {usersSearched && <UserTable isLoading={isLoading} users={usersSearched}/>}
+            {usersSearched && <UserTable isLoading={isLoading} users={usersSearched} isRecentUser={recentUserId}/>}
         </div>
     )
 }
