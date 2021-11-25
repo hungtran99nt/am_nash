@@ -5,7 +5,7 @@ import editImg from "../../assets/images/pen.png";
 import deleteImg from "../../assets/images/cross.png";
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
-import AssetDetail from "./AssetDetail/AssetDetail";
+import AssetDetail from "./AssetModal/AssetDetail";
 
 const defaultSorted = [{
 	dataField: 'assetCode',
