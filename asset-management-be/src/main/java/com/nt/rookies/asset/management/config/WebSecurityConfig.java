@@ -53,6 +53,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .permitAll() // Don't authenticate this particular request
         .antMatchers(HttpMethod.POST, "/api/v1.0/users/").hasAuthority( "Admin") // only admin create new user
         .antMatchers(HttpMethod.PUT, "/api/v1.0/users/{id}").hasAuthority( "Admin") // only admin edit user
+        .antMatchers("/api/v1.0/categories*").hasAuthority( "Admin") // only admin can access category
+        .antMatchers(HttpMethod.GET, "/api/v1.0/assets").hasAuthority( "Admin") // only admin can get all assets by location
+        .antMatchers(HttpMethod.GET, "/api/v1.0/assets/{id}").hasAuthority( "Admin") // only admin can get asset by id
         .anyRequest()
         .authenticated()
         .and() // All other requests need to be authenticated

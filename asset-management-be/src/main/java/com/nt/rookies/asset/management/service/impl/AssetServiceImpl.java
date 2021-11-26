@@ -3,6 +3,7 @@ package com.nt.rookies.asset.management.service.impl;
 import com.nt.rookies.asset.management.dto.AssetDTO;
 import com.nt.rookies.asset.management.entity.Asset;
 import com.nt.rookies.asset.management.entity.Location;
+import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.AssetRepository;
 import com.nt.rookies.asset.management.service.AssetService;
 import com.nt.rookies.asset.management.service.UserService;
@@ -45,5 +46,13 @@ public class AssetServiceImpl  implements AssetService {
     return assets.stream()
             .map(asset -> modelMapper.map(asset, AssetDTO.class))
             .collect(Collectors.toList());
+  }
+
+  @Override
+  public AssetDTO getAssetById(Integer id) {
+    logger.info("Inside getAssetById({})", id);
+    Asset asset = assetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Asset not found."));
+    logger.info("Asset with id={}: {}", id, asset);
+    return modelMapper.map(asset, AssetDTO.class);
   }
 }

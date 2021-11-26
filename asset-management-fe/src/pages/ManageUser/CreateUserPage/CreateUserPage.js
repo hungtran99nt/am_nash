@@ -94,7 +94,7 @@ const CreateUserPage = () => {
                           }) => (
                             <Form onSubmit={handleSubmit}>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
-                                    <Form.Label column sm="2">First Name</Form.Label>
+                                    <Form.Label column sm="3">First Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
                                             type="text"
@@ -111,7 +111,7 @@ const CreateUserPage = () => {
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextLastName">
-                                    <Form.Label column sm="2">Last Name</Form.Label>
+                                    <Form.Label column sm="3">Last Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
                                             type="text"
@@ -127,7 +127,7 @@ const CreateUserPage = () => {
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextBirthDate">
-                                    <Form.Label column sm="2">Date Of Birth</Form.Label>
+                                    <Form.Label column sm="3">Date Of Birth</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
                                             name="birthDate"
@@ -143,7 +143,7 @@ const CreateUserPage = () => {
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                                    <Form.Label column sm="2">
+                                    <Form.Label column sm="3">
                                         Gender
                                     </Form.Label>
                                     <Col sm="6">
@@ -169,7 +169,7 @@ const CreateUserPage = () => {
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                                    <Form.Label column sm="2">
+                                    <Form.Label column sm="3">
                                         Joined Date
                                     </Form.Label>
                                     <Col sm="6">
@@ -187,7 +187,7 @@ const CreateUserPage = () => {
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                                    <Form.Label column sm="2">Type</Form.Label>
+                                    <Form.Label column sm="3">Type</Form.Label>
                                     <Col sm="6">
                                         <Form.Select
                                             name="type"
