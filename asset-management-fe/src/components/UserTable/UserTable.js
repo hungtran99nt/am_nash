@@ -10,6 +10,8 @@ import './UserTable.css'
 import {useHistory} from "react-router-dom";
 import moment from "moment";
 import {pagination, sortCode} from "../../common/config";
+import UserDisableError from "./UserModal/UserDisableError";
+import UserDisableConfirmation from "./UserModal/UserDisableConfirmation";
 
 const defaultSorted = [{
 	dataField: 'staffCode',
@@ -23,9 +25,29 @@ const UserTable = ({users, isLoading, isRecentUser}) => {
 		history.push(`/edit/${id}`);
 	}
 
-	const handleDeleteClicked = id => {
-		console.log("id clicked = ", id);
-	}
+	const [showErr, setShowErr] = useState(false);
+	const handleCloseErr = () => setShowErr(false);
+	const handleShowErr = () => setShowErr(true);
+
+	const [showConfirm, setShowConfirm] = useState(false);
+	const handleCloseConfirm = () => setShowConfirm(false);
+	const handleShowConfirm = () => setShowConfirm(true);
+	const [disableUser, setDisableUser] = useState(false);
+	const [idDisable, setIdDisable] = useState(null);
+
+	const handleDeleteClicked = (id) => {
+		axios
+		.get(`${API_URL}/users/${id}/valid`)
+		.then((res) => {
+      if (res.data === true) {
+        setIdDisable(id);
+        handleShowConfirm();}
+        else handleShowErr();
+		})
+		.catch((err) => {
+			console.error("Delete error: ", err);
+		});
+	};
 
 	const columnFormatter = (cell, row) => {
 		return (
@@ -138,6 +160,18 @@ const UserTable = ({users, isLoading, isRecentUser}) => {
 			/>
 			{isLoading && <div>Loading...</div>}
 			{show ? <UserPopup show={show} handleClose={handleClose} userInfo={userDetail}/> : null}
+			{showErr ? (
+				<UserDisableError showErr={showErr} handleCloseErr={handleCloseErr} />
+			) : null}
+
+			{showConfirm ? (
+				<UserDisableConfirmation
+				idDisable={idDisable}
+				showConfirm={showConfirm}
+				handleCloseConfirm={handleCloseConfirm}
+				setDisableUser={setDisableUser}
+				/>
+			) : null}
 		</>
 	)
 }

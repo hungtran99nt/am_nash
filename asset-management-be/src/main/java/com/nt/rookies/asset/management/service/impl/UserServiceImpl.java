@@ -1,13 +1,5 @@
 package com.nt.rookies.asset.management.service.impl;
 
-import com.nt.rookies.asset.management.common.BaseConstants;
-import com.nt.rookies.asset.management.dto.AccountDTO;
-import com.nt.rookies.asset.management.dto.UserDTO;
-import com.nt.rookies.asset.management.entity.Location;
-import com.nt.rookies.asset.management.entity.User;
-import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
-import com.nt.rookies.asset.management.repository.UserRepository;
-import com.nt.rookies.asset.management.service.UserService;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -22,6 +14,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.nt.rookies.asset.management.common.BaseConstants;
+import com.nt.rookies.asset.management.dto.AccountDTO;
+import com.nt.rookies.asset.management.dto.UserDTO;
+import com.nt.rookies.asset.management.entity.Assignment;
+import com.nt.rookies.asset.management.entity.Location;
+import com.nt.rookies.asset.management.entity.User;
+import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
+import com.nt.rookies.asset.management.exception.UserDisabledException;
+import com.nt.rookies.asset.management.repository.AssignmentRepository;
+import com.nt.rookies.asset.management.repository.UserRepository;
+import com.nt.rookies.asset.management.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,11 +32,12 @@ public class UserServiceImpl implements UserService {
   private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
   private final UserRepository repository;
   private final ModelMapper modelMapper;
+  private final AssignmentRepository assignmentRepository;
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserServiceImpl(
-      UserRepository repository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
+  public UserServiceImpl(UserRepository repository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, AssignmentRepository assignmentRepository) {
+    this.assignmentRepository = assignmentRepository;
     this.repository = repository;
     this.modelMapper = modelMapper;
     this.passwordEncoder = passwordEncoder;
@@ -41,18 +45,14 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO getUserById(Integer id) {
-    User user =
-        repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found."));
+    User user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found."));
     logger.info("getUserById: {}", user);
     return modelMapper.map(user, UserDTO.class);
   }
 
   @Override
   public UserDTO updateUser(Integer id, UserDTO userDTO) {
-    User user =
-        repository
-            .findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Update user not found."));
+    User user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Update user not found."));
     logger.info("User found: {}", user);
     user.setBirthDate(userDTO.getBirthDate());
     user.setGender(userDTO.getGender());
@@ -99,15 +99,12 @@ public class UserServiceImpl implements UserService {
   public List<UserDTO> findAllByLocation() {
     Location location = getUserLocation();
     List<User> users = repository.findAllByLocation(location);
-    return users.stream()
-        .map(user -> modelMapper.map(user, UserDTO.class))
-        .collect(Collectors.toList());
+    return users.stream().map(user -> modelMapper.map(user, UserDTO.class)).collect(Collectors.toList());
   }
 
   @Override
   public Location getUserLocation() {
-    UserDetails userDetails =
-        (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
     User currentUser = repository.findByUsername(username);
     return currentUser.getLocation();
@@ -122,17 +119,14 @@ public class UserServiceImpl implements UserService {
     }
     Optional<Integer> maxPostfix = repository.findMaxUsernamePostfix(username.toString());
     logger.info("maxPostfix: {}", maxPostfix.orElse(0));
-    //  if username existed => username = username + countUsername
+    // if username existed => username = username + countUsername
     maxPostfix.ifPresent(postfix -> username.append(++postfix));
     logger.info("username: {}", username);
     return username.toString();
   }
 
   private String removeAccent(String text) {
-    return Normalizer.normalize(text, Normalizer.Form.NFD)
-        .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
-        .replaceAll("Đ", "D")
-        .replaceAll("đ", "d");
+    return Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replaceAll("Đ", "D").replaceAll("đ", "d");
   }
 
   private String generatePassword(UserDTO userDTO, String username) {
@@ -150,5 +144,31 @@ public class UserServiceImpl implements UserService {
     String staffCode = "SD" + StringUtils.leftPad(userId.toString(), 4, "0");
     logger.info("staffCode: {}", staffCode);
     return staffCode;
+  }
+
+  @Override
+  public UserDTO disableUser(Integer id) {
+    User user = repository.getById(id);
+    List<Assignment> assignList = assignmentRepository.findByAssignTo(user);
+    if (assignList.isEmpty()) {
+
+      user.setStatus(0);
+      repository.save(user);
+      return modelMapper.map(user, UserDTO.class);
+    } else {
+      throw new UserDisabledException("You can not disable this user due to their existing assignments!");
+
+    }
+  }
+
+  @Override
+  public boolean isValidToDisable(Integer id) {
+    User user = repository.getById(id);
+    List<Assignment> assignList = assignmentRepository.findByAssignTo(user);
+
+    if (assignList.isEmpty()) {
+      return true;
+    } else
+      return false;
   }
 }
