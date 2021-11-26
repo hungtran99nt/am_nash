@@ -13,4 +13,19 @@ public interface AssetService {
      * @return {@link List<AssetDTO>}
      */
     List<AssetDTO> findAllByLocation();
+
+    /**
+    * Check an asset is valid to delete
+    *
+    * @param id asset id
+    * @return boolean value
+    * */
+    boolean isValidToDelete(Integer id);
+
+    /**
+     * Delete an asset by id
+     *
+     * @param id asset id
+     * **/
+    void deleteAsset(Integer id);
 }

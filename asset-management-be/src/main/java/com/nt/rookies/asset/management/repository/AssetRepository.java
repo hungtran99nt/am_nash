@@ -16,4 +16,12 @@ public interface AssetRepository extends JpaRepository<Asset, Integer> {
     * @return {@link List<Asset>}
     * */
     List<Asset> findAllByLocation(Location location);
+
+    /**
+     * Delete asset by id
+     *
+     * @param id the id of an asset, Integer value
+     *  */
+    @Override
+    void deleteById(Integer id);
 }
