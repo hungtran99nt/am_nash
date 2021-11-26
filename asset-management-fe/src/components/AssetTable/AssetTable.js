@@ -5,9 +5,10 @@ import editImg from "../../assets/images/pen.png";
 import deleteImg from "../../assets/images/cross.png";
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
+import axios from "axios";
 import AssetDetail from "./AssetModal/AssetDetail";
 import AssetDeleteNotification from "./AssetModal/AssetDeleteNotification";
-import axios from "axios";
+import AssetDeleteConfirm from "./AssetModal/AssetDeleteConfirm";
 
 const defaultSorted = [{
 	dataField: 'assetCode',
@@ -98,13 +99,14 @@ const AssetTable = ({assets, isLoading, errorMessage}) => {
 	const handleDeleteClicked = (id) => {
 		setIdDelete(id);
 		axios
-			.get(`${API_URL}/assets/${id}`)
+			.get(`${API_URL}/assets/${id}/valid`)
 			.then(res => {
-				handleShowConfirm(); // TODO handle asset valid to delete
+				if (res.data === true)
+					handleShowConfirm();
+				else handleShowNotification();
 			})
 			.catch(err => {
-				handleShowNotification(); // TODO change it to upper, when asset is valid will be notify
-				console.error("Delete error: ", err);
+				alert(`Error with check valid to delete asset ${err}`);
 			});
 	}
 
@@ -149,6 +151,16 @@ const AssetTable = ({assets, isLoading, errorMessage}) => {
 				<AssetDeleteNotification
 					show={showNotification}
 					handleCloseNotification={handleCloseNotification}
+					idDelete={idDelete}
+				/>
+			}
+
+			{
+				showConfirm &&
+				<AssetDeleteConfirm
+					show={showConfirm}
+					assets={assets}
+					handleCloseConfirm={handleCloseConfirm}
 					idDelete={idDelete}
 				/>
 			}
