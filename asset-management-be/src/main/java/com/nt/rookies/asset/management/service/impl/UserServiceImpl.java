@@ -30,29 +30,29 @@ import com.nt.rookies.asset.management.service.UserService;
 public class UserServiceImpl implements UserService {
 
   private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-  private final UserRepository repository;
+  private final UserRepository userRepository;
   private final ModelMapper modelMapper;
   private final AssignmentRepository assignmentRepository;
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserServiceImpl(UserRepository repository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, AssignmentRepository assignmentRepository) {
+  public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, AssignmentRepository assignmentRepository) {
     this.assignmentRepository = assignmentRepository;
-    this.repository = repository;
+    this.userRepository = userRepository;
     this.modelMapper = modelMapper;
     this.passwordEncoder = passwordEncoder;
   }
 
   @Override
   public UserDTO getUserById(Integer id) {
-    User user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found."));
+    User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found."));
     logger.info("getUserById: {}", user);
     return modelMapper.map(user, UserDTO.class);
   }
 
   @Override
   public UserDTO updateUser(Integer id, UserDTO userDTO) {
-    User user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Update user not found."));
+    User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Update user not found."));
     logger.info("User found: {}", user);
     user.setBirthDate(userDTO.getBirthDate());
     user.setGender(userDTO.getGender());
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
     user.setType(userDTO.getType());
     logger.info("User edited: {}", user);
 
-    User updatedUser = repository.save(user);
+    User updatedUser = userRepository.save(user);
     logger.info("User updated: {}", updatedUser);
     return modelMapper.map(updatedUser, UserDTO.class);
   }
@@ -78,17 +78,17 @@ public class UserServiceImpl implements UserService {
     user.setLocation(location);
     logger.info("New User:{}", user);
 
-    User createdUser = repository.save(user); // insert user to db
+    User createdUser = userRepository.save(user); // insert user to db
     String staffCode = generateStaffCode(createdUser.getId());
     createdUser.setStaffCode(staffCode);
-    createdUser = repository.save(createdUser); // update user with staff code
+    createdUser = userRepository.save(createdUser); // update user with staff code
     logger.info("Created User:{}", createdUser);
     return modelMapper.map(createdUser, UserDTO.class);
   }
 
   @Override
   public Optional<AccountDTO> findActiveByUsername(String username) {
-    User user = repository.findByUsername(username);
+    User user = userRepository.findByUsername(username);
     if (user.getStatus() != BaseConstants.USER_STATUS_DISABLED) {
       return Optional.of(modelMapper.map(user, AccountDTO.class));
     }
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public List<UserDTO> findAllByLocation() {
     Location location = getUserLocation();
-    List<User> users = repository.findAllByLocation(location);
+    List<User> users = userRepository.findAllByLocation(location);
     return users.stream().map(user -> modelMapper.map(user, UserDTO.class)).collect(Collectors.toList());
   }
 
@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
   public Location getUserLocation() {
     UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
-    User currentUser = repository.findByUsername(username);
+    User currentUser = userRepository.findByUsername(username);
     return currentUser.getLocation();
   }
 
@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
     for (String name : lastNames) {
       username.append(Character.toLowerCase(name.charAt(0)));
     }
-    Optional<Integer> maxPostfix = repository.findMaxUsernamePostfix(username.toString());
+    Optional<Integer> maxPostfix = userRepository.findMaxUsernamePostfix(username.toString());
     logger.info("maxPostfix: {}", maxPostfix.orElse(0));
     // if username existed => username = username + countUsername
     maxPostfix.ifPresent(postfix -> username.append(++postfix));
@@ -148,12 +148,11 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO disableUser(Integer id) {
-    User user = repository.getById(id);
+    User user = userRepository.getById(id);
     List<Assignment> assignList = assignmentRepository.findByAssignTo(user);
     if (assignList.isEmpty()) {
-
-      user.setStatus(0);
-      repository.save(user);
+      user.setStatus(BaseConstants.USER_STATUS_DISABLED);
+      userRepository.save(user);
       return modelMapper.map(user, UserDTO.class);
     } else {
       throw new UserDisabledException("You can not disable this user due to their existing assignments!");
@@ -163,9 +162,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public boolean isValidToDisable(Integer id) {
-    User user = repository.getById(id);
+    User user = userRepository.getById(id);
     List<Assignment> assignList = assignmentRepository.findByAssignTo(user);
-
     if (assignList.isEmpty()) {
       return true;
     } else
