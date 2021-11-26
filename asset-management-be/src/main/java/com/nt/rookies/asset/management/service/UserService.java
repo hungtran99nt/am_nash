@@ -1,10 +1,10 @@
 package com.nt.rookies.asset.management.service;
 
+import java.util.List;
+import java.util.Optional;
 import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.Location;
-import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
@@ -18,10 +18,6 @@ public interface UserService {
   Optional<AccountDTO> findActiveByUsername(String username);
 
   UserDTO disableUser(Integer id);
-
-  List<UserDTO> getAllUser();
-
-  UserDTO findByUsernameTest(String username);
 
   List<UserDTO> findAllByLocation();
 
