@@ -38,6 +38,8 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public CategoryDTO createCategory(CategoryDTO category) {
     logger.info("Inside createCategory() method");
+    // TODO: validate category
+
     //    assert category != null : "Category is null";
     //    assert category.getCategoryName() != null && category.getCategoryPrefix() != null : "";
     //    assert category.getCategoryName().length() <= 30 && !category.getCategoryName().isEmpty()

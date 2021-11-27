@@ -24,13 +24,28 @@ public class AssetRestController {
   public AssetRestController(AssetService assetService, UserService userService) {
     this.assetService = assetService;
   }
-
+  /**
+   * API Get all asset same location with admin.<br>
+   * Link: <code>/api/v1.0/assets</code> <br>
+   * Method: GET
+   *
+   * @return {@link List<AssetDTO>}
+   */
   @GetMapping()
   @ApiOperation("Get all assets follow location of admin")
   public List<AssetDTO> getAllAssets() {
     return assetService.findAllByLocation();
   }
 
+
+  /**
+   * API Check asset is valid to delete by id.<br>
+   * Link: <code>/api/v1.0/assets/{id}/valid</code> <br>
+   * Method: GET
+   *
+   * @param id asset id
+   * @return {@link Boolean}
+   */
   @GetMapping("/{id}/valid")
   @ApiOperation(value = "Check an asset id is valid to delete", response = Boolean.class)
   public boolean isValidToDelete(@PathVariable(name = "id") Integer id) {
@@ -38,6 +53,14 @@ public class AssetRestController {
     return assetService.isValidToDelete(id);
   }
 
+  /**
+   * API Delete asset by id.<br>
+   * Link: <code>/api/v1.0/assets/{id}</code> <br>
+   * Method: DELETE
+   *
+   * @param id asset id
+   * @return {@link ResponseEntity}
+   */
   @DeleteMapping("/{id}")
   @ApiOperation(value = "Delete asset by id", response = String.class)
   public ResponseEntity<?> deleteAsset(@PathVariable(name = "id") Integer id) {
@@ -48,5 +71,31 @@ public class AssetRestController {
     } else {
       throw new ResourceDeleteException("Cannot delete this asset");
     }
+  }
+
+  /**
+   * API Get asset by id.<br>
+   * Link: <code>/api/v1.0/assets/{id}</code> <br>
+   * Method: GET
+   *
+   * @param id asset id
+   * @return {@link AssetDTO} found by id
+   */
+  @GetMapping("/{id}")
+  public AssetDTO getAssetById(@PathVariable(name = "id") Integer id) {
+    return assetService.getAssetById(id);
+  }
+
+  /**
+   * API Create new asset.<br>
+   * Link: <code>/api/v1.0/assets</code> <br>
+   * Method: POST
+   *
+   * @param assetDTO new asset
+   * @return created {@link AssetDTO} object
+   */
+  @PostMapping()
+  public AssetDTO createAsset(@RequestBody AssetDTO assetDTO) {
+    return assetService.createAsset(assetDTO);
   }
 }
