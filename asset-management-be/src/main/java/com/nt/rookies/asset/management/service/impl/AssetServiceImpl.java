@@ -4,19 +4,22 @@ import com.nt.rookies.asset.management.dto.AssetDTO;
 import com.nt.rookies.asset.management.entity.Asset;
 import com.nt.rookies.asset.management.entity.Category;
 import com.nt.rookies.asset.management.entity.Location;
+import com.nt.rookies.asset.management.exception.ResourceDeleteException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.AssetRepository;
+import com.nt.rookies.asset.management.repository.AssignmentRepository;
 import com.nt.rookies.asset.management.repository.CategoryRepository;
 import com.nt.rookies.asset.management.service.AssetService;
 import com.nt.rookies.asset.management.service.UserService;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AssetServiceImpl implements AssetService {
@@ -26,17 +29,20 @@ public class AssetServiceImpl implements AssetService {
   private final AssetRepository assetRepository;
   private final CategoryRepository categoryRepository;
   private final ModelMapper modelMapper;
+  private final AssignmentRepository assignmentRepository;
 
-  @Autowired
   public AssetServiceImpl(
       UserService userService,
       AssetRepository assetRepository,
       CategoryRepository categoryRepository,
-      ModelMapper modelMapper) {
+      ModelMapper modelMapper,
+      AssignmentRepository assignmentRepository
+  ) {
     this.userService = userService;
     this.assetRepository = assetRepository;
     this.categoryRepository = categoryRepository;
     this.modelMapper = modelMapper;
+    this.assignmentRepository = assignmentRepository;
   }
 
   @Override
@@ -84,5 +90,22 @@ public class AssetServiceImpl implements AssetService {
     staffCode.append(StringUtils.leftPad(assetId.toString(), 4, "0"));
     logger.info("staffCode: {}", staffCode);
     return staffCode.toString();
+  }
+
+  @Override
+  public boolean isValidToDelete(Integer assetId){
+    if (assetId == null) throw new IllegalArgumentException("Id is invalid");
+    return assignmentRepository.getTotalHistoricalAssigmentOfAnAsset(assetId) <= 0;
+  }
+
+  @Override
+  public void deleteAsset(Integer id) {
+    if (isValidToDelete(id)) {
+      Asset asset = assetRepository.findById(id)
+              .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
+      assetRepository.delete(asset);
+    } else {
+      throw new ResourceDeleteException("Cannot delete this asset, it belong one or more historical assignment");
+    }
   }
 }

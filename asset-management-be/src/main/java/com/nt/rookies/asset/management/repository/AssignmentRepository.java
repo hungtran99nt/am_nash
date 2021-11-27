@@ -1,6 +1,8 @@
 package com.nt.rookies.asset.management.repository;
 
 import java.util.List;
+
+import com.nt.rookies.asset.management.entity.Asset;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,4 +16,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
   int getTotalCountByAssigneeId(@Param("id") int id);
 
   List<Assignment> findByAssignTo(User assignTo);
+
+  @Query(value = "SELECT COUNT(*) FROM Assignment a WHERE a.asset.id = :assetId")
+  int getTotalHistoricalAssigmentOfAnAsset(@Param("assetId") Integer assetId);
 }
