@@ -1,8 +1,16 @@
+.modal-content {
+    padding: 1rem !important;
+}
+
+.modal-title {
+    font-weight: 700 !important;
+}
+
 .popup__detail th {
     font-weight: normal;
 }
 
-.popup__detail th {
+.popup__detail > th {
     padding: 0 20px;
 }
 

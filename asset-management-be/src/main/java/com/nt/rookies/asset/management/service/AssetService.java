@@ -22,4 +22,12 @@ public interface AssetService {
    * @exception ResourceNotFoundException if asset not found
    */
   AssetDTO getAssetById(Integer id);
+
+  /**
+   * Create new asset.
+   *
+   * @param assetDTO new asset
+   * @return created {@link AssetDTO} object
+   */
+  AssetDTO createAsset(AssetDTO assetDTO);
 }

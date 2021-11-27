@@ -80,8 +80,7 @@ public class DTOModelMapperTests {
         () -> assertEquals(user.getGender(), userDTO.getGender()),
         () -> assertEquals(user.getBirthDate(), userDTO.getBirthDate()),
         () -> assertEquals(user.getType(), userDTO.getType()),
-        () -> assertEquals(user.getStatus(), userDTO.getStatus())
-    );
+        () -> assertEquals(user.getStatus(), userDTO.getStatus()));
   }
 
   @Test
@@ -101,6 +100,33 @@ public class DTOModelMapperTests {
         // important
         () -> assertEquals(asset.getLocation().getLocationName(), assetDTO.getLocation()),
         () -> assertEquals(asset.getCategory().getCategoryName(), assetDTO.getCategoryName()));
+  }
+
+  @Test
+  void testAssetMapper_DTOtoEntity() {
+    AssetDTO assetDTO = new AssetDTO();
+    assetDTO.setAssetName("Dell Inspiron 15 3511");
+    assetDTO.setCategoryName("Laptop");
+    assetDTO.setSpecification("Intel Core i5-8265U, 8GB RAM, 1TB HDD, 15.6 inch, Windows 10");
+    assetDTO.setInstalledDate(Calendar.getInstance().getTime());
+    assetDTO.setState("Available");
+
+    logger.info("AssetDTO: {}", assetDTO);
+    Asset asset = modelMapper.map(assetDTO, Asset.class);
+    logger.info("Asset: {}", asset);
+
+    assertAll(
+        () -> assertEquals(asset.getId(), assetDTO.getId()),
+        () -> assertEquals(asset.getAssetCode(), assetDTO.getAssetCode()),
+        () -> assertEquals(asset.getAssetName(), assetDTO.getAssetName()),
+        () -> assertEquals(asset.getSpecification(), assetDTO.getSpecification()),
+        () -> assertEquals(asset.getInstalledDate(), assetDTO.getInstalledDate()),
+        () -> assertEquals(asset.getState(), assetDTO.getState())
+        // important
+        //        ,() -> assertEquals(asset.getLocation().getLocationName(), assetDTO.getLocation())
+        //        ,() -> assertEquals(asset.getCategory().getCategoryName(),
+        // assetDTO.getCategoryName())
+    );
   }
 
   @Test

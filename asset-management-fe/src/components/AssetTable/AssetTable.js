@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
 import {useHistory} from "react-router-dom";
-import {SORT_ORDERS} from "../../common/constants";
+import {API_URL, SORT_ORDERS} from "../../common/constants";
 import editImg from "../../assets/images/pen.png";
 import deleteImg from "../../assets/images/cross.png";
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
-import AssetDetail from "./AssetDetail/AssetDetail";
+import axios from "axios";
+import AssetDetail from "./AssetModal/AssetDetail";
+import AssetDeleteNotification from "./AssetModal/AssetDeleteNotification";
+import AssetDeleteConfirm from "./AssetModal/AssetDeleteConfirm";
 
 const defaultSorted = [{
 	dataField: 'assetCode',
@@ -83,8 +86,28 @@ const AssetTable = ({assets, isLoading, errorMessage}) => {
 		history.push(`/edit/asset/${id}`);
 	}
 
+	const [idDelete, setIdDelete] = useState(null);
+
+	const [showNotification, setShowNotification] = useState(false);
+	const handleCloseNotification = () => setShowNotification(false);
+	const handleShowNotification = () => setShowNotification(true);
+
+	const [showConfirm, setShowConfirm] = useState(false);
+	const handleCloseConfirm = () => setShowConfirm(false);
+	const handleShowConfirm = () => setShowConfirm(true);
+
 	const handleDeleteClicked = (id) => {
-		console.log("Delete id = ", id)
+		setIdDelete(id);
+		axios
+			.get(`${API_URL}/assets/${id}/valid`)
+			.then(res => {
+				if (res.data === true)
+					handleShowConfirm();
+				else handleShowNotification();
+			})
+			.catch(err => {
+				alert(`Error with check valid to delete asset ${err}`);
+			});
 	}
 
 	const [assetIdPopup, setAssetIdPopup] = useState("");
@@ -113,7 +136,34 @@ const AssetTable = ({assets, isLoading, errorMessage}) => {
 			/>
 			{isLoading && <div>Loading...</div>}
 			{errorMessage && <div>{errorMessage}</div>}
-			{showDetail ? <AssetDetail show={showDetail} handleClose={handleCloseDetail} assetId={assetIdPopup}/> : null}
+
+			{
+				showDetail &&
+				<AssetDetail
+					show={showDetail}
+					handleClose={handleCloseDetail}
+					assetId={assetIdPopup}
+				/>
+			}
+
+			{
+				showNotification &&
+				<AssetDeleteNotification
+					show={showNotification}
+					handleCloseNotification={handleCloseNotification}
+					idDelete={idDelete}
+				/>
+			}
+
+			{
+				showConfirm &&
+				<AssetDeleteConfirm
+					show={showConfirm}
+					assets={assets}
+					handleCloseConfirm={handleCloseConfirm}
+					idDelete={idDelete}
+				/>
+			}
 		</>
 	);
 };

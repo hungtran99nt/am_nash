@@ -2,7 +2,6 @@ package com.nt.rookies.asset.management.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -51,11 +50,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers("/authenticate")
         .permitAll() // Don't authenticate this particular request
-        .antMatchers(HttpMethod.POST, "/api/v1.0/users/").hasAuthority( "Admin") // only admin create new user
-        .antMatchers(HttpMethod.PUT, "/api/v1.0/users/{id}").hasAuthority( "Admin") // only admin edit user
-        .antMatchers("/api/v1.0/categories*").hasAuthority( "Admin") // only admin can access category
-        .antMatchers(HttpMethod.GET, "/api/v1.0/assets").hasAuthority( "Admin") // only admin can get all assets by location
-        .antMatchers(HttpMethod.GET, "/api/v1.0/assets/{id}").hasAuthority( "Admin") // only admin can get asset by id
+        .antMatchers("/api/v1.0/users/{id}/assignments").hasAuthority("Staff") // staff can access their own assignments
+        .antMatchers(
+            "/**/users**",
+            "/**/categories**",
+            "/**/assets**",
+            "/**/users/**",
+            "/**/categories/**",
+            "/**/assets/**")
+        .hasAuthority("Admin") // only allow admins to access these endpoints
         .anyRequest()
         .authenticated()
         .and() // All other requests need to be authenticated
