@@ -53,9 +53,9 @@ public class AssetServiceImpl  implements AssetService {
   }
 
   @Override
-  public boolean isValidToDelete(Integer asset_id){
-    if (asset_id == null) throw new IllegalArgumentException("Id is invalid");
-    return assignmentRepository.getTotalHistoricalAssigmentOfAnAsset(asset_id) <= 0;
+  public boolean isValidToDelete(Integer assetId){
+    if (assetId == null) throw new IllegalArgumentException("Id is invalid");
+    return assignmentRepository.getTotalHistoricalAssigmentOfAnAsset(assetId) <= 0;
   }
 
   @Override

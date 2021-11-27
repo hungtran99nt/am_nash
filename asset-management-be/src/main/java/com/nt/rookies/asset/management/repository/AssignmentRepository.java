@@ -17,6 +17,6 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
 
   List<Assignment> findByAssignTo(User assignTo);
 
-  @Query(value = "SELECT COUNT(*) FROM Assignment a WHERE a.asset_id = :asset_id", nativeQuery = true)
-  int getTotalHistoricalAssigmentOfAnAsset(@Param("asset_id") Integer asset_id);
+  @Query(value = "SELECT COUNT(*) FROM Assignment a WHERE a.asset_id = :assetId")
+  int getTotalHistoricalAssigmentOfAnAsset(@Param("assetId") Integer assetId);
 }
