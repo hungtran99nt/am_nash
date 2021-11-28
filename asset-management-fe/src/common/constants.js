@@ -18,3 +18,8 @@ export const USER_STATUS = {
 	DISABLED: 0,
 	ACTIVE: 1
 }
+
+export const LOGIN_MESSAGE = {
+	REQUIRED: "Please login first!",
+	FAILED: "Username or password is incorrect. Please try again!"
+}
