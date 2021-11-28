@@ -100,10 +100,8 @@ const CreateAssetPage = () => {
                                                 <Dropdown.Divider />
                                                 <div className="category-form">
                                                     <input placeholder="Name of new Category" className="input-cate"/>
-                                                    <div className="category-btn_add">
-                                                        <input placeholder="Prefix of new Category" className="input-prefix"/>
-                                                        <button className="btn btn-add"><FontAwesomeIcon icon={faPlus}/> Add Category</button>
-                                                    </div>
+                                                    <input placeholder="Prefix of new Category" className="input-prefix"/>
+                                                    <button className="btn btn-addCategory"><FontAwesomeIcon icon={faPlus}/> Add Category</button>
                                                 </div>
                                             </Dropdown.Menu>
                                         </Dropdown>

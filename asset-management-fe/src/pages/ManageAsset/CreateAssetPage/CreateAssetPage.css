@@ -18,14 +18,19 @@
     width: 100%;
     padding: 6px 10px;
     border:1px solid #33333373;
-    border-radius: 2px;
-    margin-bottom: 20px;
+    border-radius: 4px;
+    margin: 10px 0;
 }
-.category-btn_add{
-    display: flex;
-}
+
 .input-prefix{
+    width: 56%;
+    margin-right: 16px;
+    border:1px solid #33333373;
+    border-radius: 4px;
+    padding: 4px 4px;
 }
-.btn-add{
+button.btn.btn-addCategory {
     color: #0a53be;
+    margin-bottom: 5px;
+    padding: 0;
 }
