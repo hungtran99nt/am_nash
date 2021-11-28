@@ -1,0 +1,8 @@
+.asset.select::after {
+    content: '';
+    top: 0;
+    left: 200px;
+    position: absolute;
+    border: 1px solid #ced4da;
+    height: 75%;
+}

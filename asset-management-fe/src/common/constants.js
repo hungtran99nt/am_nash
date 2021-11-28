@@ -23,3 +23,21 @@ export const LOGIN_MESSAGE = {
 	REQUIRED: "Please login first!",
 	FAILED: "Username or password is incorrect. Please try again!"
 }
+
+export const FILTER_STATE_OPTIONS = {
+	AVAILABLE: 'Available',
+	NOT_AVAILABLE: 'Not available',
+	ASSIGNED: 'Assigned',
+	WAITING_FOR_RECYCLING: 'Waiting for recycling',
+	RECYCLED: 'Recycled'
+}
+
+export const SORT_ORDERS = {
+	ASC: 'asc',
+	DESC: 'desc'
+}
+
+export const AGE_LIMIT = 567648000000; // 18 years in milliseconds
+
+export const ISO_WEEKEND = [6, 7];
+

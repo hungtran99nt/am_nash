@@ -5,7 +5,8 @@ import * as Yup from 'yup';
 import moment from "moment";
 import {useHistory} from "react-router-dom";
 import axios from "axios";
-import {API_URL, USER_STATUS} from "../../../common/constants";
+import {AGE_LIMIT, API_URL, ISO_WEEKEND} from "../../../common/constants";
+import Error from "../../Error/Error";
 
 const validateForm = Yup.object().shape({
     firstName: Yup.string()
@@ -16,33 +17,38 @@ const validateForm = Yup.object().shape({
         .min(2, 'Too Short!')
         .max(50, 'Too Long!')
         .required('Required'),
-    birthDate: Yup.date().max(new Date(Date.now() - 567648000000), "User is under 18. Please select a different date")
-        .required("Required"),
+    birthDate: Yup.date().max(new Date(Date.now() - AGE_LIMIT), "User is under 18. Please select a different date")
+        .required("Invalid date. Please select a different date"),
     type: Yup.string().required("Required!")
 });
 
-const validation = (values) => {
+const validation = ({birthDate, joinedDate}) => {
     const errors = {};
-    let isWeekend = moment(values.joinedDate).isoWeekday();
-    if (!values.joinedDate) {
-        errors.joinedDate = "Required";
-    } else if (moment(values.joinedDate).isBefore(moment(values.joinedDate))) {
+
+    if (!joinedDate) {
+        errors.joinedDate = "Invalid date. Please select a different date";
+        return errors;
+    }
+    let isoWeekday = moment(joinedDate).isoWeekday();
+    if (moment(joinedDate).isBefore(birthDate)) {
         errors.joinedDate = "Joined date is not later than Date of Birth. Please select a different date";
-    } else if (isWeekend === 7 || isWeekend === 6) {
+    } else if (ISO_WEEKEND.includes(isoWeekday)) {
         errors.joinedDate = "Joined date is Saturday or Sunday. Please select a different date"
+    } else if (moment(joinedDate).isAfter(Date.now())) {
+        errors.joinedDate = "Joined date is not future day. Please select a different date"
     }
     return errors;
 }
 
 const CreateUserPage = () => {
-    const initialValues = {firstName: "", lastName: "", birthDate: "", gender: "female", joinedDate: "", type: ""};
+    const initialValues = {firstName: "", lastName: "", birthDate: "", gender: "Female", joinedDate: "", type: ""};
 
     let history = useHistory();
 
     const handleRedirectUseManagePage = () => {
         history.push("/user");
     }
-    
+
     const submit = (values, {resetForm}) => {
         axios({
             method: 'POST',
@@ -56,17 +62,18 @@ const CreateUserPage = () => {
                 type: values.type
             }
         }).then(res => {
-            console.log("res = ", res);
+            // console.log("res = ", res);
             console.log('create user success.');
-            history.push("/user");
+            history.push("/user", {firstId: res.data.id});
         }).catch(err => {
             console.log("err = ", err);
-            return <div style={{color: "red"}}>{err}</div>;
-        });
-        resetForm();
+            return <Error message={err.response.data.message}/>
+        }).finally(
+            resetForm()
+        );
     }
     return (
-        <div className="app-create">
+        <div className="app-page">
             <div className="row">
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
@@ -84,12 +91,10 @@ const CreateUserPage = () => {
                               handleBlur,
                               handleChange,
                               handleSubmit,
-                              isSubmitting,
-                              resetForm,
                           }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextfirstName">
-                                    <Form.Label column sm="2">First Name</Form.Label>
+                                <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
+                                    <Form.Label column sm="3">First Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
                                             type="text"
@@ -105,8 +110,8 @@ const CreateUserPage = () => {
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextlastName">
-                                    <Form.Label column sm="2">Last Name</Form.Label>
+                                <Form.Group as={Row} className="mb-3" controlId="formTextLastName">
+                                    <Form.Label column sm="3">Last Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
                                             type="text"
@@ -121,8 +126,8 @@ const CreateUserPage = () => {
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextbirthDate">
-                                    <Form.Label column sm="2">Date Of Birth</Form.Label>
+                                <Form.Group as={Row} className="mb-3" controlId="formTextBirthDate">
+                                    <Form.Label column sm="3">Date Of Birth</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
                                             name="birthDate"
@@ -138,7 +143,7 @@ const CreateUserPage = () => {
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                                    <Form.Label column sm="2">
+                                    <Form.Label column sm="3">
                                         Gender
                                     </Form.Label>
                                     <Col sm="6">
@@ -148,7 +153,7 @@ const CreateUserPage = () => {
                                                 label="Female"
                                                 name="gender"
                                                 type="radio"
-                                                value="female"
+                                                value="Female"
                                                 defaultChecked={true}
                                                 onChange={handleChange}
                                             />
@@ -157,14 +162,14 @@ const CreateUserPage = () => {
                                                 label="Male"
                                                 name="gender"
                                                 type="radio"
-                                                value="male"
+                                                value="Male"
                                                 onChange={handleChange}
                                             />
                                         </div>
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                                    <Form.Label column sm="2">
+                                    <Form.Label column sm="3">
                                         Joined Date
                                     </Form.Label>
                                     <Col sm="6">
@@ -182,7 +187,7 @@ const CreateUserPage = () => {
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                                    <Form.Label column sm="2">Type</Form.Label>
+                                    <Form.Label column sm="3">Type</Form.Label>
                                     <Col sm="6">
                                         <Form.Select
                                             name="type"

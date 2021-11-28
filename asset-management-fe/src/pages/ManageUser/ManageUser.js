@@ -8,13 +8,14 @@ import moment from "moment";
 import {useHistory} from "react-router-dom";
 import jwt_decode from "jwt-decode";
 
+
 const convertDataResponse = res => res.data.map(u => (
     {
         id: u.id,
         staffCode: u.staffCode,
         fullName: `${u.firstName} ${u.lastName}`,
         userName: u.username,
-        joinDate: moment(u.joinDate).format(DATE_FORMAT.TO),
+        joinedDate: moment(u.joinedDate).format(DATE_FORMAT.TO),
         type: u.type,
         location: u.location
     }
@@ -23,20 +24,24 @@ const convertDataResponse = res => res.data.map(u => (
 const ManageUser = () => {
     const [filterOption, setFilterOption] = useState(FILTER_USER_OPTIONS.NONE);
     const [searchText, setSearchText] = useState('');
-	const token = localStorage.getItem("TOKEN");
+    const history = useHistory();
+    let recentUserId = history.location.state ? history.location.state.firstId : null;
 
-	let history = useHistory();
+    const handleAddNewClick = () => {
+        history.push("/create");
+    }
 
-	const handleAddNewClick = () => {
-		history.push("/create");
-	}
-	const {
-		isLoading,
-		data: users,
-		errorMessage
-	} = useFetch([], `${API_URL}/users`, convertDataResponse);
-
+    const {
+        isLoading,
+        data: users,
+        errorMessage
+    } = useFetch([], `${API_URL}/users`, convertDataResponse);
     if (errorMessage) window.location.reload(history.push("/login"));
+
+    if (recentUserId) { // user created/edited: move it to the top of the list
+        users.sort((a, b) => a.id === recentUserId ? -1 : b.id === recentUserId ? 1 : 0);
+        window.history.replaceState(null, '');
+    }
 
     const usersFiltered = useMemo(() => {
         return users.filter(user =>
@@ -47,18 +52,17 @@ const ManageUser = () => {
         return usersFiltered.filter(user => {
                 return user.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
                     user.staffCode.toLowerCase().includes(searchText.toLowerCase());
-
             }
-        )
+        );
     }, [searchText, usersFiltered]);
 
     return (
         <div className="mt-4">
 			<Container className="px-0">
-				<div className="manager-user__heading pb-3">
+				<div className="manager__heading pb-3">
 					ManageUser
 				</div>
-				<Form className="manager-user__action mb-3">
+				<Form className="manager__action mb-3">
 					<Row className="actions__wrapper">
 						<Col className='col-2 flex-grow-1 select'>
 							<Form.Select

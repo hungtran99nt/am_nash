@@ -1,40 +1,53 @@
 import BootstrapTable from 'react-bootstrap-table-next';
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import UserPopup from "./UserModal/UserPopup";
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
-import paginationFactory from 'react-bootstrap-table2-paginator';
-import {API_URL} from "../../common/constants";
+import {API_URL, DATE_FORMAT, SORT_ORDERS} from "../../common/constants";
 import axios from "axios";
 import editImg from '../../assets/images/pen.png'
 import deleteImg from '../../assets/images/cross.png'
 import './UserTable.css'
 import {useHistory} from "react-router-dom";
+import moment from "moment";
+import {pagination, sortCode} from "../../common/config";
+import UserDisableError from "./UserModal/UserDisableError";
+import UserDisableConfirmation from "./UserModal/UserDisableConfirmation";
 
 const defaultSorted = [{
 	dataField: 'staffCode',
-	order: 'asc'
+	order: SORT_ORDERS.ASC
 }]
 
-//  config for pagination
-const pagination = paginationFactory({
-	page: 1,
-	sizePerPage: 10,
-	nextPageText: 'Next',
-	prePageText: 'Prev',
-	hideSizePerPage: true,
-	withFirstAndLast: false,
-	alwaysShowAllBtns: true,
-});
 
-const UserTable = ({users, isLoading}) => {
+const UserTable = ({users, isLoading, isRecentUser}) => {
 
 	const handleEditClicked = id => {
 		history.push(`/edit/${id}`);
 	}
 
-	const handleDeleteClicked = id => {
-		console.log("id clicked = ", id);
-	}
+	const [showErr, setShowErr] = useState(false);
+	const handleCloseErr = () => setShowErr(false);
+	const handleShowErr = () => setShowErr(true);
+
+	const [showConfirm, setShowConfirm] = useState(false);
+	const handleCloseConfirm = () => setShowConfirm(false);
+	const handleShowConfirm = () => setShowConfirm(true);
+	const [disableUser, setDisableUser] = useState(false);
+	const [idDisable, setIdDisable] = useState(null);
+
+	const handleDeleteClicked = (id) => {
+		axios
+		.get(`${API_URL}/users/${id}/valid`)
+		.then((res) => {
+      if (res.data === true) {
+        setIdDisable(id);
+        handleShowConfirm();}
+        else handleShowErr();
+		})
+		.catch((err) => {
+			console.error("Delete error: ", err);
+		});
+	};
 
 	const columnFormatter = (cell, row) => {
 		return (
@@ -47,11 +60,11 @@ const UserTable = ({users, isLoading}) => {
 				<img src={editImg} alt="edit"/>
 			</span>
 
-			 <span
-				  className="action__items"
-				  title={`Delete user ${row.userName}`}
-				  onClick={() => handleDeleteClicked(row.id)}
-			 >
+				<span
+					className="action__items"
+					title={`Delete user ${row.userName}`}
+					onClick={() => handleDeleteClicked(row.id)}
+				>
 				<img src={deleteImg} alt="delete"/>
 			</span>
 			</div>
@@ -62,7 +75,10 @@ const UserTable = ({users, isLoading}) => {
 		{
 			dataField: 'staffCode',
 			text: 'Staff Code',
-			sort: true
+			sort: true,
+			sortFunc: (a, b, order) => {
+				return sortCode(a, b, order);
+			}
 		}, {
 			dataField: 'fullName',
 			text: 'Full Name',
@@ -71,9 +87,14 @@ const UserTable = ({users, isLoading}) => {
 			dataField: 'userName',
 			text: 'Username',
 		}, {
-			dataField: 'joinDate',
+			dataField: 'joinedDate',
 			text: 'Join Date',
-			sort: true
+			sort: true,
+			sortFunc: (a, b, order) => {
+				if (order === SORT_ORDERS.ASC)
+					return moment(a, DATE_FORMAT.TO) - moment(b, DATE_FORMAT.TO);
+				return moment(b, DATE_FORMAT.TO) - moment(a, DATE_FORMAT.TO);
+			}
 		}, {
 			dataField: 'type',
 			text: 'Type',
@@ -125,7 +146,6 @@ const UserTable = ({users, isLoading}) => {
 		setShow(handleShow);
 	};
 
-	if (isLoading) return (<div>Loading...</div>)
 	return (
 		<>
 			<BootstrapTable
@@ -135,10 +155,23 @@ const UserTable = ({users, isLoading}) => {
 				hover
 				rowEvents={getUserDetail}
 				formatter={columnFormatter}
-				defaultSorted={defaultSorted}
+				defaultSorted={isRecentUser ? [] : defaultSorted}
 				pagination={pagination}
 			/>
+			{isLoading && <div>Loading...</div>}
 			{show ? <UserPopup show={show} handleClose={handleClose} userInfo={userDetail}/> : null}
+			{showErr ? (
+				<UserDisableError showErr={showErr} handleCloseErr={handleCloseErr} />
+			) : null}
+
+			{showConfirm ? (
+				<UserDisableConfirmation
+				idDisable={idDisable}
+				showConfirm={showConfirm}
+				handleCloseConfirm={handleCloseConfirm}
+				setDisableUser={setDisableUser}
+				/>
+			) : null}
 		</>
 	)
 }

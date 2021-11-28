@@ -1,11 +1,19 @@
-.user__detail th {
+.modal-content {
+    padding: 1rem !important;
+}
+
+.modal-title {
+    font-weight: 700 !important;
+}
+
+.popup__detail th {
     font-weight: normal;
 }
 
-.user__detail th {
+.popup__detail > th {
     padding: 0 20px;
 }
 
-.user__detail td {
+.popup__detail td {
     padding: 5px 20px;
 }
