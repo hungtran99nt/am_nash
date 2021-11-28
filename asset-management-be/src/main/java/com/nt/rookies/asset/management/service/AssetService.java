@@ -45,4 +45,6 @@ public interface AssetService {
    * @return created {@link AssetDTO} object
    */
   AssetDTO createAsset(AssetDTO assetDTO);
+
+
 }

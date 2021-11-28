@@ -1,0 +1,31 @@
+.drop-category{
+    display: flex;
+    justify-content: space-between;
+    background-color: #ffffff !important;
+    color: #33333373 !important;
+    border: 1px solid #000000 !important;
+    text-align: left !important;
+}
+.drop-icon{
+    margin-left: 176px;
+    margin-top: 4px;
+}
+.category-form{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.input-cate{
+    width: 100%;
+    padding: 6px 10px;
+    border:1px solid #33333373;
+    border-radius: 2px;
+    margin-bottom: 20px;
+}
+.category-btn_add{
+    display: flex;
+}
+.input-prefix{
+}
+.btn-add{
+    color: #0a53be;
+}
