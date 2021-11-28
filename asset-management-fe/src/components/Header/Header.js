@@ -65,14 +65,14 @@ const Header = ({header, account, token, setToken}) => {
                             <div className="modal-body logout px-4">
                                 <p style={{color: "black"}}>Do you want to log out?</p>
                                 <div className="d-flex justify-content-between">
-                                    <a href="/login" className="btn btn-primary"
+                                    <a href="/login" className="a-btn btn btn-primary"
                                        style={{backgroundColor: "#f44336", borderColor: "#f44336"}}
                                        onClick={() => {
                                            localStorage.clear();
                                            setToken("");
                                        }}
                                     >Log out</a>
-                                    <button type="button" className="btn btn-secondary"
+                                    <button type="button" className="a-btn btn btn-secondary"
                                             data-bs-dismiss="modal"
                                             style={{backgroundColor: "transparent", color: "#6c757d"}}
                                     >Cancel
