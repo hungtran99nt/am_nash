@@ -1,8 +1,11 @@
 import React from "react";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from "formik";
-import {useHistory} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import * as Yup from 'yup';
+import moment from "moment";
+import useFetch from "../../../hooks/useFetch";
+import {API_URL} from "../../../common/constants";
 
 
 const validateForm = Yup.object().shape({
@@ -11,18 +14,37 @@ const validateForm = Yup.object().shape({
     specification:Yup.string().required("Required!"),
     installDate:Yup.date().required("Required!"),
 })
+const convertDataResponse = res =>(
+    {
+        assetName:res.data.assetName,
+        category: res.data.categoryName,
+        specification: res.data.specification,
+        installDate: moment(res.data.installedDate).format("YYYY-MM-DD"),
+        state: res.data.state
+    }
+);
+
 const EditAssetPage = () =>{
+    const {id} = useParams();
     let history = useHistory();
     const handleRedirectAssetManagePage = () =>{
         history.push("/asset")
     }
+    const {
+        isLoading,
+        data: assets,
+        errorMessage
+    } = useFetch([], `${API_URL}/assets/${id}`, convertDataResponse);
+    console.log(assets)
     const initialValues ={
-        name:"",
-        category:"Laptop",
-        specification:"",
-        installDate:"",
-        state:"Recycled"
+        name:assets.assetName,
+        category:assets.category,
+        specification:assets.specification,
+        installDate:assets.installDate,
+        state:assets.state
     }
+    if (isLoading) return "Loading";
+    if (errorMessage) return <div style={{color: "red"}}>{errorMessage}</div>;
     const submit = (values,{resetForm}) => {
         console.log("value on submit =",values);
         history.push("/asset")
@@ -79,11 +101,7 @@ const EditAssetPage = () =>{
                                             isInvalid={touched.category && errors.category}
                                             disabled={true}
                                         >
-                                            <option value={values.category}/>
-                                            {/*<option value="Staff" defaultChecked={values.type === "Staff"}*/}
-                                            {/*        label="Staff"/>*/}
-                                            {/*<option value="Admin" defaultChecked={values.type === "Admin"}*/}
-                                            {/*        label="Admin"/>*/}
+                                            <option value={values.category} label={values.category}/>
                                         </Form.Select>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.category}
