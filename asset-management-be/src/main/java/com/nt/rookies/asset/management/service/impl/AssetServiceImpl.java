@@ -31,6 +31,7 @@ public class AssetServiceImpl implements AssetService {
   private final ModelMapper modelMapper;
   private final AssignmentRepository assignmentRepository;
 
+  @Autowired
   public AssetServiceImpl(
       UserService userService,
       AssetRepository assetRepository,

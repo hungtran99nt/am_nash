@@ -27,6 +27,11 @@ export const FILTER_STATE_OPTIONS = {
 	RECYCLED: 'Recycled'
 }
 
+export const FILTER_ASM_STATE_OPTIONS = {
+	ACCEPTED: 'Accepted',
+	WAITING_FOR_ACCEPTANCE: 'Waiting for acceptance',
+}
+
 export const SORT_ORDERS = {
 	ASC: 'asc',
 	DESC: 'desc'
