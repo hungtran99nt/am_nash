@@ -3,6 +3,7 @@ package com.nt.rookies.asset.management.controller;
 import com.nt.rookies.asset.management.dto.CategoryDTO;
 import com.nt.rookies.asset.management.service.CategoryService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,7 @@ public class CategoryRestController {
   }
 
   @PostMapping()
-  public CategoryDTO createCategory(@RequestBody CategoryDTO categoryDTO) {
+  public CategoryDTO createCategory(@RequestBody @Valid CategoryDTO categoryDTO) {
     return categoryService.createCategory(categoryDTO);
   }
 }

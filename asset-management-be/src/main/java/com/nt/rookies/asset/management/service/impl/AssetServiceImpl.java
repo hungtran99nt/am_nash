@@ -57,7 +57,6 @@ public class AssetServiceImpl implements AssetService {
   @Override
   public AssetDTO getAssetById(Integer id) {
     logger.info("Inside getAssetById({})", id);
-    // TODO: validate id
     Asset asset =
         assetRepository
             .findById(id)
@@ -69,8 +68,6 @@ public class AssetServiceImpl implements AssetService {
   @Override
   public AssetDTO createAsset(AssetDTO assetDTO) {
     logger.info("Inside createAsset({})", assetDTO);
-    // TODO: validate asset
-
     Asset asset = modelMapper.map(assetDTO, Asset.class);
     Category category = categoryRepository.findByCategoryName(assetDTO.getCategoryName());
     asset.setCategory(category);
@@ -83,6 +80,25 @@ public class AssetServiceImpl implements AssetService {
     createdAsset = assetRepository.save(createdAsset); // update asset code
     logger.info("Asset created: {}", createdAsset);
     return modelMapper.map(createdAsset, AssetDTO.class);
+  }
+
+  @Override
+  public AssetDTO updateAsset(Integer id, AssetDTO assetDTO) {
+    logger.info("Inside updateAsset({}, {})", id, assetDTO);
+    Asset asset =
+        assetRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Edit asset not found."));
+    logger.info("Asset found: {}", asset);
+    asset.setAssetName(assetDTO.getAssetName());
+    asset.setSpecification(assetDTO.getSpecification());
+    asset.setInstalledDate(assetDTO.getInstalledDate());
+    asset.setState(assetDTO.getState());
+    logger.info("Asset edited: {}", asset);
+
+    Asset updatedAsset = assetRepository.save(asset);
+    logger.info("Asset updated: {}", updatedAsset);
+    return modelMapper.map(updatedAsset, AssetDTO.class);
   }
 
   private String generateAssetCode(Integer assetId, Category category) {
