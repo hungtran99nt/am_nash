@@ -6,20 +6,21 @@ import * as Yup from 'yup';
 import moment from "moment";
 import useFetch from "../../../hooks/useFetch";
 import {API_URL} from "../../../common/constants";
+import axios from "axios";
 
 
 const validateForm = Yup.object().shape({
     name:Yup.string().required("Required!"),
     category:Yup.string().required("Required!"),
     specification:Yup.string().required("Required!"),
-    installDate:Yup.date().required("Required!"),
+    installedDate:Yup.date().required("Required!"),
 })
 const convertDataResponse = res =>(
     {
         assetName:res.data.assetName,
         category: res.data.categoryName,
         specification: res.data.specification,
-        installDate: moment(res.data.installedDate).format("YYYY-MM-DD"),
+        installedDate: moment(res.data.installedDate).format("YYYY-MM-DD"),
         state: res.data.state
     }
 );
@@ -40,16 +41,44 @@ const EditAssetPage = () =>{
         name:assets.assetName,
         category:assets.category,
         specification:assets.specification,
-        installDate:assets.installDate,
+        installedDate:assets.installedDate,
         state:assets.state
     }
-    if (isLoading) return "Loading";
+    if (isLoading) return "Loading...";
     if (errorMessage) return <div style={{color: "red"}}>{errorMessage}</div>;
-    const submit = (values,{resetForm}) => {
-        console.log("value on submit =",values);
-        history.push("/asset")
+    const submit = (values, {resetForm}) => {
+        console.log('Form values =', {values});
+        // console.log('token=',localStorage.getItem('TOKEN'));
+        axios({
+            method: 'PUT',
+            url: `${API_URL}/assets/${id}`,
+            header: {
+                'Content-Type': 'application/json',
+                // 'Authorization': `Bearer ${localStorage.getItem('TOKEN')}`
+            },
+            data: {
+                assetName: values.name,
+                categoryName: values.category,
+                specification: values.specification,
+                installedDate: values.installedDate,
+                state:values.state
+            }
+        }).then((res) => {
+            console.log("res = ", res);
+            console.log("Edit success");
+            history.push("/asset", {firstId: res.data.id});
+        }).catch(err => {
+            console.log("err = ", err);
+            console.log(err.message);
+            return <div style={{color: "red"}}>{err}</div>;
+        });
         resetForm();
     }
+    // const submit = (values,{resetForm}) => {
+    //     console.log("value on submit =",values);
+    //     history.push("/asset")
+    //     resetForm();
+    // }
     return(
         <div className="app-page">
             <div className="row">
@@ -94,7 +123,7 @@ const EditAssetPage = () =>{
                                     <Form.Label column sm="3">Category</Form.Label>
                                     <Col sm="6">
                                         <Form.Select
-                                            name="type"
+                                            name="category"
                                             value={values.category}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
@@ -124,19 +153,19 @@ const EditAssetPage = () =>{
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextInstallDate">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextInstalledDate">
                                     <Form.Label column sm="3">Installed Date</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
-                                            name="birthDate"
+                                            name="installedDate"
                                             type="date"
-                                            value={values.installDate}
+                                            value={values.installedDate}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.installDate && errors.installDate}
+                                            isInvalid={touched.installedDate && errors.installedDate}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.installDate}
+                                            {errors.installedDate}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
@@ -183,7 +212,7 @@ const EditAssetPage = () =>{
 
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
-                                            disabled={!values.name || !values.specification ||!values.installDate}
+                                            disabled={!values.name || !values.specification ||!values.installedDate}
                                     >
                                         Save
                                     </Button>
