@@ -1,5 +1,6 @@
 package com.nt.rookies.asset.management.dto;
 
+import com.nt.rookies.asset.management.common.BaseConstants;
 import java.util.Date;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -11,28 +12,28 @@ public class AssetDTO {
   private Integer id;
   private String assetCode;
 
-  @NotNull(message = "Asset name is required")
-  @NotBlank(message = "Asset name cannot be blank")
-  @Size(max = 50, message = "Asset name must be less than 50 characters")
+  @NotNull(message = BaseConstants.ERR_ASSET_NAME_REQUIRED)
+  @NotBlank(message = BaseConstants.ERR_ASSET_NAME_BLANK)
+  @Size(max = 50, message = BaseConstants.ERR_ASSET_NAME_LENGTH)
   private String assetName;
 
-  @NotNull(message = "Specification is required")
-  @NotBlank(message = "Specification cannot be blank")
-  @Size(max = 300, message = "Specification must be less than 300 characters")
+  @NotNull(message = BaseConstants.ERR_ASSET_SPECIFICATION_REQUIRED)
+  @NotBlank(message = BaseConstants.ERR_ASSET_SPECIFICATION_BLANK)
+  @Size(max = 300, message = BaseConstants.ERR_ASSET_SPECIFICATION_LENGTH)
   private String specification;
 
-  @NotNull(message = "Installation date is required")
+  @NotNull(message = BaseConstants.ERR_ASSET_INSTALLEDDATE_LENGTH)
   private Date installedDate;
 
-  @NotNull(message = "State is required")
-  @NotBlank(message = "State cannot be blank")
-  @Size(max = 30, message = "State must be less than 30 characters")
+  @NotNull(message = BaseConstants.ERR_ASSET_STATE_REQUIRED)
+  @NotBlank(message = BaseConstants.ERR_ASSET_STATE_BLANK)
+  @Size(max = 30, message = BaseConstants.ERR_ASSET_STATE_LENGTH)
   private String state;
 
   private String location;
 
-  @NotNull(message = "Category name is required")
-  @NotBlank(message = "Category name cannot be blank")
-  @Size(max = 30, message = "Category name must be less than 30 characters")
+  @NotNull(message = BaseConstants.ERR_CATEGORY_NAME_REQUIRED)
+  @NotBlank(message = BaseConstants.ERR_CATEGORY_NAME_BLANK)
+  @Size(max = 30, message = BaseConstants.ERR_CATEGORY_NAME_LENGTH)
   private String categoryName;
 }
