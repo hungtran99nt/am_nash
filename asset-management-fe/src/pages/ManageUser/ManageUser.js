@@ -93,7 +93,7 @@ const ManageUser = () => {
 				</Form>
 			</Container>
 			{ errorMessage && <div>errorMessage</div> }
-			{ usersSearched && <UserTable isLoading={isLoading} users={usersSearched}/>}
+			{ usersSearched && <UserTable isLoading={isLoading} users={usersSearched} isRecentUser={recentUserId}/>}
 		</div>
 	)
 }

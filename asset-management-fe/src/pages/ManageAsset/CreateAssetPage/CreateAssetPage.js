@@ -1,36 +1,49 @@
-import React from "react";
-import {Button, Col, Form, Row} from "react-bootstrap";
+import React, {useState} from "react";
+import './CreateAssetPage.css'
+import {Button, Col, Form, Row, Dropdown, DropdownButton} from "react-bootstrap";
 import {Formik} from "formik";
 import {useHistory} from "react-router-dom";
 import * as Yup from 'yup';
+import useFetch from "../../../hooks/useFetch";
+import {API_URL} from "../../../common/constants";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faAngleDown, faPlus} from '@fortawesome/free-solid-svg-icons'
 
 
 const validateForm = Yup.object().shape({
-    name:Yup.string().required("Required!"),
-    category:Yup.string().required("Required!"),
-    specification:Yup.string().required("Required!"),
-    installDate:Yup.date().required("Required!"),
+    name: Yup.string().required("Required!"),
+    category: Yup.string().nullable().required("Required!"),
+    specification: Yup.string().required("Required!"),
+    installDate: Yup.date().required("Required!"),
 })
+const convertDataResponse = res => res.data;
 
-
-const CreateAssetPage = () =>{
+const CreateAssetPage = () => {
     let history = useHistory();
-    const handleRedirectAssetManagePage = () =>{
+
+    const {
+        data: categories,
+    } = useFetch([], `${API_URL}/categories`, convertDataResponse);
+    console.log("cate", categories)
+    const handleRedirectAssetManagePage = () => {
         history.push("/asset")
     }
-    const initialValues ={
-        name:"",
-        category:"Laptop",
-        specification:"",
-        installDate:"",
-        state:"Recycled"
+    const initialValues = {
+        name: "",
+        category:categories.categoryName,
+        specification: "",
+        installDate: "",
+        state: ""
     }
-    const submit = (values,{resetForm}) => {
-        console.log("value on submit =",values);
+    const [dropValue,setDropValue] = useState("Select Category")
+
+
+    const submit = (values, {resetForm}) => {
+        console.log("value on submit =", values);
         history.push("/asset")
         resetForm();
     }
-    return(
+    return (
         <div className="app-page">
             <div className="row">
                 <div className="col-lg-2"/>
@@ -73,19 +86,26 @@ const CreateAssetPage = () =>{
                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
                                     <Form.Label column sm="3">Category</Form.Label>
                                     <Col sm="6">
-                                        <Form.Select
-                                            name="type"
-                                            value={values.category}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            isInvalid={touched.category && errors.category}
-                                        >
-                                            <option value={values.category}/>
-                                            <option value="Staff" defaultChecked={values.category === "Staff"}
-                                                    label="Staff"/>
-                                            <option value="Admin" defaultChecked={values.category === "Admin"}
-                                                    label="Admin"/>
-                                        </Form.Select>
+                                        <Dropdown>
+                                            <Dropdown.Toggle id="dropdown-autoclose-true" className="form-control drop-category" placeholder={dropValue} >
+                                                {dropValue}
+                                                <FontAwesomeIcon className="drop-icon" icon={faAngleDown} />
+                                            </Dropdown.Toggle>
+                                            <Dropdown.Menu className="form-control">
+                                                {categories.map(cate => <Dropdown.Item key={cate.id} value={values.category}>
+                                                    <div onClick={(e) => setDropValue(e.target.textContent)}>{cate.categoryName}
+                                                    </div>
+                                                </Dropdown.Item>)
+                                                }
+                                                <Dropdown.Divider />
+                                                <div className="category-form">
+                                                    <input placeholder="Name of new Category" className="input-cate"/>
+                                                    <input placeholder="Prefix of new Category" className="input-prefix"/>
+                                                    <button className="btn btn-addCategory"><FontAwesomeIcon icon={faPlus}/> Add Category</button>
+                                                </div>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+
                                         <Form.Control.Feedback type="invalid">
                                             {errors.category}
                                         </Form.Control.Feedback>
@@ -111,7 +131,7 @@ const CreateAssetPage = () =>{
                                     <Form.Label column sm="3">Installed Date</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
-                                            name="birthDate"
+                                            name="installDate"
                                             type="date"
                                             value={values.installDate}
                                             onChange={handleChange}
@@ -150,7 +170,7 @@ const CreateAssetPage = () =>{
 
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
-                                            disabled={!values.name || !values.specification ||!values.installDate}
+                                            disabled={!values.name || !values.specification || !values.installDate}
                                     >
                                         Save
                                     </Button>
