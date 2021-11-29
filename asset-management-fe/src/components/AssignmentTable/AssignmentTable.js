@@ -4,9 +4,10 @@ import deleteImg from "../../assets/images/cross.png";
 import returnImg from "../../assets/images/return.png";
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
-import {SORT_ORDERS} from "../../common/constants";
+import {FILTER_ASM_STATE_OPTIONS, SORT_ORDERS} from "../../common/constants";
 import {useHistory} from "react-router-dom";
 import NoDataFound from "../NoDataFound/NoDataFound";
+import './AssignmentTable.css';
 
 const defaultSorted = [{
 	dataField: 'assetCode',
@@ -16,21 +17,40 @@ const defaultSorted = [{
 const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 	const history = useHistory();
 
+	const columnNoFormatter = (cell, row, index) => {
+		return <span>{index + 1}</span>;
+	}
+
 	const columnFormatter = (cell, row) => {
 		return (
-			<div className="table__actions">
-				<span className="action__items" onClick={() => handleEditClicked(row.id)}
-					  title={"Edit assignment"}
+			<div className={`table__actions ${row.state === FILTER_ASM_STATE_OPTIONS.ACCEPTED ? 'disable' : ''}`}>
+				<span
+					className="action__items"
+					onClick={
+						row.state !== FILTER_ASM_STATE_OPTIONS.ACCEPTED ?
+							() => handleEditClicked(row.id) : undefined
+					}
+					title={"Edit assignment"}
 				>
 					 <img src={editImg} alt="edit"/>
 				</span>
 
-				<span className="action__items"
-					  title={"Delete assignment"}
+				<span
+					className="action__items"
+					onClick={
+						row.state !== FILTER_ASM_STATE_OPTIONS.ACCEPTED ?
+							() => console.log(`Delete assignment id: ${row.id}`) : undefined
+					}
+					title={"Delete assignment"}
 				>
 					 <img src={deleteImg} alt="delete"/>
 				</span>
-				<span className="action__items" // onClick={() => handleDeleteClicked(row.id)}
+				<span
+					className="action__items"
+					onClick={
+						row.state !== FILTER_ASM_STATE_OPTIONS.ACCEPTED ?
+							() => console.log(`Return assignment id: ${row.id}`) : undefined
+					}
 					title={"Return assignment"}
 				>
 					 <img src={returnImg} alt="return"/>
@@ -44,6 +64,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 			dataField: 'id',
 			text: 'No.',
 			sort: true,
+			formatter: columnNoFormatter,
 			headerStyle: () => {
 				return {width: '70px'};
 			}
