@@ -11,7 +11,7 @@ const convertDataResponse = res => res.data;
 
 const ManageAsset = () => {
 	const history = useHistory();
-
+	let recentAssetId = history.location.state ? history.location.state.firstId : null;
 	const handleRedirectCreateAssetPage = () => {
 		history.push("/create/asset");
 	}
@@ -33,7 +33,10 @@ const ManageAsset = () => {
 	const [filterStateOption, setFilterStateOption] = useState('');
 	const [filterCategoryOption, setFilterCategoryOption] = useState('');
 	const [searchText, setSearchText] = useState('');
-
+	if (recentAssetId) { // user created/edited: move it to the top of the list
+		assets.sort((a, b) => a.id === recentAssetId ? -1 : b.id === recentAssetId ? 1 : 0);
+		window.history.replaceState(null, '');
+	}
 	const assetsDefault = useMemo(() => {
 		return assets.filter(asset => {
 			return !isMatchExact((FILTER_STATE_OPTIONS.RECYCLED).toLowerCase(), asset.state.toLowerCase()) &&
@@ -103,7 +106,7 @@ const ManageAsset = () => {
 					</Row>
 				</Form>
 			</Container>
-			<AssetTable assets={assetsSearched} isLoading={isLoading} errorMessage ={errorMessage}/>
+			<AssetTable assets={assetsSearched} isLoading={isLoading} errorMessage ={errorMessage} isRecentAsset={recentAssetId}/>
 		</div>
 	)
 }

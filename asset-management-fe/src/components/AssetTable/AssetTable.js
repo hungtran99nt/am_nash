@@ -15,7 +15,7 @@ const defaultSorted = [{
 	order: SORT_ORDERS.ASC
 }]
 
-const AssetTable = ({assets, isLoading, errorMessage}) => {
+const AssetTable = ({assets, isLoading, errorMessage, isRecentAsset}) => {
 	const history = useHistory();
 
 	const columnFormatter = (cell, row) => {
@@ -131,7 +131,7 @@ const AssetTable = ({assets, isLoading, errorMessage}) => {
 				columns={columns}
 				rowEvents={getAssetDetail}
 				formatter={columnFormatter}
-				defaultSorted={defaultSorted}
+				defaultSorted={isRecentAsset ? [] : defaultSorted}
 				pagination={pagination}
 			/>
 			{isLoading && <div>Loading...</div>}
