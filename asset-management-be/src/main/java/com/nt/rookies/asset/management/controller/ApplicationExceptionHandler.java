@@ -6,6 +6,7 @@ import com.nt.rookies.asset.management.exception.ErrorResponse;
 import com.nt.rookies.asset.management.exception.ResourceAlreadyExistsException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.exception.UserDisabledException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,10 @@ public class ApplicationExceptionHandler {
       BusinessException ex, HttpServletRequest request) {
     logger.info("Business exception: " + ex.getClass().getName());
     logger.info("Exception message: "+ ex.getMessage());
+    logger.info(
+        Arrays.stream(ex.getStackTrace())
+            .map(Object::toString)
+            .reduce("Stack trace:\n", (result, element) -> result + element + "\n"));
 
     HttpStatus httpStatus;
     if (ex instanceof ResourceNotFoundException) {
@@ -51,6 +56,10 @@ public class ApplicationExceptionHandler {
       MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
     logger.info("Illegal API parameter: " + ex.getClass().getName());
     logger.info("Exception message: "+ ex.getMessage());
+    logger.info(
+        Arrays.stream(ex.getStackTrace())
+            .map(Object::toString)
+            .reduce("Stack trace:\n", (result, element) -> result + element + "\n"));
 
     HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
     ErrorResponse error =
@@ -63,11 +72,12 @@ public class ApplicationExceptionHandler {
   public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
       MethodArgumentNotValidException ex, HttpServletRequest request) {
     logger.info("Invalid API argument: " + ex.getClass().getName());
-//    logger.info(
-//        Arrays.stream(ex.getStackTrace())
-//            .map(Object::toString)
-//            .reduce("Stack trace: ", (result, element) -> result + element + "\n"));
     logger.info("Exception message: "+ ex.getMessage());
+    logger.info(
+        Arrays.stream(ex.getStackTrace())
+            .map(Object::toString)
+            .reduce("Stack trace:\n", (result, element) -> result + element + "\n"));
+
     Map<String, String> errors = new HashMap<>();
     ex.getBindingResult()
         .getAllErrors()
@@ -90,6 +100,10 @@ public class ApplicationExceptionHandler {
   public ResponseEntity<ErrorResponse> handleException(Exception ex, HttpServletRequest request) {
     logger.info("Exception: " + ex.getClass().getName());
     logger.info("Exception message: "+ ex.getMessage());
+    logger.info(
+        Arrays.stream(ex.getStackTrace())
+            .map(Object::toString)
+            .reduce("Stack trace:\n", (result, element) -> result + element + "\n"));
 
     HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     ErrorResponse error =
