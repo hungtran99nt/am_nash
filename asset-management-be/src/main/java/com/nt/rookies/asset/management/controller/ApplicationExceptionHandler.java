@@ -27,8 +27,7 @@ public class ApplicationExceptionHandler {
   @ExceptionHandler(value = BusinessException.class)
   public ResponseEntity<ErrorResponse> handleException(
       BusinessException ex, HttpServletRequest request) {
-    logger.info("Business exception: " + ex.getClass().getName());
-    logger.info("Exception message: "+ ex.getMessage());
+    logger.info("Business exception: " + ex);
     logger.info(
         Arrays.stream(ex.getStackTrace())
             .map(Object::toString)
@@ -54,8 +53,7 @@ public class ApplicationExceptionHandler {
   @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
   public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
       MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
-    logger.info("Illegal API parameter: " + ex.getClass().getName());
-    logger.info("Exception message: "+ ex.getMessage());
+    logger.info("Illegal API parameter: " + ex);
     logger.info(
         Arrays.stream(ex.getStackTrace())
             .map(Object::toString)
@@ -71,8 +69,7 @@ public class ApplicationExceptionHandler {
   @ExceptionHandler(value = MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
       MethodArgumentNotValidException ex, HttpServletRequest request) {
-    logger.info("Invalid API argument: " + ex.getClass().getName());
-    logger.info("Exception message: "+ ex.getMessage());
+    logger.info("Invalid API argument: " + ex);
     logger.info(
         Arrays.stream(ex.getStackTrace())
             .map(Object::toString)
@@ -98,8 +95,7 @@ public class ApplicationExceptionHandler {
 
   @ExceptionHandler(value = Exception.class)
   public ResponseEntity<ErrorResponse> handleException(Exception ex, HttpServletRequest request) {
-    logger.info("Exception: " + ex.getClass().getName());
-    logger.info("Exception message: "+ ex.getMessage());
+    logger.info("Exception: " + ex);
     logger.info(
         Arrays.stream(ex.getStackTrace())
             .map(Object::toString)
