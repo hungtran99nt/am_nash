@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useHistory} from "react-router-dom";
-import {API_URL, SORT_ORDERS} from "../../common/constants";
+import {API_URL, FILTER_STATE_OPTIONS, SORT_ORDERS} from "../../common/constants";
 import editImg from "../../assets/images/pen.png";
 import deleteImg from "../../assets/images/cross.png";
 import BootstrapTable from "react-bootstrap-table-next";
@@ -20,11 +20,11 @@ const AssetTable = ({assets, isLoading, errorMessage}) => {
 
 	const columnFormatter = (cell, row) => {
 		return (
-			<div className="table__actions">
+			<div className={`table__actions ${row.state === FILTER_STATE_OPTIONS.ASSIGNED ? 'disable' : ''}`}>
 				<span
 					className="action__items"
 					title={`Edit asset ${row.assetName}`}
-					onClick={() => handleEditClicked(row.id)}
+					onClick={row.state !== FILTER_STATE_OPTIONS.ASSIGNED ? () => handleEditClicked(row.id): undefined}
 				>
 					 <img src={editImg} alt="edit"/>
 				</span>
@@ -32,7 +32,7 @@ const AssetTable = ({assets, isLoading, errorMessage}) => {
 				<span
 					className="action__items"
 					title={`Delete asset ${row.assetName}`}
-					onClick={() => handleDeleteClicked(row.id)}
+					onClick={row.state !== FILTER_STATE_OPTIONS.ASSIGNED ? () => handleDeleteClicked(row.id): undefined}
 				>
 					 <img src={deleteImg} alt="delete"/>
 				</span>
