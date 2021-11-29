@@ -24,13 +24,12 @@ const CreateAssetPage = () => {
     const {
         data: categories,
     } = useFetch([], `${API_URL}/categories`, convertDataResponse);
-    console.log("cate", categories)
     const handleRedirectAssetManagePage = () => {
         history.push("/asset")
     }
     const initialValues = {
         name: "",
-        category:categories.categoryName,
+        category:"",
         specification: "",
         installDate: "",
         state: ""
@@ -87,7 +86,15 @@ const CreateAssetPage = () => {
                                     <Form.Label column sm="3">Category</Form.Label>
                                     <Col sm="6">
                                         <Dropdown>
-                                            <Dropdown.Toggle id="dropdown-autoclose-true" className="form-control drop-category" placeholder={dropValue} >
+                                            <Dropdown.Toggle id="dropdown-autoclose-true"
+                                                             className="form-control drop-category"
+                                                             placeholder={dropValue}
+                                                             value={values.category}
+                                                             onChange={handleChange}
+                                                             onBlur={handleBlur}
+                                                             isInvalid={touched.specification && errors.specification}
+
+                                            >
                                                 <div className="drop-box">
                                                     <span className="drop-title">{dropValue}</span>
                                                     <FontAwesomeIcon className="drop-icon" icon={faAngleDown} />
