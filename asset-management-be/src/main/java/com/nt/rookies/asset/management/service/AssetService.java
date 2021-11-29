@@ -45,4 +45,12 @@ public interface AssetService {
    * @return created {@link AssetDTO} object
    */
   AssetDTO createAsset(AssetDTO assetDTO);
+
+  /**
+   * Edit an asset.
+   *
+   * @param assetDTO edit asset
+   * @return edited {@link AssetDTO} object
+   */
+  AssetDTO updateAsset(Integer id, AssetDTO assetDTO);
 }

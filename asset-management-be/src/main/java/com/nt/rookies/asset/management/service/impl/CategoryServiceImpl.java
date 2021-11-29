@@ -38,16 +38,6 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public CategoryDTO createCategory(CategoryDTO category) {
     logger.info("Inside createCategory() method");
-    // TODO: validate category
-
-    //    assert category != null : "Category is null";
-    //    assert category.getCategoryName() != null && category.getCategoryPrefix() != null : "";
-    //    assert category.getCategoryName().length() <= 30 && !category.getCategoryName().isEmpty()
-    //        : "Category name should not be empty and should not exceed 30 characters";
-    //    assert category.getCategoryPrefix().length() <= 3 &&
-    // !category.getCategoryPrefix().isEmpty()
-    //        : "Category prefix should not be empty and should not exceed 3 characters";
-
     Category categoryEntity = modelMapper.map(category, Category.class);
     logger.info("New category: {}", categoryEntity);
     try {
