@@ -19,6 +19,11 @@ export const USER_STATUS = {
 	ACTIVE: 1
 }
 
+export const LOGIN_MESSAGE = {
+	REQUIRED: "Please login first!",
+	FAILED: "Username or password is incorrect. Please try again!"
+}
+
 export const FILTER_STATE_OPTIONS = {
 	AVAILABLE: 'Available',
 	NOT_AVAILABLE: 'Not available',
@@ -35,3 +40,4 @@ export const SORT_ORDERS = {
 export const AGE_LIMIT = 567648000000; // 18 years in milliseconds
 
 export const ISO_WEEKEND = [6, 7];
+

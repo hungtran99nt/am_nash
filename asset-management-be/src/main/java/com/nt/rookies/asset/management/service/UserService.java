@@ -15,8 +15,21 @@ public interface UserService {
   UserDTO createUser(UserDTO userDTO);
 
 
-  // Find Active(isDisable=false) Staff by username
+  /**
+   * Get user who is active (status != 0) by username
+   * @param username
+   * @return {@link AccountDTO}
+   */
   Optional<AccountDTO> findActiveByUsername(String username);
+
+  /**
+   * Change password at first login (user status = -1)
+   * and change status to 1
+   * @param username
+   * @param newPassword
+   * @return
+   */
+  UserDTO changePasswordAtFirstLogin(String username, String newPassword);
 
   UserDTO disableUser(Integer id);
 

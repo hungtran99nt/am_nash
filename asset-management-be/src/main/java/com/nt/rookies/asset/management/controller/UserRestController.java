@@ -62,5 +62,9 @@ public class UserRestController {
   public ResponseEntity<Boolean> isValidToDisable(@PathVariable(name = "id") Integer id) {
     return new ResponseEntity<>(userService.isValidToDisable(id), HttpStatus.OK);
   }
-
+  @PutMapping("/user/updatePassword")
+  public UserDTO changePasswordAtFirstLogin(@RequestParam String username,
+                                            @RequestParam String password){
+    return userService.changePasswordAtFirstLogin(username, password);
+  }
 }
