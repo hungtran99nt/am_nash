@@ -6,7 +6,6 @@ import com.nt.rookies.asset.management.exception.ErrorResponse;
 import com.nt.rookies.asset.management.exception.ResourceAlreadyExistsException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.exception.UserDisabledException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -27,11 +26,7 @@ public class ApplicationExceptionHandler {
   @ExceptionHandler(value = BusinessException.class)
   public ResponseEntity<ErrorResponse> handleException(
       BusinessException ex, HttpServletRequest request) {
-    logger.info("Business exception: " + ex);
-    logger.info(
-        Arrays.stream(ex.getStackTrace())
-            .map(Object::toString)
-            .reduce("Stack trace:\n", (result, element) -> result + element + "\n"));
+    logger.error("Business exception: ", ex);
 
     HttpStatus httpStatus;
     if (ex instanceof ResourceNotFoundException) {
@@ -53,11 +48,7 @@ public class ApplicationExceptionHandler {
   @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
   public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
       MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
-    logger.info("Illegal API parameter: " + ex);
-    logger.info(
-        Arrays.stream(ex.getStackTrace())
-            .map(Object::toString)
-            .reduce("Stack trace:\n", (result, element) -> result + element + "\n"));
+    logger.error("Illegal API parameter: ", ex);
 
     HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
     ErrorResponse error =
@@ -69,11 +60,7 @@ public class ApplicationExceptionHandler {
   @ExceptionHandler(value = MethodArgumentNotValidException.class)
   public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
       MethodArgumentNotValidException ex, HttpServletRequest request) {
-    logger.info("Invalid API argument: " + ex);
-    logger.info(
-        Arrays.stream(ex.getStackTrace())
-            .map(Object::toString)
-            .reduce("Stack trace:\n", (result, element) -> result + element + "\n"));
+    logger.error("Invalid API argument: ", ex);
 
     Map<String, String> errors = new HashMap<>();
     ex.getBindingResult()
@@ -95,11 +82,7 @@ public class ApplicationExceptionHandler {
 
   @ExceptionHandler(value = Exception.class)
   public ResponseEntity<ErrorResponse> handleException(Exception ex, HttpServletRequest request) {
-    logger.info("Exception: " + ex);
-    logger.info(
-        Arrays.stream(ex.getStackTrace())
-            .map(Object::toString)
-            .reduce("Stack trace:\n", (result, element) -> result + element + "\n"));
+    logger.error("Exception caused", ex);
 
     HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     ErrorResponse error =
