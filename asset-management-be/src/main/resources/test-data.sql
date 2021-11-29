@@ -25,7 +25,7 @@ values
 -- user data
 insert into user (id, birth_date, status, first_name, gender, joined_date, last_name, staff_code, type, password, username, location_id)
 values
-(1, '1991-12-22 03:59:31', 0, 'An', 'Female', '2019-09-11 12:56:54', 'Nguyen Thuy', 'SD001', 'Staff', 'staff', 'annt', 1),
+(1, '1991-12-22 03:59:31', 1, 'An', 'Female', '2019-09-11 12:56:54', 'Nguyen Thuy', 'SD001', 'Staff', 'staff', 'annt', 1),
 (2, '1991-10-10 00:54:30', 1, 'An', 'Female', '2019-08-21 19:18:44', 'Tran Van', 'SD002','Staff',  'staff', 'antv', 2),
 (3, '1991-02-09 16:36:01', 1, 'Binh', 'Male', '2019-08-31 01:45:51', 'Nguyen Van', 'SD003','Admin',  'admin', 'binhnv', 3),
 (4, '1994-11-05 23:18:59', 0, 'Binh', 'Female', '2019-11-23 18:02:10', 'Nguyen Van', 'SD004','Staff',  'staff', 'binhnv1', 1),
@@ -54,7 +54,10 @@ values
 (27, '1993-01-04 07:41:52', 1, 'Binh', 'Female', '2018-11-04 19:52:45', 'Nguyen Van', 'SD0027','Staff',  'staff', 'binhnv24', 2),
 (28, '1996-06-16 21:38:38', 0, 'Binh', 'Female', '2018-02-13 20:17:09', 'Nguyen Van', 'SD0028','Staff',  'staff', 'binhnv25', 3),
 (29, '1997-04-12 22:24:04', 1, 'Binh', 'Female', '2018-03-04 06:36:50', 'Nguyen Van', 'SD0029','Staff',  'staff', 'binhnv26', 1),
-(30, '1996-02-19 09:40:49', 1, 'Binh', 'Female', '2018-05-11 09:13:53', 'Nguyen Van', 'SD0030','Staff',  'staff', 'binhnv27', 2);
+(30, '1996-02-19 09:40:49', 1, 'Binh', 'Female', '2018-05-11 09:13:53', 'Nguyen Van', 'SD0030','Staff',  'staff', 'binhnv27', 2),
+(31, '1996-02-19 09:40:49', 1, 'HCM', 'Male', '2018-05-11 09:13:53', 'Admin', 'SD0031','Admin',  'admin', 'adminhcm', 3),
+(32, '1996-02-19 09:40:49', 1, 'HN', 'Male', '2018-05-11 09:13:53', 'Admin', 'SD0032','Admin',  'admin', 'adminhn', 1),
+(33, '1996-02-19 09:40:49', 1, 'DN', 'Male', '2018-05-11 09:13:53', 'Admin', 'SD0033','Admin',  'admin', 'admindn', 2);
 
 -- assignment data 
 insert into assignment (id, assigned_date, note, returned_date, state, accepted_by, asset_id, assign_by, assign_to, request_by) 

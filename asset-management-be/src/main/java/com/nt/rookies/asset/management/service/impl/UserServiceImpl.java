@@ -1,5 +1,16 @@
 package com.nt.rookies.asset.management.service.impl;
 
+import com.nt.rookies.asset.management.common.BaseConstants;
+import com.nt.rookies.asset.management.dto.AccountDTO;
+import com.nt.rookies.asset.management.dto.UserDTO;
+import com.nt.rookies.asset.management.entity.Assignment;
+import com.nt.rookies.asset.management.entity.Location;
+import com.nt.rookies.asset.management.entity.User;
+import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
+import com.nt.rookies.asset.management.exception.UserDisabledException;
+import com.nt.rookies.asset.management.repository.AssignmentRepository;
+import com.nt.rookies.asset.management.repository.UserRepository;
+import com.nt.rookies.asset.management.service.UserService;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -14,17 +25,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.nt.rookies.asset.management.common.BaseConstants;
-import com.nt.rookies.asset.management.dto.AccountDTO;
-import com.nt.rookies.asset.management.dto.UserDTO;
-import com.nt.rookies.asset.management.entity.Assignment;
-import com.nt.rookies.asset.management.entity.Location;
-import com.nt.rookies.asset.management.entity.User;
-import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
-import com.nt.rookies.asset.management.exception.UserDisabledException;
-import com.nt.rookies.asset.management.repository.AssignmentRepository;
-import com.nt.rookies.asset.management.repository.UserRepository;
-import com.nt.rookies.asset.management.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -36,7 +36,11 @@ public class UserServiceImpl implements UserService {
   private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, AssignmentRepository assignmentRepository) {
+  public UserServiceImpl(
+      UserRepository userRepository,
+      ModelMapper modelMapper,
+      PasswordEncoder passwordEncoder,
+      AssignmentRepository assignmentRepository) {
     this.assignmentRepository = assignmentRepository;
     this.userRepository = userRepository;
     this.modelMapper = modelMapper;
@@ -45,14 +49,20 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO getUserById(Integer id) {
-    User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found."));
+    User user =
+        userRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found."));
     logger.info("getUserById: {}", user);
     return modelMapper.map(user, UserDTO.class);
   }
 
   @Override
   public UserDTO updateUser(Integer id, UserDTO userDTO) {
-    User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Update user not found."));
+    User user =
+        userRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Update user not found."));
     logger.info("User found: {}", user);
     user.setBirthDate(userDTO.getBirthDate());
     user.setGender(userDTO.getGender());
@@ -96,15 +106,29 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public UserDTO changePasswordAtFirstLogin(String username, String newPassword) {
+    User user = userRepository.findByUsername(username);
+    logger.info("User need to change:{}", user);
+    user.setPassword(passwordEncoder.encode(newPassword));
+    user.setStatus(BaseConstants.USER_STATUS_ACTIVE);
+    User updatedUser = userRepository.save(user);
+    logger.info("Changed pass:{}", updatedUser);
+    return modelMapper.map(updatedUser, UserDTO.class);
+  }
+
+  @Override
   public List<UserDTO> findAllByLocation() {
     Location location = getUserLocation();
     List<User> users = userRepository.findAllByLocation(location);
-    return users.stream().map(user -> modelMapper.map(user, UserDTO.class)).collect(Collectors.toList());
+    return users.stream()
+        .map(user -> modelMapper.map(user, UserDTO.class))
+        .collect(Collectors.toList());
   }
 
   @Override
   public Location getUserLocation() {
-    UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    UserDetails userDetails =
+        (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
     User currentUser = userRepository.findByUsername(username);
     return currentUser.getLocation();
@@ -126,7 +150,10 @@ public class UserServiceImpl implements UserService {
   }
 
   private String removeAccent(String text) {
-    return Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").replaceAll("Đ", "D").replaceAll("đ", "d");
+    return Normalizer.normalize(text, Normalizer.Form.NFD)
+        .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+        .replaceAll("Đ", "D")
+        .replaceAll("đ", "d");
   }
 
   private String generatePassword(UserDTO userDTO, String username) {
@@ -155,8 +182,8 @@ public class UserServiceImpl implements UserService {
       userRepository.save(user);
       return modelMapper.map(user, UserDTO.class);
     } else {
-      throw new UserDisabledException("You can not disable this user due to their existing assignments!");
-
+      throw new UserDisabledException(
+          "You can not disable this user due to their existing assignments!");
     }
   }
 
@@ -166,7 +193,6 @@ public class UserServiceImpl implements UserService {
     List<Assignment> assignList = assignmentRepository.findByAssignTo(user);
     if (assignList.isEmpty()) {
       return true;
-    } else
-      return false;
+    } else return false;
   }
 }

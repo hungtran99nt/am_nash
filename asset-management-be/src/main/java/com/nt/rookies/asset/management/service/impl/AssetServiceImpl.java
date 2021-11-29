@@ -11,15 +11,14 @@ import com.nt.rookies.asset.management.repository.AssignmentRepository;
 import com.nt.rookies.asset.management.repository.CategoryRepository;
 import com.nt.rookies.asset.management.service.AssetService;
 import com.nt.rookies.asset.management.service.UserService;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AssetServiceImpl implements AssetService {
@@ -37,8 +36,7 @@ public class AssetServiceImpl implements AssetService {
       AssetRepository assetRepository,
       CategoryRepository categoryRepository,
       ModelMapper modelMapper,
-      AssignmentRepository assignmentRepository
-  ) {
+      AssignmentRepository assignmentRepository) {
     this.userService = userService;
     this.assetRepository = assetRepository;
     this.categoryRepository = categoryRepository;
@@ -110,7 +108,7 @@ public class AssetServiceImpl implements AssetService {
   }
 
   @Override
-  public boolean isValidToDelete(Integer assetId){
+  public boolean isValidToDelete(Integer assetId) {
     if (assetId == null) throw new IllegalArgumentException("Id is invalid");
     return assignmentRepository.getTotalHistoricalAssigmentOfAnAsset(assetId) <= 0;
   }
@@ -118,11 +116,14 @@ public class AssetServiceImpl implements AssetService {
   @Override
   public void deleteAsset(Integer id) {
     if (isValidToDelete(id)) {
-      Asset asset = assetRepository.findById(id)
+      Asset asset =
+          assetRepository
+              .findById(id)
               .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
       assetRepository.delete(asset);
     } else {
-      throw new ResourceDeleteException("Cannot delete this asset, it belong one or more historical assignment");
+      throw new ResourceDeleteException(
+          "Cannot delete this asset, it belong one or more historical assignment");
     }
   }
 }

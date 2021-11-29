@@ -21,3 +21,7 @@
 .modal-body.logout {
     color: var(--primary-color);
 }
+
+.a-btn:hover{
+    opacity: 0.8;
+}

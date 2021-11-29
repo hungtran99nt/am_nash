@@ -55,7 +55,7 @@ const ManageAssignment = () => {
 			return assignment.state.toLowerCase().includes(filterStateOption.toLowerCase())
 				&& isMatchExact(assignment.assignedDate, dateFilterFormatted);
 		});
-	}, [assignments, filterStateOption, dateFilterFormatted]);
+	}, [assignments, filterStateOption, dateFilterValue, dateFilterFormatted]);
 
 	const assignmentsSearched = useMemo(() => {
 		return assignmentsFiltered.filter(assignment => {
