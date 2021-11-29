@@ -85,15 +85,15 @@ const CreateAssetPage = () => {
                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
                                     <Form.Label column sm="3">Category</Form.Label>
                                     <Col sm="6">
-                                        <Dropdown>
+                                        <Dropdown
+                                            name="category"
+                                            value={values.category}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                        >
                                             <Dropdown.Toggle id="dropdown-autoclose-true"
                                                              className="form-control drop-category"
                                                              placeholder={dropValue}
-                                                             value={values.category}
-                                                             onChange={handleChange}
-                                                             onBlur={handleBlur}
-                                                             isInvalid={touched.specification && errors.specification}
-
                                             >
                                                 <div className="drop-box">
                                                     <span className="drop-title">{dropValue}</span>
@@ -160,7 +160,7 @@ const CreateAssetPage = () => {
                                                 label="Available"
                                                 name="state"
                                                 type="radio"
-                                                value="Female"
+                                                value="Available"
                                                 defaultChecked={true}
                                                 onChange={handleChange}
                                             />
@@ -168,7 +168,7 @@ const CreateAssetPage = () => {
                                                 label="Not Available"
                                                 name="state"
                                                 type="radio"
-                                                value="Female"
+                                                value="Not Available"
                                                 onChange={handleChange}
                                             />
 
