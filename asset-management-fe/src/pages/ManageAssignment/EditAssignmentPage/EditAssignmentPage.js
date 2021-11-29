@@ -3,17 +3,32 @@ import {Formik} from "formik";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import React from "react";
 import * as Yup from "yup";
+import useFetch from "../../../hooks/useFetch";
+import {API_URL} from "../../../common/constants";
 
 const validateForm = Yup.object().shape({
     user:Yup.string().required("Required!"),
     asset:Yup.string().required("Required!"),
     assignedDate:Yup.date().required("Required!"),
 })
+const convertDataResponse = res => res.data;
 const EditAssignmentPage = () =>{
     let history = useHistory();
     const handleRedirectAssignmentPage = () =>{
         history.push("/assignment");
     }
+    const {
+        isLoading,
+        data: users,
+        errorMessage
+    } = useFetch([], `${API_URL}/users`, convertDataResponse);
+    const listUsers = users.map(user => <option key={user.id} value={user.firstName + " " + user.lastName}>{user.firstName +" " + user.lastName}</option>)
+
+    const {
+        data: assets,
+    } = useFetch([], `${API_URL}/assets`, convertDataResponse);
+    const listAssets = assets.map(asset =><option key={asset.id} value={asset.assetName}>{asset.assetName}</option> );
+    console.log("assets = ", assets)
     const initialValues ={
         user:"",
         asset:"",
@@ -25,6 +40,8 @@ const EditAssignmentPage = () =>{
         history.push("/assignment")
         resetForm();
     }
+    if (isLoading) return "Loading...";
+    if (errorMessage) return <div style={{color: "red"}}>{errorMessage}</div>;
     return(
         <div className="app-page">
             <div className="row">
@@ -49,14 +66,16 @@ const EditAssignmentPage = () =>{
                                 <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
                                     <Form.Label column sm="3">User</Form.Label>
                                     <Col sm="6">
-                                        <Form.Control
-                                            type="text"
+                                        <Form.Select
                                             name="user"
-                                            defaultValue={values.user}
+                                            value={values.user}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             isInvalid={touched.user && errors.user}
-                                        />
+                                        >
+                                        <option value={values.user}>{values.user}</option>
+                                        {listUsers}
+                                        </Form.Select>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.user}
                                         </Form.Control.Feedback>
@@ -68,14 +87,16 @@ const EditAssignmentPage = () =>{
                                 <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
                                     <Form.Label column sm="3">Asset</Form.Label>
                                     <Col sm="6">
-                                        <Form.Control
-                                            type="text"
+                                        <Form.Select
                                             name="asset"
-                                            defaultValue={values.asset}
+                                            value={values.asset}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             isInvalid={touched.asset && errors.asset}
-                                        />
+                                        >
+                                            <option value={values.asset}>{values.asset}</option>
+                                            {listAssets}
+                                        </Form.Select>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.asset}
                                         </Form.Control.Feedback>

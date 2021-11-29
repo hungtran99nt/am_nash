@@ -1,14 +1,12 @@
 .drop-category{
+    background-color: #ffffff !important;
+    border: 1px solid #000000 !important;
+}
+.drop-box{
     display: flex;
     justify-content: space-between;
-    background-color: #ffffff !important;
-    color: #33333373 !important;
-    border: 1px solid #000000 !important;
-    text-align: left !important;
-}
-.drop-icon{
-    margin-left: 176px;
-    margin-top: 4px;
+    align-items: center;
+    color: var(--text-color);
 }
 .category-form{
     margin-left: 10px;

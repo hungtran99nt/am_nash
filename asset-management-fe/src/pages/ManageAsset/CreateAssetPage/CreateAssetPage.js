@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import './CreateAssetPage.css'
-import {Button, Col, Form, Row, Dropdown, DropdownButton} from "react-bootstrap";
+import {Button, Col, Form, Row, Dropdown} from "react-bootstrap";
 import {Formik} from "formik";
 import {useHistory} from "react-router-dom";
 import * as Yup from 'yup';
@@ -88,8 +88,10 @@ const CreateAssetPage = () => {
                                     <Col sm="6">
                                         <Dropdown>
                                             <Dropdown.Toggle id="dropdown-autoclose-true" className="form-control drop-category" placeholder={dropValue} >
-                                                {dropValue}
-                                                <FontAwesomeIcon className="drop-icon" icon={faAngleDown} />
+                                                <div className="drop-box">
+                                                    <span className="drop-title">{dropValue}</span>
+                                                    <FontAwesomeIcon className="drop-icon" icon={faAngleDown} />
+                                                </div>
                                             </Dropdown.Toggle>
                                             <Dropdown.Menu className="form-control">
                                                 {categories.map(cate => <Dropdown.Item key={cate.id} value={values.category}>
