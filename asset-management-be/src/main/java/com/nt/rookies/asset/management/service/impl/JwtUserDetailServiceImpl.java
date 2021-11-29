@@ -23,7 +23,7 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
         .map(
             u -> {
               User.UserBuilder builder = User.withUsername(u.getUsername());
-              builder.password(new BCryptPasswordEncoder().encode(u.getPassword()));
+              builder.password(u.getPassword());
               SimpleGrantedAuthority authority = new SimpleGrantedAuthority(u.getType());
               builder.authorities(authority.toString());
               return builder.build();

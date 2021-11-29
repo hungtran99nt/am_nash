@@ -96,6 +96,17 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public UserDTO changePasswordAtFirstLogin(String username, String newPassword) {
+    User user = userRepository.findByUsername(username);
+    logger.info("User need to change:{}", user);
+    user.setPassword(passwordEncoder.encode(newPassword));
+    user.setStatus(BaseConstants.USER_STATUS_ACTIVE);
+    User updatedUser = userRepository.save(user);
+    logger.info("Changed pass:{}", updatedUser);
+    return modelMapper.map(updatedUser, UserDTO.class);
+  }
+
+  @Override
   public List<UserDTO> findAllByLocation() {
     Location location = getUserLocation();
     List<User> users = userRepository.findAllByLocation(location);
