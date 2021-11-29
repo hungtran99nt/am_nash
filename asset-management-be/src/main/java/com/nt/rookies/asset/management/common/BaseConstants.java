@@ -45,27 +45,33 @@ public class BaseConstants {
   /*---------------------------------------------------------------------
    *                     ERROR MESSAGE
    *-------------------------------------------------------------------*/
-  public static final String ERR_CATEGORY_PREFIX_REQUIRED = "Category prefix is required";
   public static final String ERR_CATEGORY_PREFIX_BLANK = "Category prefix cannot be blank";
   public static final String ERR_CATEGORY_PREFIX_LENGTH =
       "Category prefix cannot more than 3 characters long";
-  public static final String ERR_CATEGORY_NAME_REQUIRED = "Category name is required";
   public static final String ERR_CATEGORY_NAME_BLANK = "Category name cannot be blank";
   public static final String ERR_CATEGORY_NAME_LENGTH =
       "Category name cannot be more than 30 characters";
 
-  public static final String ERR_ASSET_NAME_REQUIRED = "Asset name is required";
   public static final String ERR_ASSET_NAME_BLANK = "Asset name cannot be blank";
   public static final String ERR_ASSET_NAME_LENGTH = "Asset name cannot be more than 50 characters";
-  public static final String ERR_ASSET_SPECIFICATION_REQUIRED = "Specification is required";
   public static final String ERR_ASSET_SPECIFICATION_BLANK = "Specification cannot be blank";
   public static final String ERR_ASSET_SPECIFICATION_LENGTH =
       "Specification must be less than 300 characters";
   public static final String ERR_ASSET_INSTALLEDDATE_LENGTH = "Installation date is required";
-  public static final String ERR_ASSET_STATE_REQUIRED = "Asset state is required";
   public static final String ERR_ASSET_STATE_BLANK = "Asset state cannot be blank";
   public static final String ERR_ASSET_STATE_LENGTH =
       "Asset state cannot be more than 30 characters";
+
+  public static final String ERR_USER_USERNAME_BLANK = "Username cannot be blank";
+  public static final String ERR_USER_USERNAME_LENGTH =
+      "Username cannot be more than 30 characters";
+
+  public static final String ERR_ASSIGNMENT_ASSIGNEDDATE_NULL = "Assigned date is required";
+  public static final String ERR_ASSIGNMENT_ASSIGNEDDATE_FUTURE =
+      "Assigned date must be future date";
+  public static final String ERR_ASSIGNMENT_NOTE_BLANK = "Assignment note cannot be blank";
+  public static final String ERR_ASSIGNMENT_NOTE_LENGTH =
+      "Assignment note cannot be more than 300 characters";
   // ***** constructor *****
   // ***** public method *****
   // ***** protected method *****

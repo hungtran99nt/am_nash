@@ -27,7 +27,7 @@ public class ApplicationExceptionHandler {
   public ResponseEntity<ErrorResponse> handleException(
       BusinessException ex, HttpServletRequest request) {
     logger.info("Business exception: " + ex.getClass().getName());
-    ex.printStackTrace();
+    logger.info("Exception message: "+ ex.getMessage());
 
     HttpStatus httpStatus;
     if (ex instanceof ResourceNotFoundException) {
@@ -50,7 +50,7 @@ public class ApplicationExceptionHandler {
   public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
       MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
     logger.info("Illegal API parameter: " + ex.getClass().getName());
-    ex.printStackTrace();
+    logger.info("Exception message: "+ ex.getMessage());
 
     HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
     ErrorResponse error =
@@ -63,7 +63,11 @@ public class ApplicationExceptionHandler {
   public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
       MethodArgumentNotValidException ex, HttpServletRequest request) {
     logger.info("Invalid API argument: " + ex.getClass().getName());
-    ex.printStackTrace();
+//    logger.info(
+//        Arrays.stream(ex.getStackTrace())
+//            .map(Object::toString)
+//            .reduce("Stack trace: ", (result, element) -> result + element + "\n"));
+    logger.info("Exception message: "+ ex.getMessage());
     Map<String, String> errors = new HashMap<>();
     ex.getBindingResult()
         .getAllErrors()
@@ -85,7 +89,7 @@ public class ApplicationExceptionHandler {
   @ExceptionHandler(value = Exception.class)
   public ResponseEntity<ErrorResponse> handleException(Exception ex, HttpServletRequest request) {
     logger.info("Exception: " + ex.getClass().getName());
-    ex.printStackTrace();
+    logger.info("Exception message: "+ ex.getMessage());
 
     HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     ErrorResponse error =
