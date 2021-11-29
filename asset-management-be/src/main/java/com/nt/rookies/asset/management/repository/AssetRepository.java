@@ -23,4 +23,6 @@ public interface AssetRepository extends JpaRepository<Asset, Integer> {
      * @param id the id of an asset, Integer value
      *  */
     void deleteById(Integer id);
+
+    Asset findAssetByAssetCode(String assetCode);
 }

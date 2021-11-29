@@ -42,6 +42,19 @@ public class BaseConstants {
   public static final int USER_STATUS_ACTIVE = 1;
   public static final int USER_STATUS_DISABLED = 0;
   public static final int USER_STATUS_NEW = -1;
+  /*---------------------------------------------------------------------
+   *                     ASSIGNMENT STATUS
+   *-------------------------------------------------------------------*/
+  public static final String ASSIGNMENT_STATUS_ACCEPTED = "Accepted";
+  public static final String ASSIGNMENT_STATUS_RETURNING = "Waiting for returning";
+  public static final String ASSIGNMENT_STATUS_ACCEPTING = "Waiting for acceptance";
+  public static final String ASSIGNMENT_STATUS_COMPLETED = "Completed";
+
+  /*---------------------------------------------------------------------
+   *                     ASSET STATUS
+   *-------------------------------------------------------------------*/
+  public static final String ASSET_STATUS_AVAILABLE = "Available";
+  public static final String ASSET_STATUS_UNAVAILABLE = "Not Available";
   // ***** constructor *****
   // ***** public method *****
   // ***** protected method *****
