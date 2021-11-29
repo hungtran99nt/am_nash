@@ -41,12 +41,12 @@ public class AssignmentServiceImpl implements AssignmentService {
         this.assignmentRepository = assignmentRepository;
     }
 
-
+    // TODO validate user active and asset available
     @Override
     public AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) {
         Assignment newAssignment = modelMapper.map(assignmentDTO, Assignment.class);
         User assignBy = userRepository.findByUsername(assignmentDTO.getAssignBy());
-        User assignTo = userRepository.findByUsername(assignmentDTO.getAssignBy());
+        User assignTo = userRepository.findByUsername(assignmentDTO.getAssignTo());
         Asset asset = assetRepository.findAssetByAssetCode(assignmentDTO.getAssetCode());
 
         newAssignment.setAssignBy(assignBy);
@@ -60,7 +60,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         logger.info("Assignment created: {}", createdAssignment);
         return modelMapper.map(createdAssignment, AssignmentDTO.class);
     }
-
+    //TODO change asset status to not available after create assignment
     @Override
     public boolean isValidToCreate(String assignToUsername, String assetCode) {
         return false;

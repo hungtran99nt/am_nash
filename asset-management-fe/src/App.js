@@ -20,6 +20,7 @@ import EditAssetPage from "./pages/ManageAsset/EditAssetPage/EditAssetPage";
 import CreateAssetPage from "./pages/ManageAsset/CreateAssetPage/CreateAssetPage";
 import Error from "./pages/Error/Error";
 import EditAssignmentPage from "./pages/ManageAssignment/EditAssignmentPage/EditAssignmentPage";
+import CreateAssignmentPage from "./pages/ManageAssignment/CreateAssignmentPage/CreateAssignmentPage";
 
 const headerTitle = {
     Home: 'Home',
@@ -146,6 +147,9 @@ export default function App() {
                                     </Route>}
                                     {role=== "Admin" && <Route path="/edit/assignment/:id" exact>
                                         <EditAssignmentPage/>
+                                    </Route>}
+                                    {role=== "Admin" && <Route path="/assignment/create" exact>
+                                        <CreateAssignmentPage/>
                                     </Route>}
                                 </Switch>
                             </div>
