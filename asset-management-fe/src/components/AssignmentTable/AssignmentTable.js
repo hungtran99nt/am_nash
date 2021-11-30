@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import editImg from "../../assets/images/pen.png";
 import deleteImg from "../../assets/images/cross.png";
 import returnImg from "../../assets/images/return.png";
@@ -8,6 +8,7 @@ import {FILTER_ASM_STATE_OPTIONS, SORT_ORDERS} from "../../common/constants";
 import {useHistory} from "react-router-dom";
 import NoDataFound from "../NoDataFound/NoDataFound";
 import './AssignmentTable.css';
+import AssignmentDetail from "./AssignmentModal/AssignmentDetail";
 
 const defaultSorted = [{
 	dataField: 'assetCode',
@@ -130,10 +131,15 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 		history.push(`edit/assignment/${id}`)
 	}
 
-	// TODO: get asset detail #387
+	const [assignmentIdPopup, setAssignmentIdPopup] = useState("");
+	const [showDetail, setShowDetail] = useState(false);
+	const handleCloseDetail = () => setShowDetail(false);
+	const handleShowDetail = () => setShowDetail(true);
+
 	const getAssignmentDetail = {
 		onClick: (e, row) => {
-			console.log(`Clicked row ${row}`);
+			setAssignmentIdPopup(row.id);
+			handleShowDetail();
 		}
 	}
 
@@ -152,6 +158,15 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 			{isLoading && <div>Loading...</div>}
 			{errorMessage && <div>{errorMessage}</div>}
 			{!errorMessage && !isLoading && assignments.length === 0 && <NoDataFound/>}
+
+			{
+				showDetail &&
+				<AssignmentDetail
+					show={showDetail}
+					handleClose={handleCloseDetail}
+					assignmentId={assignmentIdPopup}
+				/>
+			}
 		</>
 	);
 };
