@@ -11,17 +11,13 @@
     height: 55px;
 }
 
-.action__filter {
-    max-width: 150px !important;
-}
-
 /*custom for form select*/
-.form-select {
+.action__filter.form-select{
     background-image: url("../../assets/images/filter.png") !important;
     cursor: pointer;
 }
 
-.form-select:focus {
+.action__filter.form-select:focus {
     border-color: #ced4da !important;
     box-shadow: none !important;
 }

@@ -43,7 +43,21 @@ public class BaseConstants {
   public static final int USER_STATUS_DISABLED = 0;
   public static final int USER_STATUS_NEW = -1;
   /*---------------------------------------------------------------------
-   *                     ERROR MESSAGE
+
+   *                     ASSIGNMENT STATUS
+   *-------------------------------------------------------------------*/
+  public static final String ASSIGNMENT_STATUS_ACCEPTED = "Accepted";
+  public static final String ASSIGNMENT_STATUS_RETURNING = "Waiting for returning";
+  public static final String ASSIGNMENT_STATUS_ACCEPTING = "Waiting for acceptance";
+  public static final String ASSIGNMENT_STATUS_COMPLETED = "Completed";
+
+  /*---------------------------------------------------------------------
+   *                     ASSET STATUS
+   *-------------------------------------------------------------------*/
+  public static final String ASSET_STATUS_AVAILABLE = "Available";
+  public static final String ASSET_STATUS_UNAVAILABLE = "Not Available";
+
+   /*                     ERROR MESSAGE
    *-------------------------------------------------------------------*/
   public static final String ERR_CATEGORY_PREFIX_BLANK = "Category prefix cannot be blank";
   public static final String ERR_CATEGORY_PREFIX_LENGTH =
@@ -72,6 +86,10 @@ public class BaseConstants {
   public static final String ERR_ASSIGNMENT_NOTE_BLANK = "Assignment note cannot be blank";
   public static final String ERR_ASSIGNMENT_NOTE_LENGTH =
       "Assignment note cannot be more than 300 characters";
+  public static final String ERR_ASSIGNMENT_ASSET_CODE_BLANK =
+          "Asset code cannot be blank";
+  public static final String ERR_ASSIGNMENT_STATUS_BLANK =
+          "Assignment status must be initialized";
   // ***** constructor *****
   // ***** public method *****
   // ***** protected method *****
