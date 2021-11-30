@@ -25,6 +25,14 @@ public interface AssignmentService {
   AssignmentDTO getAssignmentById(Integer id);
 
   /**
+   * Edit an assignment.
+   *
+   * @param assignmentDTO edit asset
+   * @return edited {@link AssignmentDTO} object
+   */
+  AssignmentDTO updateAssignment(Integer id, AssignmentDTO assignmentDTO);
+
+  /**
    * Create new Assignment
    *
    * @param assignmentDTO

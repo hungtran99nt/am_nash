@@ -45,10 +45,11 @@ const EditAssignmentPage = () => {
         data: assets,
     } = useFetch([], `${API_URL}/assets`, convertDataResponse);
     const listAssets = assets.map(asset => <option key={asset.id} value={asset.assetName}>{asset.assetName}</option>);
+
     let assignedUser = users.find(u => u.username === assignments.assignTo);
     console.log("fullname =" , assignedUser);
     const initialValues = {
-        user: "",
+        user:"",
         asset: assignments.asset,
         assignedDate: assignments.assignedDate,
         note: assignments.note
