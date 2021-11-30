@@ -2,6 +2,10 @@ package com.nt.rookies.asset.management.service.impl;
 
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.entity.Assignment;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.AssignmentRepository;
 import com.nt.rookies.asset.management.service.AssignmentService;
@@ -15,20 +19,28 @@ import org.springframework.stereotype.Service;
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
   private final Logger logger = LoggerFactory.getLogger(AssetServiceImpl.class);
-  private final AssignmentRepository repository;
+  private final AssignmentRepository assignmentRepository;
   private final ModelMapper modelMapper;
 
   @Autowired
-  public AssignmentServiceImpl(AssignmentRepository repository, ModelMapper modelMapper) {
-    this.repository = repository;
+  public AssignmentServiceImpl(AssignmentRepository assignmentRepository, ModelMapper modelMapper) {
+    this.assignmentRepository = assignmentRepository;
     this.modelMapper = modelMapper;
   }
 
   @Override
+  public List<AssignmentDTO> getAllAssignments() {
+    logger.info("Get all assignments");
+    List<Assignment> assignments = assignmentRepository.findAll();
+    return assignments.stream()
+        .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
+        .collect(Collectors.toList());
+  }
+
   public AssignmentDTO getAssignmentById(Integer id) {
     logger.info("Inside getAssignmentById() method");
     Assignment assignment =
-        repository
+        assignmentRepository
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Not found assignment"));
     return modelMapper.map(assignment, AssignmentDTO.class);

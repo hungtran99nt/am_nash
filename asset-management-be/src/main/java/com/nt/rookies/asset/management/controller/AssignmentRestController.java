@@ -4,9 +4,13 @@ import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.service.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /** REST controller for Assignment. */
 @RestController
@@ -17,6 +21,18 @@ public class AssignmentRestController {
   @Autowired
   public AssignmentRestController(AssignmentService assignmentService) {
     this.assignmentService = assignmentService;
+  }
+
+  /**
+   * API Get all assignment <br>
+   * Link: <code>/api/v1.0/assignments</code> <br>
+   * Method: GET
+   *
+   * @return {@link List<AssignmentDTO>}
+   */
+  @GetMapping()
+  public List<AssignmentDTO> getAllAssignments() {
+    return assignmentService.getAllAssignments();
   }
 
   /**
