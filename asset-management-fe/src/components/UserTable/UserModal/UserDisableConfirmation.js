@@ -22,7 +22,6 @@ const UserDisableConfirmation = ({
           variant="danger"
           onClick={() => {
             axios.put(`${API_URL}/users/disable/${idDisable}`);
-            setDisableUser(true);
             handleCloseConfirm(false);
           }}
           type="submit"

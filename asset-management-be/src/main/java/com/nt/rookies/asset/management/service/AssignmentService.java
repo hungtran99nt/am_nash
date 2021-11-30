@@ -1,9 +1,9 @@
 package com.nt.rookies.asset.management.service;
 
-import com.nt.rookies.asset.management.dto.AssignmentDTO;
-import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 
 import java.util.List;
+import com.nt.rookies.asset.management.dto.AssignmentDTO;
+import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 
 /** Service interface for Assignment. */
 public interface AssignmentService {
@@ -23,4 +23,9 @@ public interface AssignmentService {
    * @exception ResourceNotFoundException if assignment not found
    */
   AssignmentDTO getAssignmentById(Integer id);
+
+  boolean isAssignmentValidtoDelete(Integer id);
+
+  void deleteAssignment(Integer id);
+
 }
