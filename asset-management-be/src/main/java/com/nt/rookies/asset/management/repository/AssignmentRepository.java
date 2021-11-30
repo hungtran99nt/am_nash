@@ -1,14 +1,12 @@
 package com.nt.rookies.asset.management.repository;
 
+import com.nt.rookies.asset.management.entity.Assignment;
+import com.nt.rookies.asset.management.entity.User;
 import java.util.List;
-
-import com.nt.rookies.asset.management.entity.Asset;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import com.nt.rookies.asset.management.entity.Assignment;
-import com.nt.rookies.asset.management.entity.User;
 
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
@@ -19,4 +17,14 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
 
   @Query(value = "SELECT COUNT(*) FROM Assignment a WHERE a.asset.id = :assetId")
   int getTotalHistoricalAssigmentOfAnAsset(@Param("assetId") Integer assetId);
+
+  /**
+   * Get recent assignment assign to user
+   *
+   * @param userId user id
+   * @return list of recent assignment
+   */
+  @Query(
+      value = "FROM Assignment a WHERE a.assignTo.id = :user_id AND a.assignedDate <= current_date")
+  List<Assignment> findRecentAssignmentsByUser(@Param("user_id") Integer userId);
 }

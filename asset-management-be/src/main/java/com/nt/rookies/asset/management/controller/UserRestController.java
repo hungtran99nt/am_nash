@@ -1,5 +1,9 @@
 package com.nt.rookies.asset.management.controller;
 
+import com.nt.rookies.asset.management.dto.AccountDTO;
+import com.nt.rookies.asset.management.dto.AssignmentDTO;
+import com.nt.rookies.asset.management.dto.UserDTO;
+import com.nt.rookies.asset.management.service.UserService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.nt.rookies.asset.management.dto.AccountDTO;
-import com.nt.rookies.asset.management.dto.UserDTO;
-import com.nt.rookies.asset.management.service.UserService;
 
 /** REST controller for user. */
 @RestController
@@ -48,6 +49,19 @@ public class UserRestController {
     return userService.updateUser(id, user);
   }
 
+  /**
+   * API Get all recent assignments assigned to user.<br>
+   * Link: <code>/api/v1.0/users/{id}/assignments</code><br>
+   * Method: GET
+   *
+   * @param id user id
+   * @return {@link List<AssignmentDTO>} list of assignments
+   */
+  @GetMapping("/{id}/assignments")
+  public List<AssignmentDTO> getRecentAssignmentsByUser(@PathVariable(name = "id") Integer id) {
+    return userService.getRecentAssignmentsByUser(id);
+  }
+
   @GetMapping("/user")
   public Optional<AccountDTO> getActiveUserByUsername(@RequestParam String username) {
     return userService.findActiveByUsername(username);
@@ -62,9 +76,10 @@ public class UserRestController {
   public ResponseEntity<Boolean> isValidToDisable(@PathVariable(name = "id") Integer id) {
     return new ResponseEntity<>(userService.isValidToDisable(id), HttpStatus.OK);
   }
+
   @PutMapping("/user/updatePassword")
-  public UserDTO changePasswordAtFirstLogin(@RequestParam String username,
-                                            @RequestParam String password){
+  public UserDTO changePasswordAtFirstLogin(
+      @RequestParam String username, @RequestParam String password) {
     return userService.changePasswordAtFirstLogin(username, password);
   }
 }
