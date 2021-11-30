@@ -34,5 +34,5 @@ public interface AssignmentService {
      * @return
      */
     AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) throws SQLException;
-    
+
 }

@@ -46,17 +46,21 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     @Transactional
     public AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) throws SQLException {
+
         Assignment newAssignment = modelMapper.map(assignmentDTO, Assignment.class);
         Assignment createdAssignment = new Assignment();
         User assignBy = userRepository.findByUsername(assignmentDTO.getAssignBy());
         User assignTo = userRepository.findByUsername(assignmentDTO.getAssignTo());
         Asset asset = assetRepository.findAssetByAssetCode(assignmentDTO.getAssetCode())
                 .orElseThrow(() -> new ResourceNotFoundException("Asset not found."));
+
         if (asset.getState().equals(BaseConstants.ASSET_STATUS_AVAILABLE)
                 && assignBy.getLocation().getId().equals(assignTo.getLocation().getId())
                 && assignBy.getLocation().getId().equals(asset.getLocation().getId())
                 && assignBy.getStatus() != BaseConstants.USER_STATUS_DISABLED
                 && assignTo.getStatus() != BaseConstants.USER_STATUS_DISABLED) {
+
+            // Create assignment
             newAssignment.setAssignBy(assignBy);
             newAssignment.setAssignTo(assignTo);
             newAssignment.setAsset(asset);
@@ -66,21 +70,31 @@ public class AssignmentServiceImpl implements AssignmentService {
             logger.info("Expect; ({}) assigns ({}) to ({}) with note: {}",
                     newAssignment.getAssignBy().getUsername(), newAssignment.getAsset().getAssetCode(),
                     newAssignment.getAssignTo().getUsername(), newAssignment.getNote());
+
+            // Save assignment to DB
             createdAssignment = assignmentRepository.save(newAssignment);
             logger.info("Result; ({}) assigns ({}) to ({}) with note: {}",
                     createdAssignment.getAssignBy().getUsername(), createdAssignment.getAsset().getAssetCode(),
                     createdAssignment.getAssignTo().getUsername(), createdAssignment.getNote());
+
+            // Change assigned asset to 'Not Available'
             asset.setState(BaseConstants.ASSET_STATUS_UNAVAILABLE);
             Asset updatedAsset = assetRepository.save(asset);
             logger.info("Set asset ({}) status to {}", updatedAsset.getAssetCode(), updatedAsset.getState());
+
         } else if (asset.getState().equals(BaseConstants.ASSET_STATUS_UNAVAILABLE)) {
+            // Asset not available to be assigned
             logger.error("Asset ({}) status: {} (must be Available)", asset.getAssetCode(), asset.getState());
+
         } else if (!assignBy.getLocation().getId().equals(assignTo.getLocation().getId())
                 || !assignBy.getLocation().getId().equals(asset.getLocation().getId())) {
+            // Asset, who creates assign and be assigned must have the same location
             logger.error("assignedBy_location: {}, assignedBy_location: {}, asset_location: {} (must be equal)",
                     assignBy.getLocation().getId(), assignTo.getLocation().getId(), asset.getLocation().getId());
+            
         } else if (assignBy.getStatus() == BaseConstants.USER_STATUS_DISABLED
                 || assignTo.getStatus() == BaseConstants.USER_STATUS_DISABLED) {
+            // who creates assign and be assigned must have active account
             logger.error("assignBy_state: {} and assignTo_state: {} (must be -1 or 1)",
                     assignBy.getStatus(), assignTo.getStatus());
         }
