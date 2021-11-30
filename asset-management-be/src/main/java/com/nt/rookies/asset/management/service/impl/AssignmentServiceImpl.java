@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
@@ -89,5 +90,22 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public List<AssignmentDTO> findAllByUsername() {
         return null;
+    }
+    @Override
+    public List<AssignmentDTO> getAllAssignments() {
+        logger.info("Get all assignments");
+        List<Assignment> assignments = assignmentRepository.findAll();
+        return assignments.stream()
+                .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    public AssignmentDTO getAssignmentById(Integer id) {
+        logger.info("Inside getAssignmentById() method");
+        Assignment assignment =
+                assignmentRepository
+                        .findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Not found assignment"));
+        return modelMapper.map(assignment, AssignmentDTO.class);
     }
 }

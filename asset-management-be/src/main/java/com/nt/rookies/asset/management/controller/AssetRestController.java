@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,16 +19,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 /** REST controller for asset. */
 @RestController
 @RequestMapping("/api/v1.0/assets")
 public class AssetRestController {
-  public final AssetService assetService;
   public static final Logger log = LoggerFactory.getLogger(AssetRestController.class);
+  public final AssetService assetService;
 
   @Autowired
   public AssetRestController(AssetService assetService, UserService userService) {
@@ -45,7 +43,6 @@ public class AssetRestController {
   public List<AssetDTO> getAllAssets() {
     return assetService.findAllByLocation();
   }
-
 
   /**
    * API Check asset is valid to delete by id.<br>
@@ -73,7 +70,7 @@ public class AssetRestController {
   @DeleteMapping("/{id}")
   @ApiOperation(value = "Delete asset by id", response = String.class)
   public ResponseEntity<?> deleteAsset(@PathVariable(name = "id") Integer id) {
-    if (isValidToDelete(id)){
+    if (isValidToDelete(id)) {
       assetService.deleteAsset(id);
       log.info("Delete post with id {}", id);
       return ResponseEntity.ok("Post deleted");
@@ -117,7 +114,8 @@ public class AssetRestController {
    * @return edited {@link AssetDTO} object
    */
   @PutMapping("/{id}")
-  public AssetDTO updateAsset(@PathVariable(name = "id") Integer id, @RequestBody @Valid AssetDTO assetDTO) {
+  public AssetDTO updateAsset(
+      @PathVariable(name = "id") Integer id, @RequestBody @Valid AssetDTO assetDTO) {
     return assetService.updateAsset(id, assetDTO);
   }
 }
