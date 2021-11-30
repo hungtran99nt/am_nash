@@ -1,21 +1,20 @@
 import React, {useState} from 'react';
-import editImg from "../../assets/images/pen.png";
-import deleteImg from "../../assets/images/cross.png";
-import returnImg from "../../assets/images/return.png";
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
-import {FILTER_ASM_STATE_OPTIONS, SORT_ORDERS} from "../../common/constants";
+import {SORT_ORDERS} from "../../common/constants";
 import {useHistory} from "react-router-dom";
 import NoDataFound from "../NoDataFound/NoDataFound";
 import './AssignmentTable.css';
 import AssignmentDetail from "./AssignmentModal/AssignmentDetail";
+import MyAssignmentAction from "./MyAssignmentAction";
+import ManageAssignmentAction from "./ManageAssignmentAction";
 
 const defaultSorted = [{
 	dataField: 'assetCode',
 	order: SORT_ORDERS.ASC
 }]
 
-const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
+const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment}) => {
 	const history = useHistory();
 
 	const columnNoFormatter = (cell, row, index) => {
@@ -24,39 +23,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 
 	const columnFormatter = (cell, row) => {
 		return (
-			<div className={`table__actions ${row.state === FILTER_ASM_STATE_OPTIONS.ACCEPTED ? 'disable' : ''}`}>
-				<span
-					className="action__items"
-					onClick={
-						row.state !== FILTER_ASM_STATE_OPTIONS.ACCEPTED ?
-							() => handleEditClicked(row.id) : undefined
-					}
-					title={"Edit assignment"}
-				>
-					 <img src={editImg} alt="edit"/>
-				</span>
-
-				<span
-					className="action__items"
-					onClick={
-						row.state !== FILTER_ASM_STATE_OPTIONS.ACCEPTED ?
-							() => console.log(`Delete assignment id: ${row.id}`) : undefined
-					}
-					title={"Delete assignment"}
-				>
-					 <img src={deleteImg} alt="delete"/>
-				</span>
-				<span
-					className="action__items"
-					onClick={
-						row.state !== FILTER_ASM_STATE_OPTIONS.ACCEPTED ?
-							() => console.log(`Return assignment id: ${row.id}`) : undefined
-					}
-					title={"Return assignment"}
-				>
-					 <img src={returnImg} alt="return"/>
-				</span>
-			</div>
+			isMyAssignment ? <MyAssignmentAction cell={cell} row={row}/> : <ManageAssignmentAction cell={cell} row={row}/>
 		)
 	};
 
@@ -66,6 +33,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 			text: 'No.',
 			sort: true,
 			formatter: columnNoFormatter,
+			hidden: isMyAssignment,
 			headerStyle: () => {
 				return {width: '70px'};
 			}
@@ -165,6 +133,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 					show={showDetail}
 					handleClose={handleCloseDetail}
 					assignmentId={assignmentIdPopup}
+					isMyAssignment={isMyAssignment}
 				/>
 			}
 		</>
