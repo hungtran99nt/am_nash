@@ -66,6 +66,7 @@ const ManageUser = () => {
 						<Col className='col-2 flex-grow-1 select'>
 							<Form.Select
 								className="action__filter h-75"
+								style={{maxWidth: 150}}
 								value={filterOption}
 								onChange={evt => {
 									setFilterOption(evt.target.value)

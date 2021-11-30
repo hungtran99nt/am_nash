@@ -75,7 +75,7 @@ const ManageAssignment = () => {
 					<Row className="actions__wrapper">
 						<Col className='asset select'>
 							<Form.Select
-								className="h-75"
+								className="action__filter h-75"
 								value={filterStateOption}
 								onChange={evt => setFilterStateOption(evt.target.value)}
 							>
