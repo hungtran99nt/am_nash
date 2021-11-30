@@ -4,11 +4,14 @@ import deleteImg from "../../assets/images/cross.png";
 import returnImg from "../../assets/images/return.png";
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
-import {FILTER_ASM_STATE_OPTIONS, SORT_ORDERS} from "../../common/constants";
+import {FILTER_ASM_STATE_OPTIONS, SORT_ORDERS, FILTER_ASM_STATE_DELETE} from "../../common/constants";
 import {useHistory} from "react-router-dom";
 import NoDataFound from "../NoDataFound/NoDataFound";
 import './AssignmentTable.css';
 import AssignmentDetail from "./AssignmentModal/AssignmentDetail";
+import axios from 'axios';
+import { API_URL } from "../../common/constants";
+import AssignmentDeleteConfirmation from './AssignmentModal/AssignmentDeleteConfirmation'
 
 const defaultSorted = [{
 	dataField: 'assetCode',
@@ -24,7 +27,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 
 	const columnFormatter = (cell, row) => {
 		return (
-			<div className={`table__actions ${row.state === FILTER_ASM_STATE_OPTIONS.ACCEPTED ? 'disable' : ''}`}>
+			<div className={`table__actions ${row.state === FILTER_ASM_STATE_DELETE.WAITING_FOR_RETURNING || row.state === FILTER_ASM_STATE_DELETE.ACCEPTED ? 'disable' : ''}`}>
 				<span
 					className="action__items"
 					onClick={
@@ -39,8 +42,9 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 				<span
 					className="action__items"
 					onClick={
-						row.state !== FILTER_ASM_STATE_OPTIONS.ACCEPTED ?
-							() => console.log(`Delete assignment id: ${row.id}`) : undefined
+						row.state !== (FILTER_ASM_STATE_DELETE.ACCEPTED || FILTER_ASM_STATE_DELETE.WAITING_FOR_RETURNING) ?
+							() => handleDeleteClicked(row.id)
+							: undefined
 					}
 					title={"Delete assignment"}
 				>
@@ -130,11 +134,24 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 	const handleEditClicked = (id) => {
 		history.push(`edit/assignment/${id}`)
 	}
+	const handleDeleteClicked = (id) => {
+		setIdDelete(id);
+		axios.get(`${API_URL}/assignments/${id}/valid`).then((response) => {
+			if (response.data === true) {
+				handleShowDeleteConfirm();}
+			
+		}).catch(err => {alert(`Error with check valid to delete asset ${err}`)})
+	}
 
 	const [assignmentIdPopup, setAssignmentIdPopup] = useState("");
 	const [showDetail, setShowDetail] = useState(false);
 	const handleCloseDetail = () => setShowDetail(false);
 	const handleShowDetail = () => setShowDetail(true);
+
+	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+	const [idDelete, setIdDelete] = useState(null);
+	const handleCloseDeleteConfirm = () => setShowDeleteConfirm(false);
+	const handleShowDeleteConfirm = () => setShowDeleteConfirm(true);
 
 	const getAssignmentDetail = {
 		onClick: (e, row) => {
@@ -165,6 +182,15 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 					show={showDetail}
 					handleClose={handleCloseDetail}
 					assignmentId={assignmentIdPopup}
+				/>
+			}
+			{
+				showDeleteConfirm &&
+				<AssignmentDeleteConfirmation
+					showDeleteConfirm={showDeleteConfirm}
+					handleCloseDeleteConfirm={handleCloseDeleteConfirm}
+					assignments={assignments}
+					idDelete={idDelete}
 				/>
 			}
 		</>

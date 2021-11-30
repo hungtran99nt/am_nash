@@ -7,17 +7,16 @@ const UserDisableConfirmation = ({
   idDisable,
   showConfirm,
   handleCloseConfirm,
-  setDisableUser,
 }) => {
   return (
-    <Modal show={showConfirm} onHide={handleCloseConfirm} centered>
-      <Modal.Header closeButton className="text-danger">
+    <Modal show={showConfirm} onHide={handleCloseConfirm} centered backdrop="static">
+      <Modal.Header closeButton='' className="text-danger">
         <Modal.Title>Are you sure?</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <p>Do you want to disable this user? </p>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer className="confirm">
         <Button
           variant="danger"
           onClick={() => {
@@ -29,7 +28,7 @@ const UserDisableConfirmation = ({
           Disable
         </Button>
         <Button variant="outline-secondary" onClick={handleCloseConfirm}>
-          Close
+          Cancel
         </Button>
       </Modal.Footer>
     </Modal>

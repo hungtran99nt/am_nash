@@ -3,6 +3,7 @@ package com.nt.rookies.asset.management.service;
 
 import java.util.List;
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
+import com.nt.rookies.asset.management.exception.ResourceDeleteException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 
 /** Service interface for Assignment. */
@@ -24,8 +25,22 @@ public interface AssignmentService {
    */
   AssignmentDTO getAssignmentById(Integer id);
 
+  /**
+   * Check removable assignment
+   * 
+   * @param id
+   * @return {@link boolean} true if able to delete, and vice versa
+   */
   boolean isAssignmentValidtoDelete(Integer id);
 
+
+  /**
+   * Delete assignment
+   * 
+   * @param id
+   * @return void
+   * @exception ResourceDeleteException if can not delete assignment
+   */
   void deleteAssignment(Integer id);
 
 }

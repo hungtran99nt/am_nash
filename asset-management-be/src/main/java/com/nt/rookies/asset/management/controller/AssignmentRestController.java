@@ -50,17 +50,25 @@ public class AssignmentRestController {
 
   /**
    * API check valid assignment to delete. <br>
-   * Link: <code>/{id}/validAssignment</code> <br>
+   * Link: <code>/{id}/valid</code> <br>
    * Method: GET
    * 
    * @param id assignment id
-   * @return
+   * @return {@link Boolean} true or false base on assignment
    */
   @GetMapping("/{id}/valid")
   public ResponseEntity<Boolean> isAssignmentValidtoDelete(@PathVariable(name = "id") Integer id) {
     return new ResponseEntity<>(assignmentService.isAssignmentValidtoDelete(id), HttpStatus.OK);
   }
 
+  /**
+   * API delete valid assignment. <br>
+   * Link: <code>/{id}</code> <br>
+   * Method: DELETE
+   * 
+   * @param id assignment id
+   * @return {@link void} delete valid assignment
+   */
   @DeleteMapping("/{id}")
   public void deleteAssignment(@PathVariable(name = "id") Integer id) {
     assignmentService.deleteAssignment(id);

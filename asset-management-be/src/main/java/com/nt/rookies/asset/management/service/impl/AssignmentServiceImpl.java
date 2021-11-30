@@ -50,7 +50,6 @@ public class AssignmentServiceImpl implements AssignmentService {
   public void deleteAssignment(Integer id) {
     if (isAssignmentValidtoDelete(id)) {
       Assignment assignment = assignmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
-      logger.info("assignment la:" + assignment);
       assignmentRepository.delete(assignment);
     } else {
       throw new ResourceDeleteException("Cannot delete this assignment");
