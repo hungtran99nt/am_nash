@@ -2,6 +2,7 @@ package com.nt.rookies.asset.management.service;
 
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface AssignmentService {
@@ -10,9 +11,8 @@ public interface AssignmentService {
      * @param assignmentDTO
      * @return
      */
-    AssignmentDTO createAssignment(AssignmentDTO assignmentDTO);
+    AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) throws SQLException;
 
-    boolean isValidToCreate(String assignToUsername, String assetCode);
     /**
      * Get all user's assignments by username
      * @return

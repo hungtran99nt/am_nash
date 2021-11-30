@@ -12,6 +12,7 @@ import lombok.Data;
 public class AssignmentDTO {
   private Integer id;
 
+  @NotBlank(message = BaseConstants.ERR_ASSIGNMENT_ASSET_CODE_BLANK)
   private String assetCode;
 
   @Size(max = 50, message = BaseConstants.ERR_ASSET_NAME_LENGTH)
@@ -37,5 +38,6 @@ public class AssignmentDTO {
   @Size(max = 50, message = BaseConstants.ERR_ASSIGNMENT_NOTE_LENGTH)
   private String note;
 
+  @NotBlank(message = BaseConstants.ERR_ASSIGNMENT_STATUS_BLANK)
   private String state;
 }

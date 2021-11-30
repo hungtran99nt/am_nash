@@ -86,7 +86,10 @@ public class BaseConstants {
   public static final String ERR_ASSIGNMENT_NOTE_BLANK = "Assignment note cannot be blank";
   public static final String ERR_ASSIGNMENT_NOTE_LENGTH =
       "Assignment note cannot be more than 300 characters";
-
+  public static final String ERR_ASSIGNMENT_ASSET_CODE_BLANK =
+          "Asset code cannot be blank";
+  public static final String ERR_ASSIGNMENT_STATUS_BLANK =
+          "Assignment status must be initialized";
   // ***** constructor *****
   // ***** public method *****
   // ***** protected method *****

@@ -1,12 +1,11 @@
 package com.nt.rookies.asset.management.service.impl;
 
 import com.nt.rookies.asset.management.common.BaseConstants;
-import com.nt.rookies.asset.management.dto.AssetDTO;
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
-import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.Asset;
 import com.nt.rookies.asset.management.entity.Assignment;
 import com.nt.rookies.asset.management.entity.User;
+import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.AssetRepository;
 import com.nt.rookies.asset.management.repository.AssignmentRepository;
 import com.nt.rookies.asset.management.repository.UserRepository;
@@ -16,7 +15,9 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -41,29 +42,48 @@ public class AssignmentServiceImpl implements AssignmentService {
         this.assignmentRepository = assignmentRepository;
     }
 
-    // TODO validate user active and asset available
     @Override
-    public AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) {
+    @Transactional
+    public AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) throws SQLException {
         Assignment newAssignment = modelMapper.map(assignmentDTO, Assignment.class);
+        Assignment createdAssignment = new Assignment();
         User assignBy = userRepository.findByUsername(assignmentDTO.getAssignBy());
         User assignTo = userRepository.findByUsername(assignmentDTO.getAssignTo());
-        Asset asset = assetRepository.findAssetByAssetCode(assignmentDTO.getAssetCode());
-
-        newAssignment.setAssignBy(assignBy);
-        newAssignment.setAssignTo(assignTo);
-        newAssignment.setAsset(asset);
-        newAssignment.setAssignedDate(assignmentDTO.getAssignedDate());
-        newAssignment.setNote(assignmentDTO.getNote());
-        newAssignment.setState(BaseConstants.ASSIGNMENT_STATUS_ACCEPTING);
-        logger.info("New assignment: {}", newAssignment);
-        Assignment createdAssignment = assignmentRepository.save(newAssignment);
-        logger.info("Assignment created: {}", createdAssignment);
+        Asset asset = assetRepository.findAssetByAssetCode(assignmentDTO.getAssetCode())
+                .orElseThrow(() -> new ResourceNotFoundException("Asset not found."));
+        if (asset.getState().equals(BaseConstants.ASSET_STATUS_AVAILABLE)
+                && assignBy.getLocation().getId().equals(assignTo.getLocation().getId())
+                && assignBy.getLocation().getId().equals(asset.getLocation().getId())
+                && assignBy.getStatus() != BaseConstants.USER_STATUS_DISABLED
+                && assignTo.getStatus() != BaseConstants.USER_STATUS_DISABLED) {
+            newAssignment.setAssignBy(assignBy);
+            newAssignment.setAssignTo(assignTo);
+            newAssignment.setAsset(asset);
+            newAssignment.setAssignedDate(assignmentDTO.getAssignedDate());
+            newAssignment.setNote(assignmentDTO.getNote());
+            newAssignment.setState(BaseConstants.ASSIGNMENT_STATUS_ACCEPTING);
+            logger.info("Expect; ({}) assigns ({}) to ({}) with note: {}",
+                    newAssignment.getAssignBy().getUsername(), newAssignment.getAsset().getAssetCode(),
+                    newAssignment.getAssignTo().getUsername(), newAssignment.getNote());
+            createdAssignment = assignmentRepository.save(newAssignment);
+            logger.info("Result; ({}) assigns ({}) to ({}) with note: {}",
+                    createdAssignment.getAssignBy().getUsername(), createdAssignment.getAsset().getAssetCode(),
+                    createdAssignment.getAssignTo().getUsername(), createdAssignment.getNote());
+            asset.setState(BaseConstants.ASSET_STATUS_UNAVAILABLE);
+            Asset updatedAsset = assetRepository.save(asset);
+            logger.info("Set asset ({}) status to {}", updatedAsset.getAssetCode(), updatedAsset.getState());
+        } else if (asset.getState().equals(BaseConstants.ASSET_STATUS_UNAVAILABLE)) {
+            logger.error("Asset ({}) status: {} (must be Available)", asset.getAssetCode(), asset.getState());
+        } else if (!assignBy.getLocation().getId().equals(assignTo.getLocation().getId())
+                || !assignBy.getLocation().getId().equals(asset.getLocation().getId())) {
+            logger.error("assignedBy_location: {}, assignedBy_location: {}, asset_location: {} (must be equal)",
+                    assignBy.getLocation().getId(), assignTo.getLocation().getId(), asset.getLocation().getId());
+        } else if (assignBy.getStatus() == BaseConstants.USER_STATUS_DISABLED
+                || assignTo.getStatus() == BaseConstants.USER_STATUS_DISABLED) {
+            logger.error("assignBy_state: {} and assignTo_state: {} (must be -1 or 1)",
+                    assignBy.getStatus(), assignTo.getStatus());
+        }
         return modelMapper.map(createdAssignment, AssignmentDTO.class);
-    }
-    //TODO change asset status to not available after create assignment
-    @Override
-    public boolean isValidToCreate(String assignToUsername, String assetCode) {
-        return false;
     }
 
     @Override

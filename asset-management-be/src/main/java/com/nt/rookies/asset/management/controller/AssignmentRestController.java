@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
+
 @RestController
 @RequestMapping("/api/v1.0/assignments")
 public class AssignmentRestController {
@@ -19,7 +21,7 @@ public class AssignmentRestController {
     }
 
     @PostMapping()
-    public AssignmentDTO createAssignment (@RequestBody AssignmentDTO assignmentDTO){
+    public AssignmentDTO createAssignment (@RequestBody AssignmentDTO assignmentDTO) throws SQLException {
         return assignmentService.createAssignment(assignmentDTO);
     }
 }
