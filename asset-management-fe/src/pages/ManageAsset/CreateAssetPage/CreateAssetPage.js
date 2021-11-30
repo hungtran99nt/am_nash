@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import './CreateAssetPage.css'
-import {Button, Col, Form, Row, Dropdown, DropdownButton} from "react-bootstrap";
+import {Button, Col, Form, Row, Dropdown} from "react-bootstrap";
 import {Formik} from "formik";
 import {useHistory} from "react-router-dom";
 import * as Yup from 'yup';
@@ -24,13 +24,12 @@ const CreateAssetPage = () => {
     const {
         data: categories,
     } = useFetch([], `${API_URL}/categories`, convertDataResponse);
-    console.log("cate", categories)
     const handleRedirectAssetManagePage = () => {
         history.push("/asset")
     }
     const initialValues = {
         name: "",
-        category:categories.categoryName,
+        category:"",
         specification: "",
         installDate: "",
         state: ""
@@ -86,10 +85,20 @@ const CreateAssetPage = () => {
                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
                                     <Form.Label column sm="3">Category</Form.Label>
                                     <Col sm="6">
-                                        <Dropdown>
-                                            <Dropdown.Toggle id="dropdown-autoclose-true" className="form-control drop-category" placeholder={dropValue} >
-                                                {dropValue}
-                                                <FontAwesomeIcon className="drop-icon" icon={faAngleDown} />
+                                        <Dropdown
+                                            name="category"
+                                            value={values.category}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                        >
+                                            <Dropdown.Toggle id="dropdown-autoclose-true"
+                                                             className="form-control drop-category"
+                                                             placeholder={dropValue}
+                                            >
+                                                <div className="drop-box">
+                                                    <span className="drop-title">{dropValue}</span>
+                                                    <FontAwesomeIcon className="drop-icon" icon={faAngleDown} />
+                                                </div>
                                             </Dropdown.Toggle>
                                             <Dropdown.Menu className="form-control">
                                                 {categories.map(cate => <Dropdown.Item key={cate.id} value={values.category}>
@@ -151,7 +160,7 @@ const CreateAssetPage = () => {
                                                 label="Available"
                                                 name="state"
                                                 type="radio"
-                                                value="Female"
+                                                value="Available"
                                                 defaultChecked={true}
                                                 onChange={handleChange}
                                             />
@@ -159,7 +168,7 @@ const CreateAssetPage = () => {
                                                 label="Not Available"
                                                 name="state"
                                                 type="radio"
-                                                value="Female"
+                                                value="Not Available"
                                                 onChange={handleChange}
                                             />
 
