@@ -32,7 +32,6 @@ const UserTable = ({users, isLoading, isRecentUser}) => {
 	const [showConfirm, setShowConfirm] = useState(false);
 	const handleCloseConfirm = () => setShowConfirm(false);
 	const handleShowConfirm = () => setShowConfirm(true);
-	const [disableUser, setDisableUser] = useState(false);
 	const [idDisable, setIdDisable] = useState(null);
 
 	const handleDeleteClicked = (id) => {
@@ -169,7 +168,6 @@ const UserTable = ({users, isLoading, isRecentUser}) => {
 				idDisable={idDisable}
 				showConfirm={showConfirm}
 				handleCloseConfirm={handleCloseConfirm}
-				setDisableUser={setDisableUser}
 				/>
 			) : null}
 		</>

@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
+import com.nt.rookies.asset.management.service.AssignmentService;
 import com.nt.rookies.asset.management.service.UserService;
 
 /** REST controller for user. */
@@ -22,10 +24,12 @@ import com.nt.rookies.asset.management.service.UserService;
 @RequestMapping("/api/v1.0/users")
 public class UserRestController {
   private final UserService userService;
+  private final AssignmentService assignmentService;
 
   @Autowired
-  public UserRestController(UserService userService) {
+  public UserRestController(UserService userService, AssignmentService assignmentService) {
     this.userService = userService;
+    this.assignmentService = assignmentService;
   }
 
   @GetMapping()
@@ -63,4 +67,13 @@ public class UserRestController {
     return new ResponseEntity<>(userService.isValidToDisable(id), HttpStatus.OK);
   }
 
+  @GetMapping("/{id}/validAssignment")
+  public ResponseEntity<Boolean> isAssignmentValidtoDelete(@PathVariable(name = "id") Integer id) {
+    return new ResponseEntity<>(assignmentService.isAssignmentValidtoDelete(id), HttpStatus.OK);
+  }
+
+  @DeleteMapping("/deleteAssignment/{id}")
+  public ResponseEntity<String> deleteAssignment(@PathVariable(name = "id") Integer id) {
+    return new ResponseEntity<>("Assignment Deleted", HttpStatus.GONE);
+  }
 }
