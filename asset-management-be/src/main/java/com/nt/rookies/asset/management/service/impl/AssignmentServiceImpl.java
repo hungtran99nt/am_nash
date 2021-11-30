@@ -5,10 +5,14 @@ import com.nt.rookies.asset.management.entity.Assignment;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.AssignmentRepository;
 import com.nt.rookies.asset.management.service.AssignmentService;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 /** Implementation of <code>AssignmentService</code>. */
@@ -32,5 +36,18 @@ public class AssignmentServiceImpl implements AssignmentService {
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Not found assignment"));
     return modelMapper.map(assignment, AssignmentDTO.class);
+  }
+
+  @Override
+  public List<AssignmentDTO> getRecentAssignmentsByUser() {
+    logger.info("Inside getRecentAssignmentsByUser() method");
+    UserDetails userDetails =
+        (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    String username = userDetails.getUsername();
+    logger.info("Current user: {}", username);
+    List<Assignment> assignments = repository.findRecentAssignmentsByUser(username);
+    return assignments.stream()
+        .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
+        .collect(Collectors.toList());
   }
 }

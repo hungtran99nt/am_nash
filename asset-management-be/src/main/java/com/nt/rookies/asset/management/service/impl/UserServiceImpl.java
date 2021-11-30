@@ -2,7 +2,6 @@ package com.nt.rookies.asset.management.service.impl;
 
 import com.nt.rookies.asset.management.common.BaseConstants;
 import com.nt.rookies.asset.management.dto.AccountDTO;
-import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.Assignment;
 import com.nt.rookies.asset.management.entity.Location;
@@ -195,13 +194,5 @@ public class UserServiceImpl implements UserService {
     if (assignList.isEmpty()) {
       return true;
     } else return false;
-  }
-
-  @Override
-  public List<AssignmentDTO> getRecentAssignmentsByUser(Integer userId) {
-    List<Assignment> assignments = assignmentRepository.findRecentAssignmentsByUser(userId);
-    return assignments.stream()
-        .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
-        .collect(Collectors.toList());
   }
 }

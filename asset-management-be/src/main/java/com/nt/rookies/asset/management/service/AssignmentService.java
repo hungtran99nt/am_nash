@@ -2,6 +2,7 @@ package com.nt.rookies.asset.management.service;
 
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
+import java.util.List;
 
 /** Service interface for Assignment. */
 public interface AssignmentService {
@@ -14,4 +15,11 @@ public interface AssignmentService {
    * @exception ResourceNotFoundException if assignment not found
    */
   AssignmentDTO getAssignmentById(Integer id);
+
+  /**
+   * Get recent assignment of user
+   *
+   * @return {@link List <AssignmentDTO>} list of assignments
+   */
+  List<AssignmentDTO> getRecentAssignmentsByUser();
 }

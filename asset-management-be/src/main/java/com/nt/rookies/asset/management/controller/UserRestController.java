@@ -1,7 +1,6 @@
 package com.nt.rookies.asset.management.controller;
 
 import com.nt.rookies.asset.management.dto.AccountDTO;
-import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.service.UserService;
 import java.util.List;
@@ -47,19 +46,6 @@ public class UserRestController {
   @PutMapping("/{id}")
   public UserDTO updateUser(@PathVariable(name = "id") Integer id, @RequestBody UserDTO user) {
     return userService.updateUser(id, user);
-  }
-
-  /**
-   * API Get all recent assignments assigned to user.<br>
-   * Link: <code>/api/v1.0/users/{id}/assignments</code><br>
-   * Method: GET
-   *
-   * @param id user id
-   * @return {@link List<AssignmentDTO>} list of assignments
-   */
-  @GetMapping("/{id}/assignments")
-  public List<AssignmentDTO> getRecentAssignmentsByUser(@PathVariable(name = "id") Integer id) {
-    return userService.getRecentAssignmentsByUser(id);
   }
 
   @GetMapping("/user")
