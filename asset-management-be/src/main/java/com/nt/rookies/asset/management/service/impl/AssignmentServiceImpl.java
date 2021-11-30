@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.entity.Assignment;
+import com.nt.rookies.asset.management.exception.ResourceDeleteException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.AssignmentRepository;
 import com.nt.rookies.asset.management.service.AssignmentService;
@@ -41,17 +42,19 @@ public class AssignmentServiceImpl implements AssignmentService {
 
   @Override
   public boolean isAssignmentValidtoDelete(Integer id) {
-    List<Assignment> assignList = assignmentRepository.getUserStateByAssignmentId(id);
-    if (assignList.isEmpty()) {
-      return true;
-    } else
-      return false;
+    String state = assignmentRepository.getUserStateByAssignmentId(id);
+    return !(state.equalsIgnoreCase("Accepted") || state.equalsIgnoreCase("Waiting for returning"));
   }
 
   @Override
   public void deleteAssignment(Integer id) {
-    assignmentRepository.findById(id);
-    assignmentRepository.deleteById(id);
+    if (isAssignmentValidtoDelete(id)) {
+      Assignment assignment = assignmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+      logger.info("assignment la:" + assignment);
+      assignmentRepository.delete(assignment);
+    } else {
+      throw new ResourceDeleteException("Cannot delete this assignment");
+    }
   }
 }
 
