@@ -26,7 +26,7 @@ const MyAssignment = () => {
         isLoading,
         data: assignments,
         errorMessage
-    } = useFetch([], `${API_URL}/users/2/assignments`, convertDataResponse);
+    } = useFetch([], `${API_URL}/assignments/user`, convertDataResponse);
     //console.log(assignments);
 
     return (
