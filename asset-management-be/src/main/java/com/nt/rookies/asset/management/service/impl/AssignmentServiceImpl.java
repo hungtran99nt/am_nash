@@ -88,10 +88,6 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public List<AssignmentDTO> findAllByUsername() {
-        return null;
-    }
-    @Override
     public List<AssignmentDTO> getAllAssignments() {
         logger.info("Get all assignments");
         List<Assignment> assignments = assignmentRepository.findAll();

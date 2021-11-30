@@ -34,11 +34,5 @@ public interface AssignmentService {
      * @return
      */
     AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) throws SQLException;
-
-    /**
-     * Get all user's assignments by username
-     *
-     * @return
-     */
-    List<AssignmentDTO> findAllByUsername();
+    
 }
