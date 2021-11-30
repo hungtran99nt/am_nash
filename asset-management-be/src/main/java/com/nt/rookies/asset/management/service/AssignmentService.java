@@ -12,38 +12,29 @@ import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
  */
 public interface AssignmentService {
 
-    /**
-     * Get all assignments.
-     *
-     * @return {@link List<AssignmentDTO>}
-     */
-    List<AssignmentDTO> getAllAssignments();
-
-    /**
-     * Get assignment by id.
-     *
-     * @param id assignment id
-     * @return {@link AssignmentDTO} object if found
-     * @throws ResourceNotFoundException if assignment not found
-     */
-    AssignmentDTO getAssignmentById(Integer id);
-
-    /**
-     * Create new Assignment
-     *
-     * @param assignmentDTO
-     * @return
-     */
-    AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) throws SQLException;
+  /**
+   * Get all assignments.
+   *
+   * @return {@link List<AssignmentDTO>}
+   */
+  List<AssignmentDTO> getAllAssignments();
 
   /**
    * Get assignment by id.
    *
    * @param id assignment id
    * @return {@link AssignmentDTO} object if found
-   * @exception ResourceNotFoundException if assignment not found
+   * @throws ResourceNotFoundException if assignment not found
    */
   AssignmentDTO getAssignmentById(Integer id);
+
+  /**
+   * Create new Assignment
+   *
+   * @param assignmentDTO
+   * @return
+   */
+  AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) throws SQLException;
 
   /**
    * Check removable assignment
@@ -51,7 +42,7 @@ public interface AssignmentService {
    * @param id
    * @return {@link boolean} true if able to delete, and vice versa
    */
-  boolean isAssignmentValidtoDelete(Integer id);
+  boolean isAssignmentValidToDelete(Integer id);
 
 
   /**
