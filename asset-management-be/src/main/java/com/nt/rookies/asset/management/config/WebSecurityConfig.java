@@ -50,7 +50,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers("/authenticate")
         .permitAll() // Don't authenticate this particular request
-        .antMatchers("/**/assignments/user", "/**/assignments/user/")
+        .antMatchers(
+            "/**/assignments/user",
+            "/**/assignments/user/",
+            "/**/assignments/{id}",
+            "/**/assignments/{id}/")
         .authenticated() // user can access their own assignments
         .antMatchers(
             "/**/users**", // get all, create
