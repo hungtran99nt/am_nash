@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/** Implementation of <code>AssetService</code>*/
 @Service
 public class AssetServiceImpl implements AssetService {
   private static final Logger logger = LoggerFactory.getLogger(AssetServiceImpl.class);
