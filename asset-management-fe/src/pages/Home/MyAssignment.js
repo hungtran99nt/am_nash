@@ -5,7 +5,6 @@ import AssignmentTable from "../../components/AssignmentTable/AssignmentTable";
 import useFetch from "../../hooks/useFetch";
 import moment from "moment";
 import {API_URL, DATE_FORMAT} from "../../common/constants";
-import './MyAssignment.css'
 
 const convertDataResponse = res => res.data.map(a => (
     {

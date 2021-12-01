@@ -14,7 +14,7 @@ const MyAssignmentAction = ({cell, row}) => {
                 color={'#E20C17'}
                 className={`action__items ${row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE ? '' : 'disable'}`}
                 onClick={
-                    row.state !== FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE ?
+                    row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE ?
                         () => console.log(`Accept assignment id: ${row.id}`) : undefined
                 }
                 title={"Accept assignment"}
