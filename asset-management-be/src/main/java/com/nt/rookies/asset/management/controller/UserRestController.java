@@ -1,5 +1,8 @@
 package com.nt.rookies.asset.management.controller;
 
+import com.nt.rookies.asset.management.dto.AccountDTO;
+import com.nt.rookies.asset.management.dto.UserDTO;
+import com.nt.rookies.asset.management.service.UserService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.nt.rookies.asset.management.dto.AccountDTO;
-import com.nt.rookies.asset.management.dto.UserDTO;
-import com.nt.rookies.asset.management.service.UserService;
 
 /** REST controller for user. */
 @RestController
@@ -62,6 +62,7 @@ public class UserRestController {
   public ResponseEntity<Boolean> isValidToDisable(@PathVariable(name = "id") Integer id) {
     return new ResponseEntity<>(userService.isValidToDisable(id), HttpStatus.OK);
   }
+
   @PutMapping("/user/updatePassword")
   public UserDTO changePasswordAtFirstLogin(@RequestParam String username,
                                             @RequestParam String password){

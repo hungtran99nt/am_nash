@@ -31,7 +31,7 @@ const ManageAssignment = () => {
 		isLoading,
 		data: assignments,
 		errorMessage
-	} = useFetch([], `${API_URL}/assignments`, convertDataResponse);
+	} = useFetch([], `${API_URL}/admin/assignments`, convertDataResponse);
 
 	const stateKeys = Object.keys(FILTER_ASM_STATE_OPTIONS);
 	const listStates = stateKeys.map(key =>
@@ -75,7 +75,7 @@ const ManageAssignment = () => {
 					<Row className="actions__wrapper">
 						<Col className='asset select'>
 							<Form.Select
-								className="h-75"
+								className="action__filter h-75"
 								value={filterStateOption}
 								onChange={evt => setFilterStateOption(evt.target.value)}
 							>
@@ -119,7 +119,7 @@ const ManageAssignment = () => {
 					</Row>
 				</Form>
 			</Container>
-			<AssignmentTable isLoading={isLoading} errorMessage={errorMessage} assignments={assignmentsSearched}/>
+			<AssignmentTable isLoading={isLoading} errorMessage={errorMessage} assignments={assignmentsSearched} isMyAssignment={false}/>
 		</div>
 	)
 }

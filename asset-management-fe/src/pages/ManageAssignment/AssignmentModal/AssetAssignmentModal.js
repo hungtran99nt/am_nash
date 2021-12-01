@@ -1,10 +1,9 @@
 import React, {useMemo, useState} from 'react';
 import {Button, FormControl, InputGroup, Modal} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSearch} from "@fortawesome/free-solid-svg-icons";
 import BootstrapTable from "react-bootstrap-table-next";
 import {assetColumns} from "./AssigmentModalAttribute";
 import {FILTER_STATE_OPTIONS} from "../../../common/constants";
+import {BiSearchAlt} from "react-icons/all";
 
 const AssetAssignmentModal = ({show, handleClose, assets, handlePassingData}) => {
     const [selectedRow, setSelectedRow] = useState({});
@@ -39,7 +38,7 @@ const AssetAssignmentModal = ({show, handleClose, assets, handlePassingData}) =>
                         placeholder="Search by name and code"
                         onChange={event => setSearchText(event.target.value)}
                     />
-                    <InputGroup.Text id="search-icon"><FontAwesomeIcon icon={faSearch}/></InputGroup.Text>
+                    <InputGroup.Text id="search-icon"><BiSearchAlt/></InputGroup.Text>
                 </InputGroup>
             </Modal.Header>
             <Modal.Body>

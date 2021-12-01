@@ -1,48 +1,72 @@
-import {useHistory} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {Formik} from "formik";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import React from "react";
 import * as Yup from "yup";
 import useFetch from "../../../hooks/useFetch";
 import {API_URL} from "../../../common/constants";
+import moment from "moment";
 
 const validateForm = Yup.object().shape({
-    user:Yup.string().required("Required!"),
-    asset:Yup.string().required("Required!"),
-    assignedDate:Yup.date().required("Required!"),
+    user: Yup.string().required("Required!"),
+    asset: Yup.string().required("Required!"),
+    assignedDate: Yup.date().required("Required!"),
 })
 const convertDataResponse = res => res.data;
-const EditAssignmentPage = () =>{
+const convertDataAssignmentResponse = res => (
+    {
+        asset: res.data.assetName,
+        assignTo: res.data.assignTo,
+        assignedDate: moment(res.data.assignedDate).format("YYYY-MM-DD"),
+        note: res.data.note
+    }
+)
+const EditAssignmentPage = () => {
     let history = useHistory();
-    const handleRedirectAssignmentPage = () =>{
+    const {id} = useParams();
+    const handleRedirectAssignmentPage = () => {
         history.push("/assignment");
     }
     const {
-        isLoading,
-        data: users,
-        errorMessage
+        data: users
     } = useFetch([], `${API_URL}/users`, convertDataResponse);
-    const listUsers = users.map(user => <option key={user.id} value={user.firstName + " " + user.lastName}>{user.firstName +" " + user.lastName}</option>)
+    console.log("users", users)
 
     const {
         data: assets,
     } = useFetch([], `${API_URL}/assets`, convertDataResponse);
-    const listAssets = assets.map(asset =><option key={asset.id} value={asset.assetName}>{asset.assetName}</option> );
-    console.log("assets = ", assets)
-    const initialValues ={
-        user:"",
-        asset:"",
-        assignedDate:"",
-        note:""
+    const listAssets = assets.map(asset => <option key={asset.id} value={asset.assetName}>{asset.assetName}</option>);
+
+    const {
+        isLoading,
+        data: assignments,
+        errorMessage
+    } = useFetch([], `${API_URL}/assignments/${id}`, convertDataAssignmentResponse);
+    console.log("assignment = ", assignments)
+
+    const listUsers = users.map(user =>
+        <option key={user.username} value={user.firstName + " " + user.lastName}>{user.firstName + " " + user.lastName}</option>)
+    let assignedUser = users.find(u => u.username === assignments.assignTo);
+    let assignedFullname = "";
+    if(assignedUser !== undefined) {
+        assignedFullname = assignedUser.firstName + " " + assignedUser.lastName;
     }
-    const submit = (values,{resetForm}) => {
-        console.log("value on submit =",values);
+    console.log("fullname =", assignedFullname);
+    const initialValues = {
+        user: assignedFullname,
+        asset: assignments.asset,
+        assignedDate: assignments.assignedDate,
+        note: assignments.note
+    }
+    console.log("initial value = ", initialValues)
+    const submit = (values, {resetForm}) => {
+        console.log("value on submit =", values);
         history.push("/assignment")
         resetForm();
     }
     if (isLoading) return "Loading...";
     if (errorMessage) return <div style={{color: "red"}}>{errorMessage}</div>;
-    return(
+    return (
         <div className="app-page">
             <div className="row">
                 <div className="col-lg-2"/>
@@ -73,8 +97,8 @@ const EditAssignmentPage = () =>{
                                             onBlur={handleBlur}
                                             isInvalid={touched.user && errors.user}
                                         >
-                                        <option value={values.user}>{values.user}</option>
-                                        {listUsers}
+                                            <option value={values.user}>{values.user}</option>
+                                            {listUsers}
                                         </Form.Select>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.user}
@@ -140,7 +164,7 @@ const EditAssignmentPage = () =>{
 
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
-                                            disabled={!values.user || !values.asset ||!values.assignedDate}
+                                            disabled={!values.user || !values.asset || !values.assignedDate}
                                     >
                                         Save
                                     </Button>

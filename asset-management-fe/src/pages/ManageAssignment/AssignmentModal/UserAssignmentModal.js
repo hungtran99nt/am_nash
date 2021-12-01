@@ -1,10 +1,9 @@
 import React, {useMemo, useState} from 'react';
 import {Button, FormControl, InputGroup, Modal} from "react-bootstrap";
-import {faSearch} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import './UserAssignmentModal.css'
 import BootstrapTable from 'react-bootstrap-table-next'
 import {userColumns} from "./AssigmentModalAttribute";
+import {BiSearchAlt} from "react-icons/all";
 
 const UserAssignmentModal = ({show, handleClose, users, handlePassingData }) => {
     const [selectedRow, setSelectedRow] = useState({});
@@ -39,7 +38,7 @@ const UserAssignmentModal = ({show, handleClose, users, handlePassingData }) => 
                         placeholder="Search by name and code"
                         onChange={event => setSearchText(event.target.value)}
                     />
-                    <InputGroup.Text id="search-icon"><FontAwesomeIcon icon={faSearch}/></InputGroup.Text>
+                    <InputGroup.Text id="search-icon"><BiSearchAlt/></InputGroup.Text>
                 </InputGroup>
             </Modal.Header>
             <Modal.Body>

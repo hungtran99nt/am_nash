@@ -6,14 +6,12 @@ import {useHistory} from "react-router-dom";
 import * as Yup from 'yup';
 import useFetch from "../../../hooks/useFetch";
 import {API_URL, DATE_FORMAT, FILTER_ASM_STATE_OPTIONS, TODAY} from "../../../common/constants";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faSearch} from '@fortawesome/free-solid-svg-icons'
 import moment from "moment";
 import {InputGroup} from "reactstrap";
 import UserAssignmentModal from "../AssignmentModal/UserAssignmentModal";
 import AssetAssignmentModal from "../AssignmentModal/AssetAssignmentModal";
 import axios from "axios";
-import Error from "../../Error/Error";
+import {BiSearchAlt} from "react-icons/all";
 
 const validateForm = Yup.object().shape({
     user: Yup.string().required("Required!"),
@@ -60,7 +58,7 @@ const CreateAssignmentPage = () => {
     const submit = (values, {resetForm}) => {
         axios({
             method: 'POST',
-            url: `${API_URL}/assignments/`,
+            url: `${API_URL}/admin/assignments/`,
             data: {
                 assetCode: assignedAsset.assetCode,
                 assignBy: localStorage.getItem('USERNAME'),
@@ -154,7 +152,7 @@ const CreateAssignmentPage = () => {
                                             <Button variant="outline-secondary" id="button-addon1"
                                                     onClick={handleClickUserPopup}
                                             >
-                                                <FontAwesomeIcon icon={faSearch}/>
+                                               <BiSearchAlt/>
                                             </Button>
                                             <UserAssignmentModal
                                                 show={show} handleClose={handleClose} users={users} handlePassingData={handlePassingData}
@@ -180,7 +178,7 @@ const CreateAssignmentPage = () => {
                                             <Button variant="outline-secondary" id="button-addon2"
                                                     onClick={handleClickAssetPopup}
                                             >
-                                                <FontAwesomeIcon icon={faSearch}/>
+                                                <BiSearchAlt/>
                                             </Button>
                                             <AssetAssignmentModal
                                                 show={showAsset} handleClose={handleAssetClose} assets={assets} handlePassingData={handlePassingAsset}
