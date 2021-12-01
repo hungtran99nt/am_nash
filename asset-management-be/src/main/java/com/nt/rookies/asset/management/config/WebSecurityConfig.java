@@ -50,8 +50,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers("/authenticate")
         .permitAll() // Don't authenticate this particular request
-        .antMatchers("/api/v1.0/users/{id}/assignments")
-        .hasAuthority("Staff") // staff can access their own assignments
+        .antMatchers(
+            "/**/user/assignment", "/**/user/assignment/") // user can access only their own
+        .authenticated() // user can access their own assignments
         .antMatchers(
             "/**/users**", // get all, create
             "/**/users/**", // get by id, update, delete, disable
@@ -59,8 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/**/categories/**",
             "/**/assets**", // get all, create
             "/**/assets/**", // get by id, update
-            "/**/assignments**",
-            "/**/assignments/**" // get by id
+            "/**/admin/assignments**", // create assignment
+            "/**/admin/assignments/**" // get by id
             )
         .hasAuthority("Admin") // only allow admins to access these endpoints
         .anyRequest()

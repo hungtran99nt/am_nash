@@ -1,7 +1,6 @@
 package com.nt.rookies.asset.management.service.impl;
 
 import com.nt.rookies.asset.management.common.BaseConstants;
-import com.nt.rookies.asset.management.dto.AssetDTO;
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.entity.Asset;
 import com.nt.rookies.asset.management.entity.Assignment;
@@ -19,6 +18,8 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -135,12 +136,26 @@ public class AssignmentServiceImpl implements AssignmentService {
         .collect(Collectors.toList());
   }
 
+  @Override
   public AssignmentDTO getAssignmentById(Integer id) {
     logger.info("Inside getAssignmentById() method");
     Assignment assignment =
         assignmentRepository
             .findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Not found assignment"));
+            .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
     return modelMapper.map(assignment, AssignmentDTO.class);
+  }
+
+  @Override
+  public List<AssignmentDTO> getRecentAssignmentsByUser() {
+    logger.info("Inside getRecentAssignmentsByUser() method");
+    UserDetails userDetails =
+        (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    String username = userDetails.getUsername();
+    logger.info("Current user: {}", username);
+    List<Assignment> assignments = assignmentRepository.findRecentAssignmentsByUser(username);
+    return assignments.stream()
+        .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
+        .collect(Collectors.toList());
   }
 }
