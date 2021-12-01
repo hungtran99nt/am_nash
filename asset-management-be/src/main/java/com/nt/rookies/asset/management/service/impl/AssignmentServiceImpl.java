@@ -1,17 +1,5 @@
 package com.nt.rookies.asset.management.service.impl;
 
-import com.nt.rookies.asset.management.common.BaseConstants;
-import com.nt.rookies.asset.management.dto.AssignmentDTO;
-import com.nt.rookies.asset.management.entity.Asset;
-import com.nt.rookies.asset.management.entity.Assignment;
-import com.nt.rookies.asset.management.entity.Location;
-import com.nt.rookies.asset.management.entity.User;
-import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
-import com.nt.rookies.asset.management.repository.AssetRepository;
-import com.nt.rookies.asset.management.repository.AssignmentRepository;
-import com.nt.rookies.asset.management.repository.UserRepository;
-import com.nt.rookies.asset.management.service.AssignmentService;
-import com.nt.rookies.asset.management.service.UserService;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +10,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.nt.rookies.asset.management.common.BaseConstants;
+import com.nt.rookies.asset.management.dto.AssignmentDTO;
+import com.nt.rookies.asset.management.entity.Asset;
+import com.nt.rookies.asset.management.entity.Assignment;
+import com.nt.rookies.asset.management.entity.Location;
+import com.nt.rookies.asset.management.entity.User;
+import com.nt.rookies.asset.management.exception.AssignmentNotFound;
+import com.nt.rookies.asset.management.exception.ResourceDeleteException;
+import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
+import com.nt.rookies.asset.management.repository.AssetRepository;
+import com.nt.rookies.asset.management.repository.AssignmentRepository;
+import com.nt.rookies.asset.management.repository.UserRepository;
+import com.nt.rookies.asset.management.service.AssignmentService;
+import com.nt.rookies.asset.management.service.UserService;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
@@ -29,7 +31,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
   private final UserService userService;
   private final UserRepository userRepository;
-  private final AssetRepository assetRepository;
+  private final AssetRepository assetRepository; 
   private final ModelMapper modelMapper;
   private final AssignmentRepository assignmentRepository;
 
@@ -157,5 +159,21 @@ public class AssignmentServiceImpl implements AssignmentService {
     return assignments.stream()
         .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
         .collect(Collectors.toList());
+  }
+
+  @Override
+  public boolean isAssignmentValidToDelete(Integer id) {
+    Assignment assignment = assignmentRepository.getStateById(id).orElseThrow(() -> new AssignmentNotFound("Assignment not found"));
+    return !(assignment.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED) || assignment.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_RETURNING));
+  }
+
+  @Override
+  public void deleteAssignment(Integer id) {
+    if (isAssignmentValidToDelete(id)) {
+      Assignment assignment = assignmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+      assignmentRepository.delete(assignment);
+    } else {
+      throw new ResourceDeleteException("Cannot delete this assignment");
+    }
   }
 }

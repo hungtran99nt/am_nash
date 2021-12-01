@@ -3,7 +3,7 @@ import "./UserPopup.css";
 
 const UserDisableError = ({ showErr, handleCloseErr }) => {
   return (
-    <Modal show={showErr} onHide={handleCloseErr} centered>
+    <Modal show={showErr} onHide={handleCloseErr} centered backdrop="static">
       <Modal.Header closeButton className="text-danger">
         <Modal.Title>Can not disable user</Modal.Title>
       </Modal.Header>

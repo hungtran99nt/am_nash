@@ -1,19 +1,36 @@
 package com.nt.rookies.asset.management.repository;
 
-import com.nt.rookies.asset.management.entity.Assignment;
-import com.nt.rookies.asset.management.entity.Location;
-import com.nt.rookies.asset.management.entity.User;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.nt.rookies.asset.management.entity.Assignment;
+import com.nt.rookies.asset.management.entity.Location;
+import com.nt.rookies.asset.management.entity.User;
+
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Integer> {
   @Query("SELECT count(*) FROM Assignment a WHERE a.assignTo = :id")
   int getTotalCountByAssigneeId(@Param("id") int id);
+  
+  /**
+   * get state by assignment id
+   *
+   * @param id current id
+   * @return Optional Assignment of that id
+   */
+  Optional<Assignment> getStateById(int id); 
 
+  /**
+   * find assignment by user id
+   *
+   * @param assignTo current User assignTo
+   * @return List of user assignment
+   */
   List<Assignment> findByAssignTo(User assignTo);
 
   /**

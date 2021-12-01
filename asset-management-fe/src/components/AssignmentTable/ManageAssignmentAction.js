@@ -1,15 +1,16 @@
-import React from 'react';
+import React,  {useState} from 'react';
 import {useHistory} from "react-router-dom";
 import {FILTER_ASM_STATE_OPTIONS} from "../../common/constants";
 import {BsPencilFill, FaRegTimesCircle, FaUndoAlt} from "react-icons/all";
 
-const ManageAssignmentAction = ({cell, row}) => {
+
+const ManageAssignmentAction = ({cell, row, handleDeleteClicked}) => {
     const history = useHistory();
 
     const handleEditClicked = (id) => {
         history.push(`edit/assignment/${id}`)
     }
-
+	
     return (
         <div className='table__actions'>
             {/* Edit button: only available when assignment is waiting for accept */}
@@ -26,12 +27,12 @@ const ManageAssignmentAction = ({cell, row}) => {
             {/* Delete button: only available when assignment is waiting for accept or declined */}
             <FaRegTimesCircle
                 color={'#D85667'}
-                className={`action__items ${row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE
-                || row.state === FILTER_ASM_STATE_OPTIONS.DECLINED ? '' : 'disable'}`}
+                className={`action__items ${(row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_RETURNING
+                || row.state === FILTER_ASM_STATE_OPTIONS.ACCEPTED) ? 'disable' : '' }`}
                 onClick={
-                    row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE
-                    || row.state === FILTER_ASM_STATE_OPTIONS.DECLINED ?
-                        () => console.log(`Delete assignment id: ${row.id}`) : undefined
+                    row.state !== FILTER_ASM_STATE_OPTIONS.ACCEPTED
+                    && row.state !== FILTER_ASM_STATE_OPTIONS.WAITING_FOR_RETURNING ?
+                        () => handleDeleteClicked(row.id) : undefined
                 }
                 title={"Delete assignment"}
             />
