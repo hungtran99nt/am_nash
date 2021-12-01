@@ -27,7 +27,7 @@ public class AssignmentRestController {
 
   /**
    * API Get all assignments by current admin location <br>
-   * Link: <code>/api/v1.0/assignments</code> <br>
+   * Link: <code>/api/v1.0/admin/assignments</code> <br>
    * Method: GET
    *
    * @return {@link List<AssignmentDTO>}
