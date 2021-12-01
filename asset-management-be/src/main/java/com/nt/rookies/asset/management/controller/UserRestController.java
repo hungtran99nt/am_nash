@@ -64,8 +64,8 @@ public class UserRestController {
   }
 
   @PutMapping("/user/updatePassword")
-  public UserDTO changePasswordAtFirstLogin(
-      @RequestParam String username, @RequestParam String password) {
+  public UserDTO changePasswordAtFirstLogin(@RequestParam String username,
+                                            @RequestParam String password){
     return userService.changePasswordAtFirstLogin(username, password);
   }
 }
