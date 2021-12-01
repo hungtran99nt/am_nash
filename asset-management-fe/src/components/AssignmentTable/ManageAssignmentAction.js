@@ -10,7 +10,6 @@ const ManageAssignmentAction = ({cell, row, handleDeleteClicked}) => {
     const handleEditClicked = (id) => {
         history.push(`edit/assignment/${id}`)
     }
-    
 	
     return (
         <div className='table__actions'>
