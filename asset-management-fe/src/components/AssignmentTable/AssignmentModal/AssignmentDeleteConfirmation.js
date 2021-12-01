@@ -18,7 +18,7 @@ const AssignmentDeleteConfirmation = ({
 
   const handleConfirmDelete = () => {
 		axios
-			.delete(`${API_URL}/assignments/${idDelete}`)
+			.delete(`${API_URL}/admin/assignments/${idDelete}`)
 			.then(() => {
 				console.log(`Delete successful assignment: ${idDelete}`);
 				handleCloseDeleteConfirm();

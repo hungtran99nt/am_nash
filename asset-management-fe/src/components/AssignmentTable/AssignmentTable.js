@@ -136,7 +136,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 	}
 	const handleDeleteClicked = (id) => {
 		setIdDelete(id);
-		axios.get(`${API_URL}/assignments/${id}/valid`).then((response) => {
+		axios.get(`${API_URL}/admin/assignments/${id}/valid`).then((response) => {
 			if (response.data === true) {
 				handleShowDeleteConfirm();
 			}
