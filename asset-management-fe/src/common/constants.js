@@ -42,11 +42,6 @@ export const FILTER_ASM_STATE_OPTIONS = {
     WAITING_FOR_RETURNING: 'Waiting for returning',
 }
 
-export const FILTER_ASM_STATE_DELETE = {
-	ACCEPTED: 'Accepted',
-	WAITING_FOR_RETURNING: 'Waiting for returning',
-}
-
 export const SORT_ORDERS = {
     ASC: 'asc',
     DESC: 'desc'

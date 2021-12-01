@@ -6,9 +6,7 @@ import {useHistory} from "react-router-dom";
 import NoDataFound from "../NoDataFound/NoDataFound";
 import './AssignmentTable.css';
 import AssignmentDetail from "./AssignmentModal/AssignmentDetail";
-import axios from 'axios';
-import { API_URL } from "../../common/constants";
-import AssignmentDeleteConfirmation from './AssignmentModal/AssignmentDeleteConfirmation'
+
 import MyAssignmentAction from "./MyAssignmentAction";
 import ManageAssignmentAction from "./ManageAssignmentAction";
 
@@ -101,15 +99,13 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment})
 	const handleEditClicked = (id) => {
 		history.push(`edit/assignment/${id}`)
 	}
-	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-	const [idDelete, setIdDelete] = useState(null);
-	const handleCloseDeleteConfirm = () => setShowDeleteConfirm(false);
-	const handleShowDeleteConfirm = () => setShowDeleteConfirm(true);
 	
+
 	const [assignmentIdPopup, setAssignmentIdPopup] = useState("");
 	const [showDetail, setShowDetail] = useState(false);
 	const handleCloseDetail = () => setShowDetail(false);
 	const handleShowDetail = () => setShowDetail(true);
+
 
 	const getAssignmentDetail = {
 		onClick: (e, row) => {
@@ -141,15 +137,6 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment})
 					handleClose={handleCloseDetail}
 					assignmentId={assignmentIdPopup}
 					isMyAssignment={isMyAssignment}
-				/>
-			}
-			{
-				showDeleteConfirm &&
-				<AssignmentDeleteConfirmation
-					showDeleteConfirm={showDeleteConfirm}
-					handleCloseDeleteConfirm={handleCloseDeleteConfirm}
-					assignments={assignments}
-					idDelete={idDelete}
 				/>
 			}
 		</>
