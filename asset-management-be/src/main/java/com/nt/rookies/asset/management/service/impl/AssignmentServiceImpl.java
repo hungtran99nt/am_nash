@@ -2,6 +2,7 @@ package com.nt.rookies.asset.management.service.impl;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -123,8 +124,15 @@ public class AssignmentServiceImpl implements AssignmentService {
     
     @Override
     public boolean isAssignmentValidToDelete(Integer id) {
-    	Assignment state = assignmentRepository.getStateById(id); 
-    	return !(state.getState().equalsIgnoreCase("Accepted") || state.getState().equalsIgnoreCase("Waiting for returning"));
+    	Optional<Assignment> state = assignmentRepository.getStateById(id); 
+    	return !(state.isPresent()? (state
+    			.get()
+    			.getState()
+    			.equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED)
+    			|| 
+    			state.get()
+    			.getState()
+    			.equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_RETURNING)): null );
     }
 
     @Override
