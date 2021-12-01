@@ -17,7 +17,7 @@ const convertDataAssignmentResponse = res => (
     {
         asset: res.data.assetName,
         assignTo: res.data.assignTo,
-        assignedDate:moment(res.data.assignedDate).format("YYYY-MM-DD"),
+        assignedDate: moment(res.data.assignedDate).format("YYYY-MM-DD"),
         note: res.data.note
     }
 )
@@ -27,6 +27,15 @@ const EditAssignmentPage = () => {
     const handleRedirectAssignmentPage = () => {
         history.push("/assignment");
     }
+    const {
+        data: users
+    } = useFetch([], `${API_URL}/users`, convertDataResponse);
+    console.log("users", users)
+
+    const {
+        data: assets,
+    } = useFetch([], `${API_URL}/assets`, convertDataResponse);
+    const listAssets = assets.map(asset => <option key={asset.id} value={asset.assetName}>{asset.assetName}</option>);
 
     const {
         isLoading,
@@ -35,25 +44,21 @@ const EditAssignmentPage = () => {
     } = useFetch([], `${API_URL}/assignments/${id}`, convertDataAssignmentResponse);
     console.log("assignment = ", assignments)
 
-    const {
-        data: users
-    } = useFetch([], `${API_URL}/users`, convertDataResponse);
-    const listUsers = users.map(user => <option key={user.id}
-                                                value={user.firstName + " " + user.lastName}>{user.firstName + " " + user.lastName}</option>)
-    console.log("users", users)
-    const {
-        data: assets,
-    } = useFetch([], `${API_URL}/assets`, convertDataResponse);
-    const listAssets = assets.map(asset => <option key={asset.id} value={asset.assetName}>{asset.assetName}</option>);
-
+    const listUsers = users.map(user =>
+        <option key={user.username} value={user.firstName + " " + user.lastName}>{user.firstName + " " + user.lastName}</option>)
     let assignedUser = users.find(u => u.username === assignments.assignTo);
-    console.log("fullname =" , assignedUser);
+    let assignedFullname = "";
+    if(assignedUser !== undefined) {
+        assignedFullname = assignedUser.firstName + " " + assignedUser.lastName;
+    }
+    console.log("fullname =", assignedFullname);
     const initialValues = {
-        user:"",
+        user: assignedFullname,
         asset: assignments.asset,
         assignedDate: assignments.assignedDate,
         note: assignments.note
     }
+    console.log("initial value = ", initialValues)
     const submit = (values, {resetForm}) => {
         console.log("value on submit =", values);
         history.push("/assignment")
