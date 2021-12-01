@@ -6,7 +6,7 @@ import {useHistory} from "react-router-dom";
 import * as Yup from 'yup';
 import useFetch from "../../../hooks/useFetch";
 import {API_URL} from "../../../common/constants";
-import {BsPlus, FiChevronDown} from "react-icons/all";
+import {BsPlus, BsPlusLg, FiChevronDown} from "react-icons/all";
 
 
 const validateForm = Yup.object().shape({
@@ -19,13 +19,13 @@ const convertDataResponse = res => res.data;
 
 const CreateAssetPage = () => {
     let history = useHistory();
-
-    const {
-        data: categories,
-    } = useFetch([], `${API_URL}/categories`, convertDataResponse);
     const handleRedirectAssetManagePage = () => {
         history.push("/asset")
     }
+    const {
+        data: categories,
+    } = useFetch([], `${API_URL}/categories`, convertDataResponse);
+
     const [dropValue, setDropValue] = useState("Select Category")
     const initialValues = {
         name: "",
@@ -109,7 +109,7 @@ const CreateAssetPage = () => {
                                                     <input placeholder="Name of new Category" className="input-cate"/>
                                                     <input placeholder="Prefix of new Category"
                                                            className="input-prefix"/>
-                                                    <button className="btn btn-addCategory"><BsPlus/> Add Category
+                                                    <button className="btn btn-addCategory"><BsPlusLg/> Add Category
                                                     </button>
                                                 </div>
                                             </Dropdown.Menu>
