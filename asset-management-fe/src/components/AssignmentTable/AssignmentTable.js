@@ -42,7 +42,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 				<span
 					className="action__items"
 					onClick={
-						row.state !== FILTER_ASM_STATE_DELETE.ACCEPTED || row.state !== FILTER_ASM_STATE_DELETE.WAITING_FOR_RETURNING ?
+						row.state !== FILTER_ASM_STATE_DELETE.ACCEPTED && row.state !== FILTER_ASM_STATE_DELETE.WAITING_FOR_RETURNING ?
 							() => handleDeleteClicked(row.id)
 							: undefined
 					}
