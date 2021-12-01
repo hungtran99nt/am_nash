@@ -1,11 +1,14 @@
 package com.nt.rookies.asset.management.controller;
 
-import com.nt.rookies.asset.management.dto.AssignmentDTO;
-import com.nt.rookies.asset.management.service.AssignmentService;
 import java.sql.SQLException;
 import java.util.List;
+
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +16,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.nt.rookies.asset.management.dto.AssignmentDTO;
+import com.nt.rookies.asset.management.service.AssignmentService;
 
 /** REST controller for Assignment. */
 @RestController
@@ -51,10 +57,12 @@ public class AssignmentRestController {
   }
 
   /**
-   * API Create assignment
-   * @param assignmentDTO
-   * @return
-   * @throws SQLException
+   * API check valid assignment to delete. <br>
+   * Link: <code>/api/v1.0/assignments/{id}/valid</code> <br>
+   * Method: GET
+   * 
+   * @param id assignment id
+   * @return {@link Boolean} true or false base on assignment
    */
   @PostMapping("/admin/assignments")
   public AssignmentDTO createAssignment(@RequestBody AssignmentDTO assignmentDTO)
@@ -86,5 +94,29 @@ public class AssignmentRestController {
   @GetMapping("/user/assignments")
   public List<AssignmentDTO> getRecentAssignmentsByUser() {
     return assignmentService.getRecentAssignmentsByUser();
+  }
+  /**
+   * API check valid to delete assignment
+   * Link: <code>/admin/assignments/{id}/valid</code><br>
+   * Method: GET
+   *
+   * @return {@link ResponseEntity<Boolean>} boolean
+   */
+  @GetMapping("/admin/assignments/{id}/valid")
+  public ResponseEntity<Boolean> isAssignmentValidToDelete(@PathVariable(name = "id") Integer id) {
+    return new ResponseEntity<>(assignmentService.isAssignmentValidToDelete(id), HttpStatus.OK);
+  }
+
+  /**
+   * API delete valid assignment. <br>
+   * Link: <code>/api/v1.0/assignments/{id}</code> <br>
+   * Method: DELETE
+   * 
+   * @param id assignment id
+   * @return {@link void} delete valid assignment
+   */
+  @DeleteMapping("/admin/assignments/{id}")
+  public void deleteAssignment(@PathVariable(name = "id") Integer id) {
+    assignmentService.deleteAssignment(id); 
   }
 }

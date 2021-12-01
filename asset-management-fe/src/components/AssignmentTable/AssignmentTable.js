@@ -6,8 +6,12 @@ import {useHistory} from "react-router-dom";
 import NoDataFound from "../NoDataFound/NoDataFound";
 import './AssignmentTable.css';
 import AssignmentDetail from "./AssignmentModal/AssignmentDetail";
+import axios from 'axios';
+import { API_URL } from "../../common/constants";
 import MyAssignmentAction from "./MyAssignmentAction";
 import ManageAssignmentAction from "./ManageAssignmentAction";
+import AssignmentDeleteConfirmation from './AssignmentModal/AssignmentDeleteConfirmation'
+
 
 const defaultSorted = [{
 	dataField: 'assetCode',
@@ -23,7 +27,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment})
 
 	const columnFormatter = (cell, row) => {
 		return (
-			isMyAssignment ? <MyAssignmentAction cell={cell} row={row}/> : <ManageAssignmentAction cell={cell} row={row}/>
+			isMyAssignment ? <MyAssignmentAction cell={cell} row={row}/> : <ManageAssignmentAction cell={cell} row={row} handleDeleteClicked={handleDeleteClicked}/>
 		)
 	};
 
@@ -98,11 +102,28 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment})
 	const handleEditClicked = (id) => {
 		history.push(`edit/assignment/${id}`)
 	}
+	
+	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+	const [idDelete, setIdDelete] = useState(null);
+	const handleCloseDeleteConfirm = () => setShowDeleteConfirm(false);
+	const handleShowDeleteConfirm = () => setShowDeleteConfirm(true);
+
+    const handleDeleteClicked = (id) => {
+		setIdDelete(id);
+		axios.get(`${API_URL}/admin/assignments/${id}/valid`).then((response) => {
+			if (response.data === true) {
+				handleShowDeleteConfirm();
+			}
+			
+		}).catch(err => {alert(`Error with check valid to delete asset ${err}`)})
+	}
+
 
 	const [assignmentIdPopup, setAssignmentIdPopup] = useState("");
 	const [showDetail, setShowDetail] = useState(false);
 	const handleCloseDetail = () => setShowDetail(false);
 	const handleShowDetail = () => setShowDetail(true);
+
 
 	const getAssignmentDetail = {
 		onClick: (e, row) => {
@@ -134,6 +155,15 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment})
 					handleClose={handleCloseDetail}
 					assignmentId={assignmentIdPopup}
 					isMyAssignment={isMyAssignment}
+				/>
+			}
+			 {
+				showDeleteConfirm &&
+				<AssignmentDeleteConfirmation
+					showDeleteConfirm={showDeleteConfirm}
+					handleCloseDeleteConfirm={handleCloseDeleteConfirm}
+					assignments={assignments}
+					idDelete={idDelete}
 				/>
 			}
 		</>
