@@ -11,12 +11,15 @@ import lombok.Data;
 @Data
 public class AssignmentDTO {
   private Integer id;
+
+  @NotBlank(message = BaseConstants.ERR_ASSIGNMENT_ASSET_CODE_BLANK)
   private String assetCode;
 
-  @NotBlank(message = BaseConstants.ERR_ASSET_NAME_BLANK)
   @Size(max = 50, message = BaseConstants.ERR_ASSET_NAME_LENGTH)
   private String assetName;
 
+  @NotBlank(message = BaseConstants.ERR_USER_USERNAME_BLANK)
+  @Size(max = 30, message = BaseConstants.ERR_USER_USERNAME_LENGTH)
   private String assignBy;
 
   @NotBlank(message = BaseConstants.ERR_USER_USERNAME_BLANK)
@@ -35,5 +38,6 @@ public class AssignmentDTO {
   @Size(max = 50, message = BaseConstants.ERR_ASSIGNMENT_NOTE_LENGTH)
   private String note;
 
+  @NotBlank(message = BaseConstants.ERR_ASSIGNMENT_STATUS_BLANK)
   private String state;
 }

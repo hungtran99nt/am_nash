@@ -62,10 +62,22 @@ values
 -- assignment data 
 insert into assignment (id, assigned_date, note, returned_date, state, accepted_by, asset_id, assign_by, assign_to, request_by) 
 values
-(1, '2021-02-22 10:16:51', 'Diverse cohesive superstructure', '2021-04-16 10:27:07', 'Accepted', null, 1, 3, 1, null),
-(2, '2021-01-15 08:23:00', 'Down-sized analyzing interface', '2021-03-19 14:46:31', 'Waiting for acceptance', null, 9, 3, 2, null),
-(3, '2021-01-15 08:23:00', 'Down-sized analyzing interface', '2021-03-19 14:46:31', 'Waiting for returning', null, 10, 2, 2, 6),
-(4, '2021-01-15 08:23:00', 'Down-sized analyzing interface', '2021-03-19 14:46:31', 'Completed', 2, 11, 3, 2, 3);
+(1, '2021-02-22 10:16:51', 'Diverse cohesive superstructure', '2021-04-16 10:27:07', 'Accepted', null, 1, 3, 25, null),
+(2, '2021-01-15 08:23:00', 'Down-sized analyzing interface', '2021-03-19 14:46:31', 'Waiting for acceptance', null, 9, 3, 28, null),
+(3, '2021-01-15 08:23:00', 'Down-sized analyzing interface 23', '2021-03-19 14:46:31', 'Waiting for returning', null, 10, 32, 1, 6),
+(4, '2021-01-15 08:23:00', 'Down-sized analyzing interface 25', '2021-03-19 14:46:31', 'Accepted', 2, 11, 3, 5, 3),
+(5, '2022-01-15 08:23:00', 'Down-sized analyzing interface2', '2021-03-19 14:46:31', 'Completed', 2, 12, 32, 29, 3),
+(6, '2024-03-15 08:23:00', 'Down-sized analyzing interface3', '2021-03-19 14:46:31', 'Waiting for returning', 2, 10, 3, 15, 3),
+(7, '2022-05-15 08:23:00', 'Down-sized analyzing interface4', '2021-03-19 14:46:31', 'Waiting for acceptance', 2, 9, 32, 17, 3),
+(8, '2022-11-15 08:23:00', 'Down-sized analyzing interface5', '2021-03-19 14:46:31', 'Completed', 2, 5, 3, 19, 3),
+(9, '2022-12-15 08:23:00', 'Down-sized analyzing interface7', '2021-03-19 14:46:31', 'Waiting for returning', 2, 4, 32, 10, 3),
+(10, '2021-12-15 08:23:00', 'Down-sized analyzing interface 8', '2021-03-19 14:46:31', 'Waiting for acceptance', 2, 6, 3, 24, 3),
+(11, '2021-09-15 08:23:00', 'Down-sized analyzing interface 9', '2021-03-19 14:46:31', 'Waiting for acceptance', 2, 7, 32, 1, 3),
+(12, '2021-08-15 08:23:00', 'Down-sized analyzing interface 10', '2021-03-19 14:46:31', 'Waiting for returning', 2, 3, 3, 25, 3),
+(13, '2021-03-21 08:23:00', 'Down-sized analyzing interface Admin', '2021-03-19 14:46:31', 'Waiting for returning', 2, 11, 3, 3, 3),
+(14, '2021-03-21 08:23:00', 'Down-sized analyzing interface 26', '2021-03-19 14:46:31', 'Accepted', 2, 11, 3, 31, 3),
+(15, '2021-02-23 08:23:00', 'Down-sized analyzing interface Admin1', '2021-03-19 14:46:31', 'Waiting for acceptance', 2, 7, 32, 32, 3);
+
 
 
 

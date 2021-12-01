@@ -1,77 +1,57 @@
-import {useHistory, useParams} from "react-router-dom";
+import React, {useState} from "react";
+import './CreateAssignmentPage.css'
+import {Button, Col, Form, Row, Dropdown, DropdownButton} from "react-bootstrap";
 import {Formik} from "formik";
-import {Button, Col, Form, Row} from "react-bootstrap";
-import React from "react";
-import * as Yup from "yup";
+import {useHistory} from "react-router-dom";
+import * as Yup from 'yup';
 import useFetch from "../../../hooks/useFetch";
-import {API_URL} from "../../../common/constants";
+import {API_URL, TODAY, YESTERDAY} from "../../../common/constants";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faAngleDown, faPlus} from '@fortawesome/free-solid-svg-icons'
 import moment from "moment";
 
 const validateForm = Yup.object().shape({
     user: Yup.string().required("Required!"),
     asset: Yup.string().required("Required!"),
-    assignedDate: Yup.date().required("Required!"),
+    note: Yup.string().required("Required!"),
+    assignedDate: Yup
+        .date()
+        .required("Required!")
+        .min(TODAY, "Date cannot be in the past")
 })
 const convertDataResponse = res => res.data;
-const convertDataAssignmentResponse = res => (
-    {
-        asset: res.data.assetName,
-        assignTo: res.data.assignTo,
-        assignedDate: moment(res.data.assignedDate).format("YYYY-MM-DD"),
-        note: res.data.note
-    }
-)
-const EditAssignmentPage = () => {
+
+const CreateAssignmentPage = () => {
     let history = useHistory();
-    const {id} = useParams();
-    const handleRedirectAssignmentPage = () => {
-        history.push("/assignment");
+
+    const {
+        data: categories,
+    } = useFetch([], `${API_URL}/categories`, convertDataResponse);
+    console.log("cate", categories)
+    const handleRedirectAssignmentManagePage = () => {
+        history.push("/assignment")
     }
-    const {
-        data: users
-    } = useFetch([], `${API_URL}/users`, convertDataResponse);
-    console.log("users", users)
 
-    const {
-        data: assets,
-    } = useFetch([], `${API_URL}/assets`, convertDataResponse);
-    const listAssets = assets.map(asset => <option key={asset.id} value={asset.assetName}>{asset.assetName}</option>);
+    let curDate = moment(Date.now()).format("YYYY-MM-DD");
 
-    const {
-        isLoading,
-        data: assignments,
-        errorMessage
-    } = useFetch([], `${API_URL}/assignments/${id}`, convertDataAssignmentResponse);
-    console.log("assignment = ", assignments)
-
-    const listUsers = users.map(user =>
-        <option key={user.username} value={user.firstName + " " + user.lastName}>{user.firstName + " " + user.lastName}</option>)
-    let assignedUser = users.find(u => u.username === assignments.assignTo);
-    let assignedFullname = "";
-    if(assignedUser !== undefined) {
-        assignedFullname = assignedUser.firstName + " " + assignedUser.lastName;
-    }
-    console.log("fullname =", assignedFullname);
     const initialValues = {
-        user: assignedFullname,
-        asset: assignments.asset,
-        assignedDate: assignments.assignedDate,
-        note: assignments.note
+        user: "",
+        asset: "",
+        note: "",
+        assignedDate: curDate
     }
-    console.log("initial value = ", initialValues)
+
     const submit = (values, {resetForm}) => {
         console.log("value on submit =", values);
-        history.push("/assignment")
+        history.push("/Assignment")
         resetForm();
     }
-    if (isLoading) return "Loading...";
-    if (errorMessage) return <div style={{color: "red"}}>{errorMessage}</div>;
     return (
         <div className="app-page">
             <div className="row">
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
-                    <div className="app-content__title">Edit Assignment</div>
+                    <div className="app-content__title">Create New Assignment</div>
                     <Formik
                         enableReinitialize={true}
                         initialValues={initialValues}
@@ -87,19 +67,17 @@ const EditAssignmentPage = () => {
                               handleSubmit,
                           }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextFullName">
                                     <Form.Label column sm="3">User</Form.Label>
                                     <Col sm="6">
-                                        <Form.Select
+                                        <Form.Control
+                                            type="text"
                                             name="user"
-                                            value={values.user}
+                                            defaultValue={values.user}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             isInvalid={touched.user && errors.user}
-                                        >
-                                            <option value={values.user}>{values.user}</option>
-                                            {listUsers}
-                                        </Form.Select>
+                                        />
                                         <Form.Control.Feedback type="invalid">
                                             {errors.user}
                                         </Form.Control.Feedback>
@@ -108,28 +86,23 @@ const EditAssignmentPage = () => {
                                 <Form.Control.Feedback type="invalid">
                                     {errors.user}
                                 </Form.Control.Feedback>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextAssetName">
                                     <Form.Label column sm="3">Asset</Form.Label>
                                     <Col sm="6">
-                                        <Form.Select
+                                        <Form.Control
+                                            type="text"
                                             name="asset"
-                                            value={values.asset}
+                                            defaultValue={values.asset}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             isInvalid={touched.asset && errors.asset}
-                                        >
-                                            <option value={values.asset}>{values.asset}</option>
-                                            {listAssets}
-                                        </Form.Select>
+                                        />
                                         <Form.Control.Feedback type="invalid">
                                             {errors.asset}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.asset}
-                                </Form.Control.Feedback>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextInstallDate">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextAssignedDate">
                                     <Form.Label column sm="3">Assigned Date</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
@@ -145,10 +118,10 @@ const EditAssignmentPage = () => {
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="exampleFormControlTextarea">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextareaNote">
                                     <Form.Label column sm="3">Note</Form.Label>
                                     <Col sm="6">
-                                        <Form.Control rows={3}
+                                        <Form.Control rows={4}
                                                       as="textarea"
                                                       name="note"
                                                       value={values.note}
@@ -164,11 +137,11 @@ const EditAssignmentPage = () => {
 
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
-                                            disabled={!values.user || !values.asset || !values.assignedDate}
+                                            disabled={!values.user || !values.asset || !values.note || !values.assignedDate}
                                     >
                                         Save
                                     </Button>
-                                    <Button className="btn-cancel" type="reset" onClick={handleRedirectAssignmentPage}>
+                                    <Button className="btn-cancel" type="reset" onClick={handleRedirectAssignmentManagePage}>
                                         Cancel
                                     </Button>
                                 </div>
@@ -181,4 +154,4 @@ const EditAssignmentPage = () => {
         </div>
     )
 }
-export default EditAssignmentPage
+export default CreateAssignmentPage;

@@ -1,10 +1,10 @@
 package com.nt.rookies.asset.management.service;
 
-import java.util.List;
-import java.util.Optional;
 import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.Location;
+import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -14,17 +14,18 @@ public interface UserService {
 
   UserDTO createUser(UserDTO userDTO);
 
-
   /**
    * Get user who is active (status != 0) by username
+   *
    * @param username
    * @return {@link AccountDTO}
    */
   Optional<AccountDTO> findActiveByUsername(String username);
 
   /**
-   * Change password at first login (user status = -1)
+   * Change password at first login (user status = -1) <br>
    * and change status to 1
+   *
    * @param username
    * @param newPassword
    * @return
