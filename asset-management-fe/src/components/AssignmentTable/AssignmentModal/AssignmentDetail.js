@@ -13,7 +13,7 @@ const AssignmentDetail = ({show, handleClose, assignmentId, isMyAssignment}) => 
         isLoading,
         data: assignment,
         errorMessage
-    } = useFetch({}, `${API_URL}/assignments/${assignmentId}`, convertDataRes);
+    } = useFetch({}, `${API_URL}/user/assignments/${assignmentId}`, convertDataRes);
 
     return (
         <Modal show={show} onHide={handleClose} centered>

@@ -31,7 +31,7 @@ const ManageAssignment = () => {
 		isLoading,
 		data: assignments,
 		errorMessage
-	} = useFetch([], `${API_URL}/assignments`, convertDataResponse);
+	} = useFetch([], `${API_URL}/admin/assignments`, convertDataResponse);
 
 	const stateKeys = Object.keys(FILTER_ASM_STATE_OPTIONS);
 	const listStates = stateKeys.map(key =>
