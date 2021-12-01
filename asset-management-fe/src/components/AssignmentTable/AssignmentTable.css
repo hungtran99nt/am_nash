@@ -2,7 +2,7 @@
     opacity: .3;
 }
 
-.disable > .action__items {
+.action__items.disable{
     cursor: default;
 }
 

@@ -119,7 +119,7 @@ const ManageAssignment = () => {
 					</Row>
 				</Form>
 			</Container>
-			<AssignmentTable isLoading={isLoading} errorMessage={errorMessage} assignments={assignmentsSearched}/>
+			<AssignmentTable isLoading={isLoading} errorMessage={errorMessage} assignments={assignmentsSearched} isMyAssignment={false}/>
 		</div>
 	)
 }

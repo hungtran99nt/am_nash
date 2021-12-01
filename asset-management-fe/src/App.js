@@ -21,6 +21,7 @@ import CreateAssetPage from "./pages/ManageAsset/CreateAssetPage/CreateAssetPage
 import Error from "./pages/Error/Error";
 import EditAssignmentPage from "./pages/ManageAssignment/EditAssignmentPage/EditAssignmentPage";
 import CreateAssignmentPage from "./pages/ManageAssignment/CreateAssignmentPage/CreateAssignmentPage";
+import MyAssignment from "./pages/Home/MyAssignment";
 
 const headerTitle = {
     Home: 'Home',
@@ -108,15 +109,15 @@ export default function App() {
                             <div className="col col-lg-9 col-md-8 col-sm-10">
                                 <Switch>
                                     <Route path="/" exact>
-                                        <Home
-                                            token={token}
-                                        />
+                                        {token ? <MyAssignment/> : <Login/>}
                                     </Route>
                                     <Route path="/user" exact
-                                           render={() => role === "Admin" ? <ManageUser/> : <Login message="Admin only"/>}
+                                           render={() => role === "Admin" ? <ManageUser/> :
+                                               <Login message="Admin only"/>}
                                     />
                                     <Route path="/asset" exact
-                                           render={() => role === "Admin" ? <ManageAsset/> : <Login message="Admin only"/>}
+                                           render={() => role === "Admin" ? <ManageAsset/> :
+                                               <Login message="Admin only"/>}
                                     />
                                     <Route path="/assignment" exact
                                            render={() => token ? <ManageAssignment/> : <Login/>}
@@ -137,18 +138,19 @@ export default function App() {
                                         {role === "Admin" ? <CreateUserPage/> : <Error message={`Access denied`}/>}
                                     </Route>
                                     <Route path="/edit/:id" exact>
-                                        {role === "Admin" ? <EditUserPage token={token}/> : <Error message={`Access denied`}/>}
+                                        {role === "Admin" ? <EditUserPage token={token}/> :
+                                            <Error message={`Access denied`}/>}
                                     </Route>
-                                    {role=== "Admin" && <Route path="/create/asset" exact>
+                                    {role === "Admin" && <Route path="/create/asset" exact>
                                         <CreateAssetPage/>
                                     </Route>}
-                                    {role=== "Admin" && <Route path="/edit/asset/:id" exact>
+                                    {role === "Admin" && <Route path="/edit/asset/:id" exact>
                                         <EditAssetPage/>
                                     </Route>}
                                     {role=== "Admin" && <Route path="/edit/assignment/:id" exact>
                                         <EditAssignmentPage/>
                                     </Route>}
-                                    {role=== "Admin" && <Route path="/assignment/create" exact>
+                                    {role === "Admin" && <Route path="/assignment/create" exact>
                                         <CreateAssignmentPage/>
                                     </Route>}
                                 </Switch>

@@ -1,13 +1,12 @@
 import React, {useState} from "react";
 import './CreateAssetPage.css'
-import {Button, Col, Form, Row, Dropdown} from "react-bootstrap";
+import {Button, Col, Dropdown, Form, Row} from "react-bootstrap";
 import {Formik} from "formik";
 import {useHistory} from "react-router-dom";
 import * as Yup from 'yup';
 import useFetch from "../../../hooks/useFetch";
 import {API_URL} from "../../../common/constants";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faAngleDown, faPlus} from '@fortawesome/free-solid-svg-icons'
+import {BsPlus, FiChevronDown} from "react-icons/all";
 
 
 const validateForm = Yup.object().shape({
@@ -94,7 +93,7 @@ const CreateAssetPage = () => {
                                             <Dropdown.Toggle id="dropdown-autoclose-true" className="form-control drop-category">
                                                 <div className="drop-box">
                                                     <span className="drop-title">{dropValue}</span>
-                                                    <FontAwesomeIcon className="drop-icon" icon={faAngleDown}/>
+                                                    <FiChevronDown/>
                                                 </div>
                                             </Dropdown.Toggle>
                                             <Dropdown.Menu className="form-control">
@@ -110,8 +109,7 @@ const CreateAssetPage = () => {
                                                     <input placeholder="Name of new Category" className="input-cate"/>
                                                     <input placeholder="Prefix of new Category"
                                                            className="input-prefix"/>
-                                                    <button className="btn btn-addCategory"><FontAwesomeIcon
-                                                        icon={faPlus}/> Add Category
+                                                    <button className="btn btn-addCategory"><BsPlus/> Add Category
                                                     </button>
                                                 </div>
                                             </Dropdown.Menu>
