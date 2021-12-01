@@ -22,7 +22,7 @@ public class AssignmentRestController {
     }
 
     /**
-     * API Get all assignment <br>
+     * API Get all assignments by current admin location <br>
      * Link: <code>/api/v1.0/assignments</code> <br>
      * Method: GET
      *
@@ -30,7 +30,7 @@ public class AssignmentRestController {
      */
     @GetMapping()
     public List<AssignmentDTO> getAllAssignments() {
-        return assignmentService.getAllAssignments();
+        return assignmentService.getAllAssignmentsByLocation();
     }
 
     /**
