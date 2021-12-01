@@ -21,10 +21,11 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
   /**
    * Get recent assignment assign to user
    *
-   * @param userId user id
+   * @param username current username
    * @return list of recent assignment
    */
   @Query(
-      value = "FROM Assignment a WHERE a.assignTo.id = :user_id AND a.assignedDate <= current_date")
-  List<Assignment> findRecentAssignmentsByUser(@Param("user_id") Integer userId);
+      value =
+          "FROM Assignment a WHERE a.assignTo.username = :username AND a.assignedDate <= current_date")
+  List<Assignment> findRecentAssignmentsByUser(@Param("username") String username);
 }

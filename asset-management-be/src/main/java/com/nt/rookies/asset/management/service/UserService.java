@@ -1,7 +1,6 @@
 package com.nt.rookies.asset.management.service;
 
 import com.nt.rookies.asset.management.dto.AccountDTO;
-import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.Location;
 import java.util.List;
@@ -45,12 +44,4 @@ public interface UserService {
    * @return {@link Location}
    */
   Location getUserLocation();
-
-  /**
-   * Get recent assignment of user
-   *
-   * @param userId user id
-   * @return {@link List<AssignmentDTO>} list of assignments
-   */
-  List<AssignmentDTO> getRecentAssignmentsByUser(Integer userId);
 }
