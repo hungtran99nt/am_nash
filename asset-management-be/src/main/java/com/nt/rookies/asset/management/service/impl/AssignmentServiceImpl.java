@@ -123,8 +123,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     
     @Override
     public boolean isAssignmentValidToDelete(Integer id) {
-      String state = assignmentRepository.getUserStateByAssignmentId(id);
-      return !(state.equalsIgnoreCase("Accepted") || state.equalsIgnoreCase("Waiting for returning"));
+    	Assignment state = assignmentRepository.getStateById(id); 
+    	return !(state.getState().equalsIgnoreCase("Accepted") || state.getState().equalsIgnoreCase("Waiting for returning"));
     }
 
     @Override

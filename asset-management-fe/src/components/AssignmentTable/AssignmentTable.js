@@ -42,7 +42,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 				<span
 					className="action__items"
 					onClick={
-						row.state !== (FILTER_ASM_STATE_DELETE.ACCEPTED || FILTER_ASM_STATE_DELETE.WAITING_FOR_RETURNING) ?
+						row.state !== FILTER_ASM_STATE_DELETE.ACCEPTED || row.state !== FILTER_ASM_STATE_DELETE.WAITING_FOR_RETURNING ?
 							() => handleDeleteClicked(row.id)
 							: undefined
 					}
@@ -138,7 +138,8 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 		setIdDelete(id);
 		axios.get(`${API_URL}/assignments/${id}/valid`).then((response) => {
 			if (response.data === true) {
-				handleShowDeleteConfirm();}
+				handleShowDeleteConfirm();
+			}
 			
 		}).catch(err => {alert(`Error with check valid to delete asset ${err}`)})
 	}
