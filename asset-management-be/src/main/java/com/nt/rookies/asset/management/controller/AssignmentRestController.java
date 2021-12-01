@@ -4,10 +4,12 @@ import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.service.AssignmentService;
 import java.sql.SQLException;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +32,7 @@ public class AssignmentRestController {
    *
    * @return {@link List<AssignmentDTO>}
    */
-  @GetMapping()
+  @GetMapping("/admin/assignments")
   public List<AssignmentDTO> getAllAssignments() {
     return assignmentService.getAllAssignmentsByLocation();
   }
@@ -50,7 +52,6 @@ public class AssignmentRestController {
 
   /**
    * API Create assignment
-   *
    * @param assignmentDTO
    * @return
    * @throws SQLException
@@ -59,6 +60,20 @@ public class AssignmentRestController {
   public AssignmentDTO createAssignment(@RequestBody AssignmentDTO assignmentDTO)
       throws SQLException {
     return assignmentService.createAssignment(assignmentDTO);
+  }
+
+  /**
+   * API Update an assignment.<br>
+   * Link: <code>/api/v1.0/assignment/{id}</code> <br>
+   * Method: PUT
+   *
+   * @param assignmentDTO edit assignment
+   * @return edited {@link AssignmentDTO} object
+   */
+  @PutMapping("/admin/assignments/{id}")
+  public AssignmentDTO updateAssignment(
+      @PathVariable(name = "id") Integer id, @RequestBody @Valid AssignmentDTO assignmentDTO) {
+    return assignmentService.updateAssignment(id, assignmentDTO);
   }
 
   /**

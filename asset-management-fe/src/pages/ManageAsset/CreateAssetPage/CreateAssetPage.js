@@ -6,7 +6,7 @@ import {useHistory} from "react-router-dom";
 import * as Yup from 'yup';
 import useFetch from "../../../hooks/useFetch";
 import {API_URL} from "../../../common/constants";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faAngleDown, faPlus} from '@fortawesome/free-solid-svg-icons'
 
 
@@ -27,14 +27,14 @@ const CreateAssetPage = () => {
     const handleRedirectAssetManagePage = () => {
         history.push("/asset")
     }
+    const [dropValue, setDropValue] = useState("Select Category")
     const initialValues = {
         name: "",
-        category:"",
+        category: dropValue,
         specification: "",
         installDate: "",
-        state: ""
+        state: "Available",
     }
-    const [dropValue,setDropValue] = useState("Select Category")
 
 
     const submit = (values, {resetForm}) => {
@@ -91,26 +91,28 @@ const CreateAssetPage = () => {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                         >
-                                            <Dropdown.Toggle id="dropdown-autoclose-true"
-                                                             className="form-control drop-category"
-                                                             placeholder={dropValue}
-                                            >
+                                            <Dropdown.Toggle id="dropdown-autoclose-true" className="form-control drop-category">
                                                 <div className="drop-box">
                                                     <span className="drop-title">{dropValue}</span>
-                                                    <FontAwesomeIcon className="drop-icon" icon={faAngleDown} />
+                                                    <FontAwesomeIcon className="drop-icon" icon={faAngleDown}/>
                                                 </div>
                                             </Dropdown.Toggle>
                                             <Dropdown.Menu className="form-control">
-                                                {categories.map(cate => <Dropdown.Item key={cate.id} value={values.category}>
-                                                    <div onClick={(e) => setDropValue(e.target.textContent)}>{cate.categoryName}
+                                                {categories.map(cate => <Dropdown.Item key={cate.id}
+                                                                                       value={values.category}>
+                                                    <div
+                                                        onClick={(e) => setDropValue(e.target.textContent)}>{cate.categoryName}
                                                     </div>
                                                 </Dropdown.Item>)
                                                 }
-                                                <Dropdown.Divider />
+                                                <Dropdown.Divider/>
                                                 <div className="category-form">
                                                     <input placeholder="Name of new Category" className="input-cate"/>
-                                                    <input placeholder="Prefix of new Category" className="input-prefix"/>
-                                                    <button className="btn btn-addCategory"><FontAwesomeIcon icon={faPlus}/> Add Category</button>
+                                                    <input placeholder="Prefix of new Category"
+                                                           className="input-prefix"/>
+                                                    <button className="btn btn-addCategory"><FontAwesomeIcon
+                                                        icon={faPlus}/> Add Category
+                                                    </button>
                                                 </div>
                                             </Dropdown.Menu>
                                         </Dropdown>
@@ -175,11 +177,9 @@ const CreateAssetPage = () => {
                                         </div>
                                     </Col>
                                 </Form.Group>
-
-
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
-                                            disabled={!values.name || !values.specification || !values.installDate}
+                                            disabled={!values.name || !values.specification || !values.installDate || !values.category}
                                     >
                                         Save
                                     </Button>

@@ -105,6 +105,28 @@ public class AssignmentServiceImpl implements AssignmentService {
   }
 
   @Override
+  public AssignmentDTO updateAssignment(Integer id, AssignmentDTO assignmentDTO) {
+    logger.info("Inside updateAsset({}, {})", id, assignmentDTO);
+    Assignment assignment =
+        assignmentRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Edit assignment not found."));
+    logger.info("Assignment found: {}", assignment);
+    assignment.setAssignTo(userRepository.findByUsername(assignmentDTO.getAssignTo()));
+    assignment.setAsset(
+        assetRepository
+            .findAssetByAssetCode(assignmentDTO.getAssetCode())
+            .orElseThrow(() -> new ResourceNotFoundException("Asset not found")));
+    assignment.setAssignedDate(assignmentDTO.getAssignedDate());
+    assignment.setNote(assignmentDTO.getNote());
+    logger.info("Assignment edited: {}", assignment);
+    Assignment updatedAssignment = assignmentRepository.save(assignment);
+    logger.info("Asset updated: {}", updatedAssignment);
+    return modelMapper.map(updatedAssignment, AssignmentDTO.class);
+
+  }
+
+  @Override
   public List<AssignmentDTO> getAllAssignmentsByLocation() {
     logger.info("Get all assignments by admin location");
     Location currentAdminLocation = userService.getUserLocation();
@@ -120,7 +142,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     Assignment assignment =
         assignmentRepository
             .findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Not found assignment"));
+            .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
     return modelMapper.map(assignment, AssignmentDTO.class);
   }
 

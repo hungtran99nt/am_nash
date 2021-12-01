@@ -32,6 +32,14 @@ public interface AssignmentService {
   List<AssignmentDTO> getRecentAssignmentsByUser();
 
   /**
+   * Edit an assignment.
+   *
+   * @param assignmentDTO edit asset
+   * @return edited {@link AssignmentDTO} object
+   */
+  AssignmentDTO updateAssignment(Integer id, AssignmentDTO assignmentDTO);
+
+  /**
    * Create new Assignment
    *
    * @param assignmentDTO
