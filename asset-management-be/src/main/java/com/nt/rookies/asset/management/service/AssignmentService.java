@@ -1,11 +1,13 @@
 package com.nt.rookies.asset.management.service;
 
-import com.nt.rookies.asset.management.dto.AssignmentDTO;
-import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import java.util.List;
 
+import com.nt.rookies.asset.management.dto.AssignmentDTO;
+import com.nt.rookies.asset.management.exception.ResourceDeleteException;
+import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
+
 /** Service interface for Assignment. */
-public interface AssignmentService {
+public interface AssignmentService { 
 
   /**
    * Get all assignments by current admin location.
@@ -52,4 +54,22 @@ public interface AssignmentService {
    * @return
    */
   List<AssignmentDTO> getAllAssignments();
+
+   /**
+   * Check removable assignment
+   * 
+   * @param id
+   * @return {@link boolean} true if able to delete, and vice versa
+   */
+  boolean isAssignmentValidToDelete(Integer id);
+
+
+  /**
+   * Delete assignment
+   * 
+   * @param id
+   * @return void
+   * @exception ResourceDeleteException if can not delete assignment
+   */
+  void deleteAssignment(Integer id);
 }

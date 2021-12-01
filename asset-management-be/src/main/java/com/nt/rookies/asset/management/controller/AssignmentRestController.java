@@ -1,10 +1,9 @@
 package com.nt.rookies.asset.management.controller;
 
-import com.nt.rookies.asset.management.dto.AssignmentDTO;
-import com.nt.rookies.asset.management.service.AssignmentService;
-import java.sql.SQLException;
 import java.util.List;
+
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.nt.rookies.asset.management.dto.AssignmentDTO;
+import com.nt.rookies.asset.management.service.AssignmentService;
 
 /** REST controller for Assignment. */
 @RestController
@@ -54,7 +56,7 @@ public class AssignmentRestController {
    * API Create assignment
    * @param assignmentDTO
    * @return
-   * @throws SQLException
+   * @throws Exception
    */
   @PostMapping("/admin/assignments")
   public AssignmentDTO createAssignment(@RequestBody AssignmentDTO assignmentDTO)
