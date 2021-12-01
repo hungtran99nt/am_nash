@@ -95,6 +95,13 @@ public class AssignmentRestController {
   public List<AssignmentDTO> getRecentAssignmentsByUser() {
     return assignmentService.getRecentAssignmentsByUser();
   }
+  /**
+   * API check valid to delete assignment
+   * Link: <code>/admin/assignments/{id}/valid</code><br>
+   * Method: GET
+   *
+   * @return {@link ResponseEntity<Boolean>} boolean
+   */
   @GetMapping("/admin/assignments/{id}/valid")
   public ResponseEntity<Boolean> isAssignmentValidToDelete(@PathVariable(name = "id") Integer id) {
     return new ResponseEntity<>(assignmentService.isAssignmentValidToDelete(id), HttpStatus.OK);

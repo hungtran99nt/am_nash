@@ -2,7 +2,6 @@ package com.nt.rookies.asset.management.service.impl;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -19,6 +18,7 @@ import com.nt.rookies.asset.management.entity.Asset;
 import com.nt.rookies.asset.management.entity.Assignment;
 import com.nt.rookies.asset.management.entity.Location;
 import com.nt.rookies.asset.management.entity.User;
+import com.nt.rookies.asset.management.exception.AssignmentNotFound;
 import com.nt.rookies.asset.management.exception.ResourceDeleteException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.AssetRepository;
@@ -163,16 +163,9 @@ public class AssignmentServiceImpl implements AssignmentService {
         .collect(Collectors.toList());
   }
    @Override
-    public boolean isAssignmentValidToDelete(Integer id) {
-    	Optional<Assignment> state = assignmentRepository.getStateById(id); 
-    	return !(state.isPresent()? (state
-    			.get()
-    			.getState()
-    			.equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED)
-    			|| 
-    			state.get()
-    			.getState()
-    			.equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_RETURNING)): null );
+	public boolean isAssignmentValidToDelete(Integer id) { 
+		Assignment state = assignmentRepository.getStateById(id).orElseThrow(() -> new AssignmentNotFound("Assignment not found")); 
+		return !(state.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED) || state.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_RETURNING));
     }
 
     @Override
