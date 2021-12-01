@@ -15,7 +15,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
   @Query("SELECT count(*) FROM Assignment a WHERE a.assignTo = :id")
   int getTotalCountByAssigneeId(@Param("id") int id);
   
-  Assignment getStateById( int id);
+  Assignment getStateById(int id);
 
   List<Assignment> findByAssignTo(User assignTo);
 
