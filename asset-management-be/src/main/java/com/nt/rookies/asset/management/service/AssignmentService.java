@@ -33,6 +33,6 @@ public interface AssignmentService {
      * @param assignmentDTO
      * @return
      */
-    AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) throws SQLException;
+    AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) throws Exception;
 
 }

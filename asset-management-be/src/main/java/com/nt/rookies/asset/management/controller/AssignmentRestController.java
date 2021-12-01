@@ -53,7 +53,7 @@ public class AssignmentRestController {
    * @throws SQLException
    */
     @PostMapping()
-    public AssignmentDTO createAssignment(@RequestBody AssignmentDTO assignmentDTO) throws SQLException {
+    public AssignmentDTO createAssignment(@RequestBody AssignmentDTO assignmentDTO) throws Exception {
         return assignmentService.createAssignment(assignmentDTO);
     }
 }
