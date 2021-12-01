@@ -1,8 +1,5 @@
 package com.nt.rookies.asset.management.repository;
 
-import com.nt.rookies.asset.management.entity.Assignment;
-import com.nt.rookies.asset.management.entity.Location;
-import com.nt.rookies.asset.management.entity.User;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.nt.rookies.asset.management.entity.Assignment;
+import com.nt.rookies.asset.management.entity.Location;
 import com.nt.rookies.asset.management.entity.User;
 
 @Repository
@@ -19,7 +17,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Integer>
   @Query("SELECT count(*) FROM Assignment a WHERE a.assignTo = :id")
   int getTotalCountByAssigneeId(@Param("id") int id);
   
-  Optional<Assignment> getStateById(int id);
+  Optional<Assignment> getStateById(int id); 
 
   List<Assignment> findByAssignTo(User assignTo);
 

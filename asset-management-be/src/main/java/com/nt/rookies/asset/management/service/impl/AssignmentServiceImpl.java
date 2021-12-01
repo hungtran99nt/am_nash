@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,16 +26,6 @@ import com.nt.rookies.asset.management.repository.AssignmentRepository;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.AssignmentService;
 import com.nt.rookies.asset.management.service.UserService;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
@@ -41,7 +33,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
   private final UserService userService;
   private final UserRepository userRepository;
-  private final AssetRepository assetRepository;
+  private final AssetRepository assetRepository; 
   private final ModelMapper modelMapper;
   private final AssignmentRepository assignmentRepository;
 
