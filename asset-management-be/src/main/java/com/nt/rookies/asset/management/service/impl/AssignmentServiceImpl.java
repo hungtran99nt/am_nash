@@ -5,6 +5,7 @@ import com.nt.rookies.asset.management.dto.AssetDTO;
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.entity.Asset;
 import com.nt.rookies.asset.management.entity.Assignment;
+import com.nt.rookies.asset.management.entity.Location;
 import com.nt.rookies.asset.management.entity.User;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.AssetRepository;
@@ -125,9 +126,10 @@ public class AssignmentServiceImpl implements AssignmentService {
   }
 
   @Override
-  public List<AssignmentDTO> getAllAssignments() {
-    logger.info("Get all assignments");
-    List<Assignment> assignments = assignmentRepository.findAll();
+  public List<AssignmentDTO> getAllAssignmentsByLocation() {
+    logger.info("Get all assignments by admin location");
+    Location currentAdminLocation = userService.getUserLocation();
+    List<Assignment> assignments = assignmentRepository.findAllByAssetLocation(currentAdminLocation);
     return assignments.stream()
         .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
         .collect(Collectors.toList());

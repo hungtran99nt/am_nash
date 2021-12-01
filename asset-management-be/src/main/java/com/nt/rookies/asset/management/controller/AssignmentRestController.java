@@ -26,17 +26,17 @@ public class AssignmentRestController {
     this.assignmentService = assignmentService;
   }
 
-  /**
-   * API Get all assignment <br>
-   * Link: <code>/api/v1.0/assignments</code> <br>
-   * Method: GET
-   *
-   * @return {@link List<AssignmentDTO>}
-   */
-  @GetMapping()
-  public List<AssignmentDTO> getAllAssignments() {
-    return assignmentService.getAllAssignments();
-  }
+    /**
+     * API Get all assignments by current admin location <br>
+     * Link: <code>/api/v1.0/assignments</code> <br>
+     * Method: GET
+     *
+     * @return {@link List<AssignmentDTO>}
+     */
+    @GetMapping()
+    public List<AssignmentDTO> getAllAssignments() {
+        return assignmentService.getAllAssignmentsByLocation();
+    }
 
   /**
    * API Get assignment by id. <br>
