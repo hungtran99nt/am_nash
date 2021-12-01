@@ -4,18 +4,21 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import React from "react";
 import * as Yup from "yup";
 import useFetch from "../../../hooks/useFetch";
-import {API_URL} from "../../../common/constants";
+import {API_URL, FILTER_STATE_OPTIONS} from "../../../common/constants";
 import moment from "moment";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 const validateForm = Yup.object().shape({
-    user: Yup.string().required("Required!"),
-    asset: Yup.string().required("Required!"),
+    assetCode: Yup.string().required("Required!"),
+    assignTo: Yup.string().required("Required!"),
     assignedDate: Yup.date().required("Required!"),
 })
 const convertDataResponse = res => res.data;
 const convertDataAssignmentResponse = res => (
     {
-        asset: res.data.assetName,
+        assetName: res.data.assetName,
+        assetCode: res.data.assetCode,
         assignTo: res.data.assignTo,
         assignedDate: moment(res.data.assignedDate).format("YYYY-MM-DD"),
         note: res.data.note
@@ -30,40 +33,62 @@ const EditAssignmentPage = () => {
     const {
         data: users
     } = useFetch([], `${API_URL}/users`, convertDataResponse);
-    console.log("users", users)
-
+    const listUser = users.filter(u => u.username !== jwt_decode(localStorage.getItem("TOKEN")).sub);
+    
     const {
         data: assets,
     } = useFetch([], `${API_URL}/assets`, convertDataResponse);
-    const listAssets = assets.map(asset => <option key={asset.id} value={asset.assetName}>{asset.assetName}</option>);
+    const availableAssets = assets.filter(a => a.state === FILTER_STATE_OPTIONS.AVAILABLE);
 
     const {
         isLoading,
         data: assignments,
         errorMessage
-    } = useFetch([], `${API_URL}/assignments/${id}`, convertDataAssignmentResponse);
-    console.log("assignment = ", assignments)
+    } = useFetch([], `${API_URL}/user/assignments/${id}`, convertDataAssignmentResponse);
 
-    const listUsers = users.map(user =>
-        <option key={user.username} value={user.firstName + " " + user.lastName}>{user.firstName + " " + user.lastName}</option>)
     let assignedUser = users.find(u => u.username === assignments.assignTo);
-    let assignedFullname = "";
-    if(assignedUser !== undefined) {
-        assignedFullname = assignedUser.firstName + " " + assignedUser.lastName;
+    let assignedFullName = "";
+    if (assignedUser !== undefined) {
+        assignedFullName = assignedUser.firstName + " " + assignedUser.lastName;
     }
-    console.log("fullname =", assignedFullname);
+
     const initialValues = {
-        user: assignedFullname,
-        asset: assignments.asset,
+        userFullName: assignedFullName,
+        assignTo: assignments.assignTo,
+        assetName: assignments.assetName,
+        assetCode: assignments.assetCode,
         assignedDate: assignments.assignedDate,
         note: assignments.note
     }
+
     console.log("initial value = ", initialValues)
     const submit = (values, {resetForm}) => {
-        console.log("value on submit =", values);
-        history.push("/assignment")
+        // console.log('Form values =', {values});
+        // console.log('token=',localStorage.getItem('TOKEN'));
+        axios({
+            method: 'PUT',
+            url: `${API_URL}/admin/assignments/${id}`,
+            header: {
+                'Content-Type': 'application/json',
+                // 'Authorization': `Bearer ${localStorage.getItem('TOKEN')}`
+            },
+            data: {
+                assetCode: values.assetCode,
+                assignTo: values.assignTo,
+                assignedDate: values.assignedDate,
+                note: values.note
+            }
+        }).then((res) => {
+            console.log("res = ", res);
+            console.log("Edit success");
+            history.push("/assignment", {firstId: res.data.id});
+        }).catch(err => {
+            console.log("err = ", err);
+            return <div style={{color: "red"}}>{err}</div>;
+        });
         resetForm();
     }
+
     if (isLoading) return "Loading...";
     if (errorMessage) return <div style={{color: "red"}}>{errorMessage}</div>;
     return (
@@ -91,44 +116,42 @@ const EditAssignmentPage = () => {
                                     <Form.Label column sm="3">User</Form.Label>
                                     <Col sm="6">
                                         <Form.Select
-                                            name="user"
-                                            value={values.user}
+                                            name="assignTo"
+                                            value={values.assignTo}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.user && errors.user}
+                                            isInvalid={touched.assignTo && errors.assignTo}
                                         >
-                                            <option value={values.user}>{values.user}</option>
-                                            {listUsers}
+                                            {listUser.map(user => <option key={user.username}
+                                                                       defaultChecked={values.assignTo === user.username}
+                                                                       value={user.username}>{user.firstName + " " + user.lastName}</option>)}
                                         </Form.Select>
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.user}
-                                        </Form.Control.Feedback>
                                     </Col>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.assignTo}
+                                    </Form.Control.Feedback>
                                 </Form.Group>
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.user}
-                                </Form.Control.Feedback>
+
                                 <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
                                     <Form.Label column sm="3">Asset</Form.Label>
                                     <Col sm="6">
                                         <Form.Select
-                                            name="asset"
-                                            value={values.asset}
+                                            name="assetCode"
+                                            value={values.assetCode}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.asset && errors.asset}
+                                            isInvalid={touched.assetCode && errors.assetCode}
                                         >
-                                            <option value={values.asset}>{values.asset}</option>
-                                            {listAssets}
+                                            {availableAssets.map(asset => <option key={asset.assetCode}
+                                                                         defaultChecked={values.assetCode === asset.assetCode}
+                                                                         value={asset.assetCode}>{asset.assetName}</option>)}
                                         </Form.Select>
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.asset}
-                                        </Form.Control.Feedback>
                                     </Col>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.assetCode}
+                                    </Form.Control.Feedback>
                                 </Form.Group>
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.asset}
-                                </Form.Control.Feedback>
+
                                 <Form.Group as={Row} className="mb-3" controlId="formTextInstallDate">
                                     <Form.Label column sm="3">Assigned Date</Form.Label>
                                     <Col sm="6">
@@ -164,7 +187,7 @@ const EditAssignmentPage = () => {
 
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
-                                            disabled={!values.user || !values.asset || !values.assignedDate}
+                                            disabled={!values.assignTo || !values.assetCode || !values.assignedDate}
                                     >
                                         Save
                                     </Button>

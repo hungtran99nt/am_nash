@@ -14,7 +14,7 @@ const defaultSorted = [{
 	order: SORT_ORDERS.ASC
 }]
 
-const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment}) => {
+const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, isRecentUser}) => {
 	const history = useHistory();
 
 	const columnNoFormatter = (cell, row, index) => {
@@ -120,7 +120,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment})
 				data={assignments}
 				rowEvents={getAssignmentDetail}
 				formatter={columnFormatter}
-				defaultSorted={defaultSorted}
+				defaultSorted={isRecentUser ? [] : defaultSorted}
 				pagination={pagination}
 			/>
 			{isLoading && <div>Loading...</div>}
