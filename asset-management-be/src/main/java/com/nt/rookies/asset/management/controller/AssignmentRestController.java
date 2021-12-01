@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** REST controller for Assignment. */
 @RestController
-@RequestMapping("/api/v1.0/assignments")
+@RequestMapping("/api/v1.0")
 public class AssignmentRestController {
   private final AssignmentService assignmentService;
 
@@ -30,7 +30,7 @@ public class AssignmentRestController {
    *
    * @return {@link List<AssignmentDTO>}
    */
-  @GetMapping()
+  @GetMapping("/admin/assignments")
   public List<AssignmentDTO> getAllAssignments() {
     return assignmentService.getAllAssignments();
   }
@@ -43,7 +43,7 @@ public class AssignmentRestController {
    * @param id assignment id
    * @return {@link AssignmentDTO} object if found
    */
-  @GetMapping("/{id}")
+  @GetMapping("/user/assignments/{id}")
   public AssignmentDTO getAssignmentById(@PathVariable("id") Integer id) {
     return assignmentService.getAssignmentById(id);
   }
@@ -55,7 +55,7 @@ public class AssignmentRestController {
    * @return
    * @throws SQLException
    */
-  @PostMapping()
+  @PostMapping("/admin/assignments")
   public AssignmentDTO createAssignment(@RequestBody AssignmentDTO assignmentDTO)
       throws SQLException {
     return assignmentService.createAssignment(assignmentDTO);
@@ -68,7 +68,7 @@ public class AssignmentRestController {
    *
    * @return {@link List <AssignmentDTO>} list of assignments
    */
-  @GetMapping("/user")
+  @GetMapping("/user/assignments")
   public List<AssignmentDTO> getRecentAssignmentsByUser() {
     return assignmentService.getRecentAssignmentsByUser();
   }
