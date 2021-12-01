@@ -36,7 +36,10 @@ export const FILTER_STATE_OPTIONS = {
 
 export const FILTER_ASM_STATE_OPTIONS = {
     ACCEPTED: 'Accepted',
+    DECLINED: 'Declined',
     WAITING_FOR_ACCEPTANCE: 'Waiting for acceptance',
+    COMPLETED: 'Completed',
+    WAITING_FOR_RETURNING: 'Waiting for returning',
 }
 
 export const FILTER_ASM_STATE_DELETE = {

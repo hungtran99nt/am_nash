@@ -1,10 +1,7 @@
 import React, {useState} from 'react';
-import editImg from "../../assets/images/pen.png";
-import deleteImg from "../../assets/images/cross.png";
-import returnImg from "../../assets/images/return.png";
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
-import {FILTER_ASM_STATE_OPTIONS, SORT_ORDERS, FILTER_ASM_STATE_DELETE} from "../../common/constants";
+import {SORT_ORDERS} from "../../common/constants";
 import {useHistory} from "react-router-dom";
 import NoDataFound from "../NoDataFound/NoDataFound";
 import './AssignmentTable.css';
@@ -12,13 +9,15 @@ import AssignmentDetail from "./AssignmentModal/AssignmentDetail";
 import axios from 'axios';
 import { API_URL } from "../../common/constants";
 import AssignmentDeleteConfirmation from './AssignmentModal/AssignmentDeleteConfirmation'
+import MyAssignmentAction from "./MyAssignmentAction";
+import ManageAssignmentAction from "./ManageAssignmentAction";
 
 const defaultSorted = [{
 	dataField: 'assetCode',
 	order: SORT_ORDERS.ASC
 }]
 
-const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
+const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment}) => {
 	const history = useHistory();
 
 	const columnNoFormatter = (cell, row, index) => {
@@ -27,40 +26,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 
 	const columnFormatter = (cell, row) => {
 		return (
-			<div className={`table__actions ${row.state === FILTER_ASM_STATE_DELETE.WAITING_FOR_RETURNING || row.state === FILTER_ASM_STATE_DELETE.ACCEPTED ? 'disable' : ''}`}>
-				<span
-					className="action__items"
-					onClick={
-						row.state !== FILTER_ASM_STATE_OPTIONS.ACCEPTED ?
-							() => handleEditClicked(row.id) : undefined
-					}
-					title={"Edit assignment"}
-				>
-					 <img src={editImg} alt="edit"/>
-				</span>
-
-				<span
-					className="action__items"
-					onClick={
-						row.state !== FILTER_ASM_STATE_DELETE.ACCEPTED && row.state !== FILTER_ASM_STATE_DELETE.WAITING_FOR_RETURNING ?
-							() => handleDeleteClicked(row.id)
-							: undefined
-					}
-					title={"Delete assignment"}
-				>
-					 <img src={deleteImg} alt="delete"/>
-				</span>
-				<span
-					className="action__items"
-					onClick={
-						row.state !== FILTER_ASM_STATE_OPTIONS.ACCEPTED ?
-							() => console.log(`Return assignment id: ${row.id}`) : undefined
-					}
-					title={"Return assignment"}
-				>
-					 <img src={returnImg} alt="return"/>
-				</span>
-			</div>
+			isMyAssignment ? <MyAssignmentAction cell={cell} row={row}/> : <ManageAssignmentAction cell={cell} row={row}/>
 		)
 	};
 
@@ -70,6 +36,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 			text: 'No.',
 			sort: true,
 			formatter: columnNoFormatter,
+			hidden: isMyAssignment,
 			headerStyle: () => {
 				return {width: '70px'};
 			}
@@ -134,25 +101,15 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 	const handleEditClicked = (id) => {
 		history.push(`edit/assignment/${id}`)
 	}
-	const handleDeleteClicked = (id) => {
-		setIdDelete(id);
-		axios.get(`${API_URL}/admin/assignments/${id}/valid`).then((response) => {
-			if (response.data === true) {
-				handleShowDeleteConfirm();
-			}
-			
-		}).catch(err => {alert(`Error with check valid to delete asset ${err}`)})
-	}
-
-	const [assignmentIdPopup, setAssignmentIdPopup] = useState("");
-	const [showDetail, setShowDetail] = useState(false);
-	const handleCloseDetail = () => setShowDetail(false);
-	const handleShowDetail = () => setShowDetail(true);
-
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 	const [idDelete, setIdDelete] = useState(null);
 	const handleCloseDeleteConfirm = () => setShowDeleteConfirm(false);
 	const handleShowDeleteConfirm = () => setShowDeleteConfirm(true);
+	
+	const [assignmentIdPopup, setAssignmentIdPopup] = useState("");
+	const [showDetail, setShowDetail] = useState(false);
+	const handleCloseDetail = () => setShowDetail(false);
+	const handleShowDetail = () => setShowDetail(true);
 
 	const getAssignmentDetail = {
 		onClick: (e, row) => {
@@ -183,6 +140,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments}) => {
 					show={showDetail}
 					handleClose={handleCloseDetail}
 					assignmentId={assignmentIdPopup}
+					isMyAssignment={isMyAssignment}
 				/>
 			}
 			{
