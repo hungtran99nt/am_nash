@@ -163,7 +163,8 @@ public class AssignmentServiceImpl implements AssignmentService {
         .collect(Collectors.toList());
   }
    @Override
-	public boolean isAssignmentValidToDelete(Integer id) { 
+	public boolean isAssignmentValidToDelete(Integer id) 
+   { 
 		Assignment assignment = assignmentRepository.getStateById(id).orElseThrow(() -> new AssignmentNotFound("Assignment not found")); 
 		return !(assignment.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED) || assignment.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_RETURNING));
     }
