@@ -9,11 +9,11 @@ import java.util.List;
 public interface AssignmentService {
 
   /**
-   * Get all assignments.
+   * Get all assignments by current admin location.
    *
    * @return {@link List<AssignmentDTO>}
    */
-  List<AssignmentDTO> getAllAssignments();
+  List<AssignmentDTO> getAllAssignmentsByLocation();
 
   /**
    * Get assignment by id.
@@ -30,6 +30,14 @@ public interface AssignmentService {
    * @return {@link List <AssignmentDTO>} list of assignments
    */
   List<AssignmentDTO> getRecentAssignmentsByUser();
+
+  /**
+   * Edit an assignment.
+   *
+   * @param assignmentDTO edit asset
+   * @return edited {@link AssignmentDTO} object
+   */
+  AssignmentDTO updateAssignment(Integer id, AssignmentDTO assignmentDTO);
 
   /**
    * Create new Assignment

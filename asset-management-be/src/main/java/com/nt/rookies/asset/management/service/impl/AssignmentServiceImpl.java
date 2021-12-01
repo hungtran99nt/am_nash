@@ -4,6 +4,7 @@ import com.nt.rookies.asset.management.common.BaseConstants;
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.entity.Asset;
 import com.nt.rookies.asset.management.entity.Assignment;
+import com.nt.rookies.asset.management.entity.Location;
 import com.nt.rookies.asset.management.entity.User;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.AssetRepository;
@@ -53,10 +54,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     Assignment createdAssignment = new Assignment();
     User assignBy = userRepository.findByUsername(assignmentDTO.getAssignBy());
     User assignTo = userRepository.findByUsername(assignmentDTO.getAssignTo());
-    Asset asset =
-        assetRepository
-            .findAssetByAssetCode(assignmentDTO.getAssetCode())
-            .orElseThrow(() -> new ResourceNotFoundException("Asset not found."));
+    Asset asset = assetRepository.findAssetByAssetCode(assignmentDTO.getAssetCode())
+        .orElseThrow(() -> new ResourceNotFoundException("Asset not found."));
 
     if (asset.getState().equals(BaseConstants.ASSET_STATUS_AVAILABLE)
         && assignBy.getLocation().getId().equals(assignTo.getLocation().getId())
@@ -71,57 +70,67 @@ public class AssignmentServiceImpl implements AssignmentService {
       newAssignment.setAssignedDate(assignmentDTO.getAssignedDate());
       newAssignment.setNote(assignmentDTO.getNote());
       newAssignment.setState(BaseConstants.ASSIGNMENT_STATUS_ACCEPTING);
-      logger.info(
-          "Expect; ({}) assigns ({}) to ({}) with note: {}",
-          newAssignment.getAssignBy().getUsername(),
-          newAssignment.getAsset().getAssetCode(),
-          newAssignment.getAssignTo().getUsername(),
-          newAssignment.getNote());
+      logger.info("Expect; ({}) assigns ({}) to ({}) with note: {}",
+          newAssignment.getAssignBy().getUsername(), newAssignment.getAsset().getAssetCode(),
+          newAssignment.getAssignTo().getUsername(), newAssignment.getNote());
 
       // Save assignment to DB
       createdAssignment = assignmentRepository.save(newAssignment);
-      logger.info(
-          "Result; ({}) assigns ({}) to ({}) with note: {}",
-          createdAssignment.getAssignBy().getUsername(),
-          createdAssignment.getAsset().getAssetCode(),
-          createdAssignment.getAssignTo().getUsername(),
-          createdAssignment.getNote());
+      logger.info("Result; ({}) assigns ({}) to ({}) with note: {}",
+          createdAssignment.getAssignBy().getUsername(), createdAssignment.getAsset().getAssetCode(),
+          createdAssignment.getAssignTo().getUsername(), createdAssignment.getNote());
 
       // Change assigned asset to 'Not Available'
       asset.setState(BaseConstants.ASSET_STATUS_UNAVAILABLE);
       Asset updatedAsset = assetRepository.save(asset);
-      logger.info(
-          "Set asset ({}) status to {}", updatedAsset.getAssetCode(), updatedAsset.getState());
+      logger.info("Set asset ({}) status to {}", updatedAsset.getAssetCode(), updatedAsset.getState());
 
     } else if (asset.getState().equals(BaseConstants.ASSET_STATUS_UNAVAILABLE)) {
       // Asset not available to be assigned
-      logger.error(
-          "Asset ({}) status: {} (must be Available)", asset.getAssetCode(), asset.getState());
+      logger.error("Asset ({}) status: {} (must be Available)", asset.getAssetCode(), asset.getState());
 
     } else if (!assignBy.getLocation().getId().equals(assignTo.getLocation().getId())
         || !assignBy.getLocation().getId().equals(asset.getLocation().getId())) {
       // Asset, who creates assign and be assigned must have the same location
-      logger.error(
-          "assignedBy_location: {}, assignedBy_location: {}, asset_location: {} (must be equal)",
-          assignBy.getLocation().getId(),
-          assignTo.getLocation().getId(),
-          asset.getLocation().getId());
+      logger.error("assignedBy_location: {}, assignedBy_location: {}, asset_location: {} (must be equal)",
+          assignBy.getLocation().getId(), assignTo.getLocation().getId(), asset.getLocation().getId());
 
     } else if (assignBy.getStatus() == BaseConstants.USER_STATUS_DISABLED
         || assignTo.getStatus() == BaseConstants.USER_STATUS_DISABLED) {
       // who creates assign and be assigned must have active account
-      logger.error(
-          "assignBy_state: {} and assignTo_state: {} (must be -1 or 1)",
-          assignBy.getStatus(),
-          assignTo.getStatus());
+      logger.error("assignBy_state: {} and assignTo_state: {} (must be -1 or 1)",
+          assignBy.getStatus(), assignTo.getStatus());
     }
     return modelMapper.map(createdAssignment, AssignmentDTO.class);
   }
 
   @Override
-  public List<AssignmentDTO> getAllAssignments() {
-    logger.info("Get all assignments");
-    List<Assignment> assignments = assignmentRepository.findAll();
+  public AssignmentDTO updateAssignment(Integer id, AssignmentDTO assignmentDTO) {
+    logger.info("Inside updateAsset({}, {})", id, assignmentDTO);
+    Assignment assignment =
+        assignmentRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Edit assignment not found."));
+    logger.info("Assignment found: {}", assignment);
+    assignment.setAssignTo(userRepository.findByUsername(assignmentDTO.getAssignTo()));
+    assignment.setAsset(
+        assetRepository
+            .findAssetByAssetCode(assignmentDTO.getAssetCode())
+            .orElseThrow(() -> new ResourceNotFoundException("Asset not found")));
+    assignment.setAssignedDate(assignmentDTO.getAssignedDate());
+    assignment.setNote(assignmentDTO.getNote());
+    logger.info("Assignment edited: {}", assignment);
+    Assignment updatedAssignment = assignmentRepository.save(assignment);
+    logger.info("Asset updated: {}", updatedAssignment);
+    return modelMapper.map(updatedAssignment, AssignmentDTO.class);
+
+  }
+
+  @Override
+  public List<AssignmentDTO> getAllAssignmentsByLocation() {
+    logger.info("Get all assignments by admin location");
+    Location currentAdminLocation = userService.getUserLocation();
+    List<Assignment> assignments = assignmentRepository.findAllByAssetLocation(currentAdminLocation);
     return assignments.stream()
         .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
         .collect(Collectors.toList());
@@ -133,7 +142,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     Assignment assignment =
         assignmentRepository
             .findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Not found assignment"));
+            .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
     return modelMapper.map(assignment, AssignmentDTO.class);
   }
 

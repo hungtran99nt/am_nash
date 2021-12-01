@@ -26,14 +26,14 @@ const CreateAssetPage = () => {
     const handleRedirectAssetManagePage = () => {
         history.push("/asset")
     }
+    const [dropValue, setDropValue] = useState("Select Category")
     const initialValues = {
         name: "",
-        category: "",
+        category: dropValue,
         specification: "",
         installDate: "",
-        state: ""
+        state: "Available",
     }
-    const [dropValue, setDropValue] = useState("Select Category")
 
 
     const submit = (values, {resetForm}) => {
@@ -90,10 +90,7 @@ const CreateAssetPage = () => {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                         >
-                                            <Dropdown.Toggle id="dropdown-autoclose-true"
-                                                             className="form-control drop-category"
-                                                             placeholder={dropValue}
-                                            >
+                                            <Dropdown.Toggle id="dropdown-autoclose-true" className="form-control drop-category">
                                                 <div className="drop-box">
                                                     <span className="drop-title">{dropValue}</span>
                                                     <FiChevronDown/>
@@ -178,11 +175,9 @@ const CreateAssetPage = () => {
                                         </div>
                                     </Col>
                                 </Form.Group>
-
-
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
-                                            disabled={!values.name || !values.specification || !values.installDate}
+                                            disabled={!values.name || !values.specification || !values.installDate || !values.category}
                                     >
                                         Save
                                     </Button>
