@@ -1,0 +1,33 @@
+.fade.modal-backdrop.drop-display.show{
+    opacity: 0;
+}
+.modal-display{
+    width:336px !important;
+    margin-left: 778px;
+    margin-top: 124px ;
+}
+.body-content{
+    padding: 8px !important;
+}
+input.form-prefix.form-control{
+    margin-top: 12px;
+}
+.table-scroll {
+    overflow-y: scroll;
+    height: 300px;
+}
+.categoryName{
+    margin: 12px 0;
+}
+.btn-addCategory {
+    background-color: #ffffff !important;
+    color: #0a53be !important;
+    padding: 0;
+}
+.group-category{
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0 !important;
+}
+
+
