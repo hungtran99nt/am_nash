@@ -75,7 +75,7 @@ const ManageAssignment = () => {
 		<div className="mt-4">
 			<Container className="px-0">
 				<div className="manager__heading pb-3">
-					Manage Assignment
+					Assignment List
 				</div>
 				<Form className="manager__action mb-3">
 					<Row className="actions__wrapper">
@@ -93,16 +93,11 @@ const ManageAssignment = () => {
 							<div className="h-75 date-picker">
 								<FormControl
 									id="assignedDate"
+									type="date"
 									className="date-input"
 									placeholder="Assigned Date"
 									value={dateFilterValue}
 									onChange={e => setDateFilterValue(e.target.value)}
-									onFocus={e => e.target.type = 'date'}
-									onBlur={e => {
-										if (e.target.value === '') {
-											e.target.type = 'text';
-										}
-									}}
 								/>
 							</div>
 						</Col>
