@@ -6,8 +6,7 @@ import {useHistory} from "react-router-dom";
 import * as Yup from 'yup';
 import useFetch from "../../../hooks/useFetch";
 import {API_URL, TODAY, YESTERDAY} from "../../../common/constants";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faAngleDown, faPlus} from '@fortawesome/free-solid-svg-icons'
+
 import moment from "moment";
 
 const validateForm = Yup.object().shape({

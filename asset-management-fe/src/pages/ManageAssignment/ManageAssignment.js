@@ -26,8 +26,9 @@ const ManageAssignment = () => {
 	const handleCreateAssigmentClicked = () => {
 		history.push("/assignment/create");
 	}
+    let recentUserId = history.location.state ? history.location.state.firstId : null;
 
-	const {
+    const {
 		isLoading,
 		data: assignments,
 		errorMessage
@@ -42,6 +43,11 @@ const ManageAssignment = () => {
 			{FILTER_ASM_STATE_OPTIONS[key]}
 		</option>
 	)
+
+    if (recentUserId) { // user created/edited: move it to the top of the list
+        assignments.sort((a, b) => a.id === recentUserId ? -1 : b.id === recentUserId ? 1 : 0);
+        window.history.replaceState(null, '');
+    }
 
 	const [filterStateOption, setFilterStateOption] = useState('');
 	const [dateFilterValue, setDateFilterValue] = useState('');
@@ -119,7 +125,7 @@ const ManageAssignment = () => {
 					</Row>
 				</Form>
 			</Container>
-			<AssignmentTable isLoading={isLoading} errorMessage={errorMessage} assignments={assignmentsSearched} isMyAssignment={false}/>
+			<AssignmentTable isLoading={isLoading} errorMessage={errorMessage} assignments={assignmentsSearched} isMyAssignment={false} isRecentUser={recentUserId} />
 		</div>
 	)
 }
