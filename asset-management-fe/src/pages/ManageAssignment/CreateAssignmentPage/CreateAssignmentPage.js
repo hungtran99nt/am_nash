@@ -1,13 +1,18 @@
 import React, {useState} from "react";
 import './CreateAssignmentPage.css'
-import {Button, Col, Form, Row, Dropdown, DropdownButton} from "react-bootstrap";
+import {Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from "formik";
 import {useHistory} from "react-router-dom";
 import * as Yup from 'yup';
 import useFetch from "../../../hooks/useFetch";
-import {API_URL, TODAY, YESTERDAY} from "../../../common/constants";
+import {API_URL, DATE_FORMAT, FILTER_ASM_STATE_OPTIONS, TODAY} from "../../../common/constants";
 
 import moment from "moment";
+import {InputGroup} from "reactstrap";
+import UserAssignmentModal from "../AssignmentModal/UserAssignmentModal";
+import AssetAssignmentModal from "../AssignmentModal/AssetAssignmentModal";
+import axios from "axios";
+import {BiSearchAlt} from "react-icons/all";
 
 const validateForm = Yup.object().shape({
     user: Yup.string().required("Required!"),
@@ -18,33 +23,101 @@ const validateForm = Yup.object().shape({
         .required("Required!")
         .min(TODAY, "Date cannot be in the past")
 })
-const convertDataResponse = res => res.data;
-
+const convertUserResponse = res => res.data.map(u => (
+    {
+        id: u.id,
+        staffCode: u.staffCode,
+        fullName: `${u.lastName} ${u.firstName}`,
+        userName: u.username,
+        joinedDate: moment(u.joinedDate).format(DATE_FORMAT.TO),
+        type: u.type,
+        location: u.location
+    }
+));
+const convertAssetResponse = res => res.data;
 const CreateAssignmentPage = () => {
     let history = useHistory();
 
+    let curDate = moment(Date.now()).format("YYYY-MM-DD");
+
+    /**
+     * Fetch user and asset
+     */
     const {
-        data: categories,
-    } = useFetch([], `${API_URL}/categories`, convertDataResponse);
-    console.log("cate", categories)
+        isUserLoading,
+        data: users,
+        errorUserMessage
+    } = useFetch([], `${API_URL}/users`, convertUserResponse);
+    const {
+        isAssetLoading,
+        data: assets,
+        errorAssetMessage
+    } = useFetch([], `${API_URL}/assets`, convertAssetResponse);
+    console.log(assets)
+    if (errorUserMessage && errorAssetMessage) window.location.reload(history.push("/login"));
+
+    const submit = (values, {resetForm}) => {
+        axios({
+            method: 'POST',
+            url: `${API_URL}/admin/assignments/`,
+            data: {
+                assetCode: assignedAsset.assetCode,
+                assignBy: localStorage.getItem('USERNAME'),
+                assignTo: assignedTo.userName,
+                assignedDate: values.assignedDate,
+                state: FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE,
+                note: values.note
+            }
+        }).then(res => {
+            history.push("/assignment")
+        }).catch(err => {
+            console.log("err = ", err);
+        }).finally( () => {
+                resetForm();
+                setAssignedAsset("");
+                setAssignedTo("");
+            }
+        );
+    }
     const handleRedirectAssignmentManagePage = () => {
         history.push("/assignment")
     }
 
-    let curDate = moment(Date.now()).format("YYYY-MM-DD");
+    /**
+     * Popup handle go here
+     */
+    const [show, setShow] = useState(false);
+    const handleClickUserPopup = () => setShow(true);
+    const handleClose = () => setShow(false);
 
+    const [showAsset, setShowAsset] = useState(false);
+    const handleClickAssetPopup = () => setShowAsset(true);
+    const handleAssetClose = () => setShowAsset(false);
+    /**
+     * Pass users from popup to input form
+     */
+    const [assignedTo, setAssignedTo] = useState({});
+    const handlePassingData = (user) => setAssignedTo(user);
+    console.log(assignedTo.fullName)
+    const [assignedAsset, setAssignedAsset] = useState({});
+    const handlePassingAsset = (asset) => setAssignedAsset(asset);
+    console.log(assignedAsset)
+
+    let assignedFullName = "";
+    if (assignedTo.fullName !== undefined) {
+        assignedFullName = assignedTo.fullName
+    }
+    let assignedAssetName = "";
+    if (assignedAsset.assetName !== undefined){
+        assignedAssetName = assignedAsset.assetName;
+    }
     const initialValues = {
-        user: "",
-        asset: "",
+        user: assignedFullName,
+        asset: assignedAssetName,
         note: "",
         assignedDate: curDate
     }
 
-    const submit = (values, {resetForm}) => {
-        console.log("value on submit =", values);
-        history.push("/Assignment")
-        resetForm();
-    }
     return (
         <div className="app-page">
             <div className="row">
@@ -69,36 +142,54 @@ const CreateAssignmentPage = () => {
                                 <Form.Group as={Row} className="mb-3" controlId="formTextFullName">
                                     <Form.Label column sm="3">User</Form.Label>
                                     <Col sm="6">
-                                        <Form.Control
-                                            type="text"
-                                            name="user"
-                                            defaultValue={values.user}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            isInvalid={touched.user && errors.user}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.user}
-                                        </Form.Control.Feedback>
+                                        <InputGroup>
+                                            <Form.Control
+                                                type="text" name="user"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                value={values.user}
+                                                isInvalid={touched.user && errors.user}
+                                                disabled={true}
+                                            />
+                                            <Button variant="outline-secondary" id="button-addon1"
+                                                    onClick={handleClickUserPopup}
+                                            >
+                                               <BiSearchAlt/>
+                                            </Button>
+                                            <UserAssignmentModal
+                                                show={show} handleClose={handleClose} users={users} handlePassingData={handlePassingData}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.user}
+                                            </Form.Control.Feedback>
+                                        </InputGroup>
                                     </Col>
                                 </Form.Group>
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.user}
-                                </Form.Control.Feedback>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextAssetName">
                                     <Form.Label column sm="3">Asset</Form.Label>
                                     <Col sm="6">
-                                        <Form.Control
-                                            type="text"
-                                            name="asset"
-                                            defaultValue={values.asset}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            isInvalid={touched.asset && errors.asset}
-                                        />
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.asset}
-                                        </Form.Control.Feedback>
+                                        <InputGroup>
+                                            <Form.Control
+                                                type="text"
+                                                name="asset"
+                                                value={values.asset}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                isInvalid={touched.asset && errors.asset}
+                                                disabled={true}
+                                            />
+                                            <Button variant="outline-secondary" id="button-addon2"
+                                                    onClick={handleClickAssetPopup}
+                                            >
+                                                <BiSearchAlt/>
+                                            </Button>
+                                            <AssetAssignmentModal
+                                                show={showAsset} handleClose={handleAssetClose} assets={assets} handlePassingData={handlePassingAsset}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.asset}
+                                            </Form.Control.Feedback>
+                                        </InputGroup>
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextAssignedDate">
@@ -140,7 +231,8 @@ const CreateAssignmentPage = () => {
                                     >
                                         Save
                                     </Button>
-                                    <Button className="btn-cancel" type="reset" onClick={handleRedirectAssignmentManagePage}>
+                                    <Button className="btn-cancel" type="reset"
+                                            onClick={handleRedirectAssignmentManagePage}>
                                         Cancel
                                     </Button>
                                 </div>

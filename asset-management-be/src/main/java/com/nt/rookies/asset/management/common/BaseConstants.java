@@ -56,7 +56,9 @@ public class BaseConstants {
    *-------------------------------------------------------------------*/
   public static final String ASSET_STATUS_AVAILABLE = "Available";
   public static final String ASSET_STATUS_UNAVAILABLE = "Not Available";
-
+  public static final String ASSET_STATUS_ASSIGNED = "Assigned";
+  public static final String ASSET_STATUS_RECYCLING = "Wait for recycling";
+  public static final String ASSET_STATUS_RECYCLED = "Recycled";
    /*                     ERROR MESSAGE
    *-------------------------------------------------------------------*/
   public static final String ERR_CATEGORY_PREFIX_BLANK = "Category prefix cannot be blank";

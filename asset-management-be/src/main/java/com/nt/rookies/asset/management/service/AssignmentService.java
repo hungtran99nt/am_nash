@@ -1,11 +1,9 @@
 package com.nt.rookies.asset.management.service;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.exception.ResourceDeleteException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
+import java.util.List;
 
 /** Service interface for Assignment. */
 public interface AssignmentService { 
@@ -33,6 +31,7 @@ public interface AssignmentService {
    */
   List<AssignmentDTO> getRecentAssignmentsByUser();
 
+
   /**
    * Edit an assignment.
    *
@@ -47,7 +46,14 @@ public interface AssignmentService {
    * @param assignmentDTO
    * @return
    */
-  AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) throws SQLException;
+  AssignmentDTO createAssignment(AssignmentDTO assignmentDTO);
+
+  /**
+   *
+   * @return
+   */
+  List<AssignmentDTO> getAllAssignments();
+
    /**
    * Check removable assignment
    * 
