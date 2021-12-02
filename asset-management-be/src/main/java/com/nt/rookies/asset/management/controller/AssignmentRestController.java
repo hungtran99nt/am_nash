@@ -121,7 +121,7 @@ public class AssignmentRestController {
    * @param assignmentDTO
    * @return
    */
-  @PutMapping("/user/assignment/accept/{id}")
+  @PutMapping("/user/assignment/{id}/accept")
   public AssignmentDTO acceptAssignment(@PathVariable(name = "id") Integer id, @RequestBody AssignmentDTO assignmentDTO) {
     return assignmentService.userAcceptAssignment(id, assignmentDTO);
   }
@@ -131,7 +131,7 @@ public class AssignmentRestController {
    * @param id
    * @return
    */
-  @DeleteMapping("/user/assignment/decline/{id}")
+  @DeleteMapping("/user/assignment/{id}/decline")
   public ResponseEntity<?> declineAssignment(@PathVariable(name = "id") Integer id){
     assignmentService.userDeclineAssignment(id);
     return ResponseEntity.ok("Assignment deleted");

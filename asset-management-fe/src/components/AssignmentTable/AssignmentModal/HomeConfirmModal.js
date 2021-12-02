@@ -25,7 +25,7 @@ const HomeConfirmModal =
 
         const handleConfirmDecline = () => {
             axios
-                .delete(`${API_URL}/user/assignment/decline/${assignmentID}`)
+                .delete(`${API_URL}/user/assignment/${assignmentID}/decline`)
                 .then(() => {
                     console.log(`Decline successful assignment: ${assignmentID}`);
                     handleCloseDeclineConfirm();
@@ -43,7 +43,7 @@ const HomeConfirmModal =
         const handleConfirmAccept = () => {
             axios({
                 method: 'PUT',
-                url: `${API_URL}/user/assignment/accept/${assignmentID}`,
+                url: `${API_URL}/user/assignment/${assignmentID}/accept`,
                 data: {
                     assetCode: assignment.assetCode,
                     assignBy: assignment.assignBy,
