@@ -5,15 +5,9 @@
 .calendar .form-control:focus {
     box-shadow: none;
 }
+
 .date-picker {
     position: relative;
-}
-
-.date-picker:before {
-    content: url("/src/assets/images/bxs-calendar.svg");
-    position: absolute;
-    top: 15%;
-    right: 10px;
 }
 
 .date-picker:after {
@@ -33,3 +27,21 @@
     opacity: 0 !important;
 }
 
+.date-picker input[type="date"] {
+    position: relative;
+    cursor: pointer;
+}
+
+.date-picker input[type="date"]:before {
+    content: attr(placeholder);
+    position: absolute;
+    background: #fff;
+    pointer-events: none;
+    line-height: 28px;
+    padding: 0 0.5rem;
+}
+
+.date-picker input[type="date"]:focus:before,
+.date-picker input[type="date"]:not([value=""]):before {
+    display: none;
+}

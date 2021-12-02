@@ -28,8 +28,13 @@ const AssetDeleteConfirm = ({show, assets, handleCloseConfirm, idDelete}) => {
 	}
 
 	return (
-		<Modal show={show} onHide={handleCloseConfirm} centered>
-			<Modal.Header closeButton className="text-danger">
+		<Modal
+			show={show}
+			onHide={handleCloseConfirm}
+			centered
+			backdrop='static'
+		>
+			<Modal.Header closeButton='' className="text-danger">
 				<Modal.Title>Are you sure?</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>

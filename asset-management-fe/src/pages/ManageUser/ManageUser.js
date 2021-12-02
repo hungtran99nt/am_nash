@@ -59,7 +59,7 @@ const ManageUser = () => {
         <div className="mt-4">
 			<Container className="px-0">
 				<div className="manager__heading pb-3">
-					ManageUser
+					User List
 				</div>
 				<Form className="manager__action mb-3">
 					<Row className="actions__wrapper">
