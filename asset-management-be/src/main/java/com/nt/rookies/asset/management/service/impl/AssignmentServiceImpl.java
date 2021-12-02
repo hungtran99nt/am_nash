@@ -3,7 +3,6 @@ package com.nt.rookies.asset.management.service.impl;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.nt.rookies.asset.management.common.BaseConstants;
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.entity.Asset;
@@ -162,20 +160,20 @@ public class AssignmentServiceImpl implements AssignmentService {
         .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
         .collect(Collectors.toList());
   }
-   @Override
-	public boolean isAssignmentValidToDelete(Integer id) 
-   {   
-		Assignment assignment = assignmentRepository.getStateById(id).orElseThrow(() -> new AssignmentNotFound("Assignment not found")); 
-		return !(assignment.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED) || assignment.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_RETURNING));
-    }
 
-    @Override
-    public void deleteAssignment(Integer id) {
-      if (isAssignmentValidToDelete(id)) {
-        Assignment assignment = assignmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
-        assignmentRepository.delete(assignment);
-      } else {
-        throw new ResourceDeleteException("Cannot delete this assignment");
-      }
-	}
+  @Override
+  public boolean isAssignmentValidToDelete(Integer id) {
+    Assignment assignment = assignmentRepository.getStateById(id).orElseThrow(() -> new AssignmentNotFound("Assignment not found"));
+    return !(assignment.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED) || assignment.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_RETURNING));
+  }
+
+  @Override
+  public void deleteAssignment(Integer id) {
+    if (isAssignmentValidToDelete(id)) {
+      Assignment assignment = assignmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+      assignmentRepository.delete(assignment);
+    } else {
+      throw new ResourceDeleteException("Cannot delete this assignment");
+    }
+  }
 }
