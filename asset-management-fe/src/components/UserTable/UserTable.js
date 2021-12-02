@@ -4,14 +4,13 @@ import UserPopup from "./UserModal/UserPopup";
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 import {API_URL, DATE_FORMAT, SORT_ORDERS} from "../../common/constants";
 import axios from "axios";
-import editImg from '../../assets/images/pen.png'
-import deleteImg from '../../assets/images/cross.png'
 import './UserTable.css'
 import {useHistory} from "react-router-dom";
 import moment from "moment";
 import {pagination, sortCode} from "../../common/config";
 import UserDisableError from "./UserModal/UserDisableError";
 import UserDisableConfirmation from "./UserModal/UserDisableConfirmation";
+import {BsPencilFill, FaRegTimesCircle} from "react-icons/all";
 
 const defaultSorted = [{
 	dataField: 'staffCode',
@@ -51,21 +50,21 @@ const UserTable = ({users, isLoading, isRecentUser}) => {
 	const columnFormatter = (cell, row) => {
 		return (
 			<div className="table__actions">
-			<span
-				className="action__items"
-				title={`Edit user ${row.userName}`}
-				onClick={() => handleEditClicked(row.id)}
-			>
-				<img src={editImg} alt="edit"/>
-			</span>
+				{/* Edit button */}
+				<BsPencilFill
+					color={'#6F6F6F'}
+					className="action__items"
+					title={`Edit user ${row.userName}`}
+					onClick={() => handleEditClicked(row.id)}
+				/>
 
-				<span
+				{/* Delete button */}
+				<FaRegTimesCircle
+					color={'#D85667'}
 					className="action__items"
 					title={`Delete user ${row.userName}`}
 					onClick={() => handleDeleteClicked(row.id)}
-				>
-				<img src={deleteImg} alt="delete"/>
-			</span>
+				/>
 			</div>
 		)
 	};

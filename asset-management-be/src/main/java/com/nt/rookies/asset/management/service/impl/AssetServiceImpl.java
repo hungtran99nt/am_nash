@@ -103,7 +103,7 @@ public class AssetServiceImpl implements AssetService {
 
   private String generateAssetCode(Integer assetId, Category category) {
     StringBuilder staffCode = new StringBuilder(category.getCategoryPrefix());
-    staffCode.append(StringUtils.leftPad(assetId.toString(), 4, "0"));
+    staffCode.append(StringUtils.leftPad(assetId.toString(), 6, "0"));
     logger.info("staffCode: {}", staffCode);
     return staffCode.toString();
   }
