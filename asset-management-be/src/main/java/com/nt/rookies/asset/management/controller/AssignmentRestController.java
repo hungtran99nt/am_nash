@@ -59,11 +59,9 @@ public class AssignmentRestController {
    * API Create assignment
    * @param assignmentDTO
    * @return
-   * @throws Exception
    */
   @PostMapping("/admin/assignments")
-  public AssignmentDTO createAssignment(@RequestBody AssignmentDTO assignmentDTO)
-      throws Exception {
+  public AssignmentDTO createAssignment(@RequestBody AssignmentDTO assignmentDTO){
     return assignmentService.createAssignment(assignmentDTO);
   }
 
