@@ -139,7 +139,7 @@ const CreateAssignmentPage = ({curUsername}) => {
                               handleSubmit,
                           }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextFullName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextFullName" id="userInput">
                                     <Form.Label column sm="3">User</Form.Label>
                                     <Col sm="6">
                                         <InputGroup>
@@ -158,6 +158,7 @@ const CreateAssignmentPage = ({curUsername}) => {
                                             </Button>
                                             <UserAssignmentModal
                                                 show={show} handleClose={handleClose} users={users} handlePassingData={handlePassingData}
+                                                curUsername={curUsername}
                                             />
                                             <Form.Control.Feedback type="invalid">
                                                 {errors.user}
@@ -165,7 +166,7 @@ const CreateAssignmentPage = ({curUsername}) => {
                                         </InputGroup>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextAssetName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextAssetName" id="assetInput">
                                     <Form.Label column sm="3">Asset</Form.Label>
                                     <Col sm="6">
                                         <InputGroup>

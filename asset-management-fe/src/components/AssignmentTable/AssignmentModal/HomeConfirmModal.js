@@ -70,7 +70,9 @@ const HomeConfirmModal =
             onHide={buttonName==="Accept" ? handleCloseAcceptConfirm : handleCloseDeclineConfirm}
             centered
             backdrop="static"
+            animation={true}
             size="sm"
+            id="homeModal"
         >
             <Modal.Header
                 closeButton=''
