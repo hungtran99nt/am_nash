@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
 import {useHistory} from "react-router-dom";
 import {API_URL, FILTER_STATE_OPTIONS, SORT_ORDERS} from "../../common/constants";
-import editImg from "../../assets/images/pen.png";
-import deleteImg from "../../assets/images/cross.png";
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
 import axios from "axios";
 import AssetDetail from "./AssetModal/AssetDetail";
 import AssetDeleteNotification from "./AssetModal/AssetDeleteNotification";
 import AssetDeleteConfirm from "./AssetModal/AssetDeleteConfirm";
+import {BsPencilFill, FaRegTimesCircle} from "react-icons/all";
 
 const defaultSorted = [{
 	dataField: 'assetCode',
@@ -21,21 +20,21 @@ const AssetTable = ({assets, isLoading, errorMessage, isRecentAsset}) => {
 	const columnFormatter = (cell, row) => {
 		return (
 			<div className={`table__actions ${row.state === FILTER_STATE_OPTIONS.ASSIGNED ? 'disable' : ''}`}>
-				<span
+				{/* Edit button */}
+				<BsPencilFill
+					color={'#6F6F6F'}
 					className="action__items"
 					title={`Edit asset ${row.assetName}`}
 					onClick={row.state !== FILTER_STATE_OPTIONS.ASSIGNED ? () => handleEditClicked(row.id): undefined}
-				>
-					 <img src={editImg} alt="edit"/>
-				</span>
+				/>
 
-				<span
+				{/* Delete button */}
+				<FaRegTimesCircle
+					color={'#D85667'}
 					className="action__items"
 					title={`Delete asset ${row.assetName}`}
 					onClick={row.state !== FILTER_STATE_OPTIONS.ASSIGNED ? () => handleDeleteClicked(row.id): undefined}
-				>
-					 <img src={deleteImg} alt="delete"/>
-				</span>
+				/>
 			</div>
 		)
 	};

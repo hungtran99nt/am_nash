@@ -1,0 +1,13 @@
+#formTextFullName, #formTextAssetName{
+    border-right: none !important;
+}
+#button-addon1, #button-addon2{
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    border: 1px solid #3e4042;
+    z-index: 2;
+}
+#button-addon1:hover, #button-addon2:hover{
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}

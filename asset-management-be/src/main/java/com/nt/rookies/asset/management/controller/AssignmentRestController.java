@@ -1,6 +1,5 @@
 package com.nt.rookies.asset.management.controller;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -57,16 +56,12 @@ public class AssignmentRestController {
   }
 
   /**
-   * API check valid assignment to delete. <br>
-   * Link: <code>/api/v1.0/assignments/{id}/valid</code> <br>
-   * Method: GET
-   * 
-   * @param id assignment id
-   * @return {@link Boolean} true or false base on assignment
+   * API Create assignment
+   * @param assignmentDTO
+   * @return
    */
   @PostMapping("/admin/assignments")
-  public AssignmentDTO createAssignment(@RequestBody AssignmentDTO assignmentDTO)
-      throws SQLException {
+  public AssignmentDTO createAssignment(@RequestBody AssignmentDTO assignmentDTO){
     return assignmentService.createAssignment(assignmentDTO);
   }
 
@@ -111,12 +106,12 @@ public class AssignmentRestController {
    * API delete valid assignment. <br>
    * Link: <code>/api/v1.0/assignments/{id}</code> <br>
    * Method: DELETE
-   * 
+   *
    * @param id assignment id
-   * @return {@link void} delete valid assignment
+   * @return {@link } delete valid assignment
    */
   @DeleteMapping("/admin/assignments/{id}")
   public void deleteAssignment(@PathVariable(name = "id") Integer id) {
-    assignmentService.deleteAssignment(id); 
+    assignmentService.deleteAssignment(id);
   }
 }
