@@ -149,6 +149,7 @@ const CreateAssignmentPage = () => {
                                                 onBlur={handleBlur}
                                                 value={values.user}
                                                 isInvalid={touched.user && errors.user}
+                                                disabled={true}
                                             />
                                             <Button variant="outline-secondary" id="button-addon1"
                                                     onClick={handleClickUserPopup}
@@ -175,6 +176,7 @@ const CreateAssignmentPage = () => {
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
                                                 isInvalid={touched.asset && errors.asset}
+                                                disabled={true}
                                             />
                                             <Button variant="outline-secondary" id="button-addon2"
                                                     onClick={handleClickAssetPopup}
