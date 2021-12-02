@@ -121,6 +121,7 @@ public class UserServiceImpl implements UserService {
     Location location = getUserLocation();
     List<User> users = userRepository.findAllByLocation(location);
     return users.stream()
+        .filter(user -> (user.getStatus() != BaseConstants.USER_STATUS_DISABLED))
         .map(user -> modelMapper.map(user, UserDTO.class))
         .collect(Collectors.toList());
   }

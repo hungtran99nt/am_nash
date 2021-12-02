@@ -98,8 +98,9 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     } else if (!asset.getState().equals(BaseConstants.ASSET_STATUS_AVAILABLE)) {
       // Asset not available to be assigned
-//      logger.error(
-//          "Asset ({}) status: {} (must be Available)", asset.getAssetCode(), asset.getState());
+      //      logger.error(
+      //          "Asset ({}) status: {} (must be Available)", asset.getAssetCode(),
+      // asset.getState());
       throw new AssignmentCreateException("Asset not available");
     } else if (!assignBy.getLocation().getId().equals(assignTo.getLocation().getId())
         || !assignBy.getLocation().getId().equals(asset.getLocation().getId())) {
