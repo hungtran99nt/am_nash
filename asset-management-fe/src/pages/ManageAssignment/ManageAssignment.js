@@ -71,64 +71,57 @@ const ManageAssignment = () => {
         });
     }, [searchText, assignmentsFiltered]);
 
-    return (
-        <div className="mt-4">
-            <Container className="px-0">
-                <div className="manager__heading pb-3">
-                    Manage Assignment
-                </div>
-                <Form className="manager__action mb-3">
-                    <Row className="actions__wrapper">
-                        <Col className='asset select'>
-                            <Form.Select
-                                className="action__filter h-75"
-                                value={filterStateOption}
-                                onChange={evt => setFilterStateOption(evt.target.value)}
-                            >
-                                <option value="">State</option>
-                                {listStates}
-                            </Form.Select>
-                        </Col>
-                        <Col className='asset calendar'>
-                            <div className="h-75 date-picker">
-                                <FormControl
-                                    id="assignedDate"
-                                    className="date-input"
-                                    placeholder="Assigned Date"
-                                    value={dateFilterValue}
-                                    onChange={e => setDateFilterValue(e.target.value)}
-                                    onFocus={e => e.target.type = 'date'}
-                                    onBlur={e => {
-                                        if (e.target.value === '') {
-                                            e.target.type = 'text';
-                                        }
-                                    }}
-                                />
-                            </div>
-                        </Col>
-                        <Col className="">
-                            <InputGroup className="h-75 search-group">
-                                <FormControl
-                                    className="search-input"
-                                    value={searchText}
-                                    onChange={evt => setSearchText(evt.target.value)}
-                                />
-                                <Button className="search-button btn-cancel" id="button-addon2" disabled>
-                                    <img src="https://img.icons8.com/ios/25/000000/search--v1.png" alt="search"/>
-                                </Button>
-                            </InputGroup>
-                        </Col>
-                        <Col className="h-75">
-                            <Button className="w-100 h-100" onClick={handleCreateAssigmentClicked}>Create new
-                                assignment</Button>
-                        </Col>
-                    </Row>
-                </Form>
-            </Container>
-            <AssignmentTable isLoading={isLoading} errorMessage={errorMessage}
-                             assignments={assignmentsSearched} isMyAssignment={false}
-                             isRecentUser={recentUserId}/>
-        </div>
-    )
+	return (
+		<div className="mt-4">
+			<Container className="px-0">
+				<div className="manager__heading pb-3">
+					Assignment List
+				</div>
+				<Form className="manager__action mb-3">
+					<Row className="actions__wrapper">
+						<Col className='asset select'>
+							<Form.Select
+								className="action__filter h-75"
+								value={filterStateOption}
+								onChange={evt => setFilterStateOption(evt.target.value)}
+							>
+								<option value="">State</option>
+								{listStates}
+							</Form.Select>
+						</Col>
+						<Col className='asset calendar'>
+							<div className="h-75 date-picker">
+								<FormControl
+									id="assignedDate"
+									type="date"
+									className="date-input"
+									placeholder="Assigned Date"
+									value={dateFilterValue}
+									onChange={e => setDateFilterValue(e.target.value)}
+								/>
+							</div>
+						</Col>
+						<Col className="">
+							<InputGroup className="h-75 search-group">
+								<FormControl
+									className="search-input"
+									value={searchText}
+									onChange={evt => setSearchText(evt.target.value)}
+								/>
+								<Button className="search-button btn-cancel" id="button-addon2" disabled>
+									<img src="https://img.icons8.com/ios/25/000000/search--v1.png" alt="search"/>
+								</Button>
+							</InputGroup>
+						</Col>
+						<Col className="h-75">
+							<Button className="w-100 h-100" onClick={handleCreateAssigmentClicked}>Create new
+								assignment</Button>
+						</Col>
+					</Row>
+				</Form>
+			</Container>
+			<AssignmentTable isLoading={isLoading} errorMessage={errorMessage} assignments={assignmentsSearched} isMyAssignment={false} isRecentUser={recentUserId} />
+		</div>
+	)
 }
 export default ManageAssignment
