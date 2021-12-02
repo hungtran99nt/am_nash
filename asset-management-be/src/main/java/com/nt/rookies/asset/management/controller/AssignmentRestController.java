@@ -122,8 +122,8 @@ public class AssignmentRestController {
    * @return
    */
   @PutMapping("/user/assignment/{id}/accept")
-  public AssignmentDTO acceptAssignment(@PathVariable(name = "id") Integer id, @RequestBody AssignmentDTO assignmentDTO) {
-    return assignmentService.acceptAssignment(id, assignmentDTO);
+  public AssignmentDTO acceptAssignment(@PathVariable(name = "id") Integer id) {
+    return assignmentService.acceptAssignment(id);
   }
 
   /**

@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Button, Modal} from "react-bootstrap";
 import axios from "axios";
 import {API_URL, FILTER_ASM_STATE_OPTIONS} from "../../../common/constants";
 import moment from "moment";
 import {Redirect, useHistory} from "react-router-dom";
+import './HomeConfirmModal.css';
 
 const HomeConfirmModal =
     ({
@@ -68,8 +69,14 @@ const HomeConfirmModal =
             show={buttonName==="Accept" ? showAcceptConfirm : showDeclineConfirm}
             onHide={buttonName==="Accept" ? handleCloseAcceptConfirm : handleCloseDeclineConfirm}
             centered
-            backdrop="static">
-            <Modal.Header closeButton='' className="text-danger">
+            backdrop="static"
+            size="sm"
+        >
+            <Modal.Header
+                closeButton=''
+                className="text-danger"
+                style={{backgroundColor: "#9fa2a34f", borderTopLeftRadius: "1rem", borderTopRightRadius: "1rem"}}
+            >
                 <Modal.Title>Are you sure?</Modal.Title>
             </Modal.Header>
             <Modal.Body>

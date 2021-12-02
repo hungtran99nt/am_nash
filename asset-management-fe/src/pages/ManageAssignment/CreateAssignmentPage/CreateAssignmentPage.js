@@ -35,7 +35,7 @@ const convertUserResponse = res => res.data.map(u => (
     }
 ));
 const convertAssetResponse = res => res.data;
-const CreateAssignmentPage = () => {
+const CreateAssignmentPage = ({curUsername}) => {
     let history = useHistory();
 
     let curDate = moment(Date.now()).format("YYYY-MM-DD");
@@ -62,7 +62,7 @@ const CreateAssignmentPage = () => {
             url: `${API_URL}/admin/assignments/`,
             data: {
                 assetCode: assignedAsset.assetCode,
-                assignBy: localStorage.getItem('USERNAME'),
+                assignBy: curUsername,
                 assignTo: assignedTo.userName,
                 assignedDate: values.assignedDate,
                 state: FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE,
