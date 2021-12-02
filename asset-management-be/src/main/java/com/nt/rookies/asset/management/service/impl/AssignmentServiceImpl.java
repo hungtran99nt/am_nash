@@ -8,6 +8,7 @@ import com.nt.rookies.asset.management.entity.Location;
 import com.nt.rookies.asset.management.entity.User;
 import com.nt.rookies.asset.management.exception.AssignmentCreateException;
 import com.nt.rookies.asset.management.exception.AssignmentNotFound;
+import com.nt.rookies.asset.management.exception.BusinessException;
 import com.nt.rookies.asset.management.exception.ResourceDeleteException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.AssetRepository;
@@ -98,8 +99,9 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     } else if (!asset.getState().equals(BaseConstants.ASSET_STATUS_AVAILABLE)) {
       // Asset not available to be assigned
-//      logger.error(
-//          "Asset ({}) status: {} (must be Available)", asset.getAssetCode(), asset.getState());
+      //      logger.error(
+      //          "Asset ({}) status: {} (must be Available)", asset.getAssetCode(),
+      // asset.getState());
       throw new AssignmentCreateException("Asset not available");
     } else if (!assignBy.getLocation().getId().equals(assignTo.getLocation().getId())
         || !assignBy.getLocation().getId().equals(asset.getLocation().getId())) {
@@ -205,5 +207,47 @@ public class AssignmentServiceImpl implements AssignmentService {
     } else {
       throw new ResourceDeleteException("Cannot delete this assignment");
     }
+  }
+
+  @Override
+  public AssignmentDTO userAcceptAssignment(Integer assignmentID, AssignmentDTO assignmentDTO) {
+    Assignment assignment =
+        assignmentRepository
+            .findById(assignmentID)
+            .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+    User acceptedBy = userRepository.findByUsername(assignmentDTO.getAssignTo());
+    if (!assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_ACCEPTING)) {
+      throw new BusinessException("Can not modify assignment with id: " + assignmentID);
+    }
+    logger.info("Assignment's current state: {}", assignment.getState());
+    // Change state assignment to Accepted
+    assignment.setState(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED);
+    // Set who accepted assignment
+    assignment.setAcceptedBy(acceptedBy);
+
+    // Save to DB
+    Assignment updatedAssignment = assignmentRepository.save(assignment);
+    logger.info("Assignment's state changed to: {}", updatedAssignment.getState());
+    logger.info(
+        "Assignment {}({}) has accepted by {}",
+        updatedAssignment.getId(),
+        assignmentID,
+        updatedAssignment.getAcceptedBy());
+    return modelMapper.map(updatedAssignment, AssignmentDTO.class);
+  }
+
+  @Override
+  public void userDeclineAssignment(Integer assignmentID) {
+    Assignment assignment =
+        assignmentRepository
+            .findById(assignmentID)
+            .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+    if (!assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_ACCEPTING)) {
+      throw new BusinessException("Can not modify assignment with id: " + assignmentID);
+    }
+    logger.info("Assignment's current state: {}", assignment.getState());
+
+    // Delete to DB
+    assignmentRepository.delete(assignment);
   }
 }
