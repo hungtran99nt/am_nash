@@ -123,7 +123,7 @@ public class AssignmentRestController {
    */
   @PutMapping("/user/assignment/{id}/accept")
   public AssignmentDTO acceptAssignment(@PathVariable(name = "id") Integer id, @RequestBody AssignmentDTO assignmentDTO) {
-    return assignmentService.userAcceptAssignment(id, assignmentDTO);
+    return assignmentService.acceptAssignment(id, assignmentDTO);
   }
 
   /**
@@ -133,7 +133,7 @@ public class AssignmentRestController {
    */
   @DeleteMapping("/user/assignment/{id}/decline")
   public ResponseEntity<?> declineAssignment(@PathVariable(name = "id") Integer id){
-    assignmentService.userDeclineAssignment(id);
+    assignmentService.declineAssignment(id);
     return ResponseEntity.ok("Assignment deleted");
   }
 

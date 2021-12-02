@@ -210,7 +210,7 @@ public class AssignmentServiceImpl implements AssignmentService {
   }
 
   @Override
-  public AssignmentDTO userAcceptAssignment(Integer assignmentID, AssignmentDTO assignmentDTO) {
+  public AssignmentDTO acceptAssignment(Integer assignmentID, AssignmentDTO assignmentDTO) {
     Assignment assignment =
         assignmentRepository
             .findById(assignmentID)
@@ -237,7 +237,7 @@ public class AssignmentServiceImpl implements AssignmentService {
   }
 
   @Override
-  public void userDeclineAssignment(Integer assignmentID) {
+  public void declineAssignment(Integer assignmentID) {
     Assignment assignment =
         assignmentRepository
             .findById(assignmentID)

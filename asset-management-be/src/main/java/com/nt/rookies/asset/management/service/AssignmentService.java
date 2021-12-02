@@ -76,11 +76,11 @@ public interface AssignmentService {
    * User can accept assignment which in state "Waiting for Acceptance"
    * @param assignmentID
    */
-  AssignmentDTO userAcceptAssignment(Integer assignmentID, AssignmentDTO assignmentDTO);
+  AssignmentDTO acceptAssignment(Integer assignmentID, AssignmentDTO assignmentDTO);
 
   /**
    * User can accept assignment which in state "Waiting for Acceptance"
    * @param assignmentID
    */
-  void userDeclineAssignment(Integer assignmentID);
+  void declineAssignment(Integer assignmentID);
 }
