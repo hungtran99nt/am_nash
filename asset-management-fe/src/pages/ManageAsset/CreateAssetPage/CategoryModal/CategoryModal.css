@@ -27,11 +27,19 @@
     border-radius: 4px;
     padding: 4px 4px;
 }
-button.btn.btn-addCategory {
-    color: #0a53be;
+.btn-addCategory {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff !important;
+    color: #0a53be !important;
     margin-bottom: 5px;
     padding: 0;
 }
 .plus-icon{
     font-size: 18px;
+}
+
+.table-scroll {
+    overflow-y: scroll;
 }

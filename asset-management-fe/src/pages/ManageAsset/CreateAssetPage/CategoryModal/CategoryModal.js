@@ -1,0 +1,153 @@
+import React from 'react';
+import './CategoryModal.css';
+import BootstrapTable from "react-bootstrap-table-next";
+import {API_URL, SORT_ORDERS} from "../../../../common/constants";
+import {Button, Form, InputGroup, Modal, ModalBody} from "react-bootstrap";
+import {Formik} from "formik";
+import useFetch from "../../../../hooks/useFetch";
+import {BsPlusLg} from "react-icons/all";
+import axios from "axios";
+import Error from "../../../Error/Error";
+
+const convertDataResponse = res => res.data;
+
+const CategoryModal = ({show, handleClose, handlePassingData}) => {
+    const {
+        data: categories,
+    } = useFetch([], `${API_URL}/categories`, convertDataResponse);
+    const selectRow = (row) => {
+        handlePassingData(row);
+        handleClose();
+        console.log("Select row ", row)
+    }
+
+    const handleCreateCategory = (values, {resetForm}) => {
+        console.log("Create category ", values)
+        axios({
+            method: 'POST',
+            url: `${API_URL}/categories`,
+            data: {
+                categoryName: values.categoryName,
+                categoryPrefix: values.categoryPrefix
+            }
+        }).then(res => {
+            // console.log("res = ", res);
+            console.log('create category success.');
+        }).catch(err => {
+            console.log("err = ", err);
+            return <Error message={err.response.data.message}/>
+        }).finally(
+            resetForm()
+        );
+    }
+
+    const columns = [
+        {
+            dataField: 'categoryName',
+            text: 'Category name',
+            sort: true,
+            headerStyle: () => {
+                return {width: '120px'};
+            }
+        }, {
+            dataField: 'categoryPrefix',
+            text: 'Prefix',
+            sort: true,
+            headerStyle: () => {
+                return {width: '40px'};
+            }
+        }
+    ];
+
+    return (
+        <Modal show={show} onHide={handleClose} centered>
+            <ModalBody>
+                <div className="table-scroll">
+                    <BootstrapTable
+                        keyField='id'
+                        columns={columns}
+                        data={categories}
+                        defaultSorted={[{
+                            dataField: 'categoryPrefix',
+                            order: SORT_ORDERS.ASC
+                        }]}
+                        selectRow={{
+                            mode: 'radio',
+                            clickToSelect: true,
+                            bgColor: 'rgba(108,117,125,0.53)',
+                            onSelect: selectRow
+                        }}
+
+                        // pagination={pagination}
+                    />
+                </div>
+
+                <Formik initialValues={{categoryName: "", categoryPrefix: ""}}
+                        validate={values => {
+                            const errors = {};
+                            if (!values.categoryName) {
+                                errors.categoryName = "Required"
+                            } else if (categories.find(category => category.categoryName === values.categoryName)) {
+                                errors.categoryName = "Category is already existed. Please enter a different category"
+                            }
+
+                            if (!values.categoryPrefix) {
+                                errors.categoryPrefix = "Required";
+                            } else if (values.categoryPrefix.length > 3) {
+                                errors.categoryPrefix = "Prefix must not be more than 3 characters";
+                            } else if (categories.find(category => category.categoryPrefix === values.categoryPrefix)) {
+                                errors.categoryPrefix = "Prefix is already existed. Please enter a different prefix";
+                            }
+                            return errors;
+                        }}
+                        onSubmit={handleCreateCategory}>
+                    {({
+                          values,
+                          errors,
+                          touched,
+                          handleBlur,
+                          handleChange,
+                          handleSubmit,
+                      }) => (
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group>
+                                <Form.Control
+                                    type="text"
+                                    name="categoryName"
+                                    value={values.categoryName}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    isInvalid={touched.categoryName && errors.categoryName}
+                                    placeholder="Name of new category"
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.categoryName}
+                                </Form.Control.Feedback>
+                                <InputGroup>
+                                    <Form.Control
+                                        type="text"
+                                        name="categoryPrefix"
+                                        placeholder="Prefix of new category"
+                                        value={values.categoryPrefix}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        isInvalid={touched.categoryPrefix && errors.categoryPrefix}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.categoryPrefix}
+                                    </Form.Control.Feedback>
+                                    <Button type="submit" className="btn btn-addCategory"><BsPlusLg/>Add category
+                                    </Button>
+                                </InputGroup>
+                            </Form.Group>
+                        </Form>
+                    )}
+                </Formik>
+
+            </ModalBody>
+        </Modal>
+    )
+        ;
+};
+
+export default CategoryModal;

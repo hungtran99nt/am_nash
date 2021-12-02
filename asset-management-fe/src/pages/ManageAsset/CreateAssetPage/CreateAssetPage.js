@@ -1,46 +1,75 @@
 import React, {useState} from "react";
-import './CreateAssetPage.css'
-import {Button, Col, Dropdown, Form, Row} from "react-bootstrap";
+import {Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from "formik";
 import {useHistory} from "react-router-dom";
 import * as Yup from 'yup';
-import useFetch from "../../../hooks/useFetch";
+import {FiChevronDown} from "react-icons/all";
+import {InputGroup} from "reactstrap";
+import CategoryModal from "./CategoryModal/CategoryModal";
+import axios from "axios";
 import {API_URL} from "../../../common/constants";
-import {BsPlus, BsPlusLg, FiChevronDown} from "react-icons/all";
+import Error from "../../Error/Error";
 
 
 const validateForm = Yup.object().shape({
-    name: Yup.string().required("Required!"),
-    category: Yup.string().nullable().required("Required!"),
+    assetName: Yup.string().required("Required!"),
+    categoryName: Yup.string().nullable().required("Required!"),
     specification: Yup.string().required("Required!"),
-    installDate: Yup.date().required("Required!"),
+    installedDate: Yup.date().required("Required!"),
 })
-const convertDataResponse = res => res.data;
 
 const CreateAssetPage = () => {
     let history = useHistory();
+
     const handleRedirectAssetManagePage = () => {
         history.push("/asset")
     }
-    const {
-        data: categories,
-    } = useFetch([], `${API_URL}/categories`, convertDataResponse);
 
-    const [dropValue, setDropValue] = useState("Select Category")
+    const [show, setShow] = useState(false);
+    const handleClickCategoryPopup = () => setShow(true);
+    const handleClose = () => setShow(false);
+
+    const [category, setCategory] = useState({});
+    console.log("before send data ", category)
+    const handlePassingData = (cate) => setCategory(cate);
+    console.log("after send data = ", category)
     const initialValues = {
-        name: "",
-        category: dropValue,
+        assetName: "",
+        categoryName: category.categoryName,
         specification: "",
-        installDate: "",
-        state: "Available",
+        installedDate: "",
+        state: "Available"
     }
-
 
     const submit = (values, {resetForm}) => {
         console.log("value on submit =", values);
-        history.push("/asset")
-        resetForm();
+        axios({
+            method: 'POST',
+            url: `${API_URL}/assets/`,
+            data: {
+                assetName: values.assetName,
+                categoryName: values.categoryName,
+                specification: values.specification,
+                installedDate: values.installedDate,
+                state: values.state
+            }
+        }).then(res => {
+            // console.log("res = ", res);
+            console.log('create asset success.');
+            history.push("/asset", {firstId: res.data.id});
+        }).catch(err => {
+            console.log("err = ", err);
+            return <Error message={err.response.data.message}/>
+        }).finally(
+            resetForm()
+        );
     }
+    const [assetName, setAssetName] = useState("");
+    const [categoryName, setCategoryName] = useState("");
+    const [specification, setSpecification] = useState("");
+    const [installedDate, setInstalledDate] = useState("");
+    const [state, setState] = useState("");
+
     return (
         <div className="app-page">
             <div className="row">
@@ -62,72 +91,67 @@ const CreateAssetPage = () => {
                               handleSubmit,
                           }) => (
                             <Form onSubmit={handleSubmit}>
+                                {/*Asset name*/}
                                 <Form.Group as={Row} className="mb-3" controlId="formTextFirstName">
                                     <Form.Label column sm="3">Name</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
                                             type="text"
-                                            name="name"
-                                            defaultValue={values.name}
-                                            onChange={handleChange}
+                                            name="assetName"
+                                            value={assetName}
+                                            onChange={(evt) => {
+                                                handleChange(evt);
+                                                setAssetName(evt.target.value);
+                                            }}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.name && errors.name}
+                                            isInvalid={touched.assetName && errors.assetName}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.name}
+                                            {errors.assetName}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.name}
-                                </Form.Control.Feedback>
-                                <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+                                {/*Category*/}
+                                <Form.Group as={Row} className="mb-3" controlId="formTextFullName">
                                     <Form.Label column sm="3">Category</Form.Label>
                                     <Col sm="6">
-                                        <Dropdown
-                                            name="category"
-                                            value={values.category}
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                        >
-                                            <Dropdown.Toggle id="dropdown-autoclose-true" className="form-control drop-category">
-                                                <div className="drop-box">
-                                                    <span className="drop-title">{dropValue}</span>
-                                                    <FiChevronDown/>
-                                                </div>
-                                            </Dropdown.Toggle>
-                                            <Dropdown.Menu className="form-control">
-                                                {categories.map(cate => <Dropdown.Item key={cate.id}
-                                                                                       value={values.category}>
-                                                    <div
-                                                        onClick={(e) => setDropValue(e.target.textContent)}>{cate.categoryName}
-                                                    </div>
-                                                </Dropdown.Item>)
-                                                }
-                                                <Dropdown.Divider/>
-                                                <div className="category-form">
-                                                    <input placeholder="Name of new Category" className="input-cate"/>
-                                                    <input placeholder="Prefix of new Category"
-                                                           className="input-prefix"/>
-                                                    <button className="btn btn-addCategory"><BsPlusLg/> Add Category
-                                                    </button>
-                                                </div>
-                                            </Dropdown.Menu>
-                                        </Dropdown>
+                                        <InputGroup>
+                                            <Form.Control
+                                                name="categoryName"
+                                                onClick={handleClickCategoryPopup}
+                                                onChange={handleChange}
+                                                value={values.categoryName}
+                                                readOnly
+                                                isInvalid={touched.categoryName && errors.categoryName}
+                                            />
 
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.category}
-                                        </Form.Control.Feedback>
+                                            <Button variant="outline-secondary" id="button-addon1"
+                                                    onClick={handleClickCategoryPopup} disabled
+                                            >
+                                                <FiChevronDown/>
+                                            </Button>
+                                            <CategoryModal
+                                                show={show} handleClose={handleClose}
+                                                handlePassingData={handlePassingData}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.categoryName}
+                                            </Form.Control.Feedback>
+                                        </InputGroup>
                                     </Col>
                                 </Form.Group>
+                                {/*Specification*/}
                                 <Form.Group as={Row} className="mb-3" controlId="exampleFormControlTextarea">
                                     <Form.Label column sm="3">Specification</Form.Label>
                                     <Col sm="6">
                                         <Form.Control rows={4}
                                                       as="textarea"
                                                       name="specification"
-                                                      value={values.specification}
-                                                      onChange={handleChange}
+                                                      value={specification}
+                                                      onChange={(evt) => {
+                                                          handleChange(evt);
+                                                          setSpecification(evt.target.value);
+                                                      }}
                                                       onBlur={handleBlur}
                                                       isInvalid={touched.specification && errors.specification}
                                         />
@@ -136,22 +160,27 @@ const CreateAssetPage = () => {
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
+                                {/*Installed Date<*/}
                                 <Form.Group as={Row} className="mb-3" controlId="formTextInstallDate">
                                     <Form.Label column sm="3">Installed Date</Form.Label>
                                     <Col sm="6">
                                         <Form.Control
-                                            name="installDate"
+                                            name="installedDate"
                                             type="date"
-                                            value={values.installDate}
-                                            onChange={handleChange}
+                                            value={installedDate}
+                                            onChange={(evt) => {
+                                                handleChange(evt);
+                                                setInstalledDate(evt.target.value);
+                                            }}
                                             onBlur={handleBlur}
-                                            isInvalid={touched.installDate && errors.installDate}
+                                            isInvalid={touched.installedDate && errors.installedDate}
                                         />
                                         <Form.Control.Feedback type="invalid">
-                                            {errors.installDate}
+                                            {errors.installedDate}
                                         </Form.Control.Feedback>
                                     </Col>
                                 </Form.Group>
+                                {/*State*/}
                                 <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
                                     <Form.Label column sm="3">State</Form.Label>
                                     <Col sm="6">
@@ -171,13 +200,12 @@ const CreateAssetPage = () => {
                                                 value="Not Available"
                                                 onChange={handleChange}
                                             />
-
                                         </div>
                                     </Col>
                                 </Form.Group>
                                 <div className="group-btn">
                                     <Button type="submit" className="btn-primary"
-                                            disabled={!values.name || !values.specification || !values.installDate || !values.category}
+                                            disabled={!values.assetName || !values.specification || !values.installedDate || !values.categoryName}
                                     >
                                         Save
                                     </Button>
