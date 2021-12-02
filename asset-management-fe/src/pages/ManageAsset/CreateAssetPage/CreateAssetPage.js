@@ -1,3 +1,4 @@
+import './CreateAssetPage.css'
 import React, {useState} from "react";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from "formik";
@@ -13,7 +14,7 @@ import Error from "../../Error/Error";
 
 const validateForm = Yup.object().shape({
     assetName: Yup.string().required("Required!"),
-    categoryName: Yup.string().nullable().required("Required!"),
+    categoryName: Yup.string().required("Required!"),
     specification: Yup.string().required("Required!"),
     installedDate: Yup.date().required("Required!"),
 })
@@ -112,21 +113,23 @@ const CreateAssetPage = () => {
                                     </Col>
                                 </Form.Group>
                                 {/*Category*/}
-                                <Form.Group as={Row} className="mb-3" controlId="formTextFullName">
+                                <Form.Group as={Row} className="mb-3" >
                                     <Form.Label column sm="3">Category</Form.Label>
                                     <Col sm="6">
                                         <InputGroup>
                                             <Form.Control
+                                                className="input-category"
                                                 name="categoryName"
                                                 onClick={handleClickCategoryPopup}
                                                 onChange={handleChange}
                                                 value={values.categoryName}
+                                                onBlur={handleBlur}
                                                 readOnly
                                                 isInvalid={touched.categoryName && errors.categoryName}
                                             />
 
-                                            <Button variant="outline-secondary" id="button-addon1"
-                                                    onClick={handleClickCategoryPopup} disabled
+                                            <Button className="btn-modal"
+                                                    onClick={handleClickCategoryPopup}
                                             >
                                                 <FiChevronDown/>
                                             </Button>
@@ -146,6 +149,7 @@ const CreateAssetPage = () => {
                                     <Col sm="6">
                                         <Form.Control rows={4}
                                                       as="textarea"
+
                                                       name="specification"
                                                       value={specification}
                                                       onChange={(evt) => {

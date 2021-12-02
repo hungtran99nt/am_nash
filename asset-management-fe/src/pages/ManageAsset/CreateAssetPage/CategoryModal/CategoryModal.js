@@ -1,17 +1,20 @@
 import React from 'react';
+import '../../../../assets/styles/main.css'
 import './CategoryModal.css';
 import BootstrapTable from "react-bootstrap-table-next";
 import {API_URL, SORT_ORDERS} from "../../../../common/constants";
-import {Button, Form, InputGroup, Modal, ModalBody} from "react-bootstrap";
+import {Button, Form, Row, Col, Modal, ModalBody} from "react-bootstrap";
 import {Formik} from "formik";
 import useFetch from "../../../../hooks/useFetch";
 import {BsPlusLg} from "react-icons/all";
 import axios from "axios";
 import Error from "../../../Error/Error";
+import {useHistory} from "react-router-dom";
 
 const convertDataResponse = res => res.data;
 
 const CategoryModal = ({show, handleClose, handlePassingData}) => {
+    const history = useHistory();
     const {
         data: categories,
     } = useFetch([], `${API_URL}/categories`, convertDataResponse);
@@ -32,6 +35,7 @@ const CategoryModal = ({show, handleClose, handlePassingData}) => {
             }
         }).then(res => {
             // console.log("res = ", res);
+            window.location.reload();
             console.log('create category success.');
         }).catch(err => {
             console.log("err = ", err);
@@ -60,92 +64,98 @@ const CategoryModal = ({show, handleClose, handlePassingData}) => {
     ];
 
     return (
-        <Modal show={show} onHide={handleClose} centered>
-            <ModalBody>
-                <div className="table-scroll">
-                    <BootstrapTable
-                        keyField='id'
-                        columns={columns}
-                        data={categories}
-                        defaultSorted={[{
-                            dataField: 'categoryPrefix',
-                            order: SORT_ORDERS.ASC
-                        }]}
-                        selectRow={{
-                            mode: 'radio',
-                            clickToSelect: true,
-                            bgColor: 'rgba(108,117,125,0.53)',
-                            onSelect: selectRow
-                        }}
+        <Modal show={show} onHide={handleClose} centered className="modal-display" backdropClassName="drop-display">
+                <ModalBody className="body-content">
+                    <div className="table-scroll">
+                        <BootstrapTable
+                            keyField='id'
+                            columns={columns}
+                            data={categories}
+                            defaultSorted={[{
+                                dataField: 'categoryPrefix',
+                                order: SORT_ORDERS.ASC
+                            }]}
+                            selectRow={{
+                                mode: 'radio',
+                                clickToSelect: true,
+                                bgColor: 'rgba(108,117,125,0.53)',
+                                onSelect: selectRow
+                            }}
 
-                        // pagination={pagination}
-                    />
-                </div>
+                            // pagination={pagination}
+                        />
+                    </div>
 
-                <Formik initialValues={{categoryName: "", categoryPrefix: ""}}
-                        validate={values => {
-                            const errors = {};
-                            if (!values.categoryName) {
-                                errors.categoryName = "Required"
-                            } else if (categories.find(category => category.categoryName === values.categoryName)) {
-                                errors.categoryName = "Category is already existed. Please enter a different category"
-                            }
+                    <Formik initialValues={{categoryName: "", categoryPrefix: ""}}
+                            validate={values => {
+                                const errors = {};
+                                if (!values.categoryName) {
+                                    errors.categoryName = "Required"
+                                } else if (categories.find(category => category.categoryName === values.categoryName)) {
+                                    errors.categoryName = "Category is already existed. Please enter a different category"
+                                }
 
-                            if (!values.categoryPrefix) {
-                                errors.categoryPrefix = "Required";
-                            } else if (values.categoryPrefix.length > 3) {
-                                errors.categoryPrefix = "Prefix must not be more than 3 characters";
-                            } else if (categories.find(category => category.categoryPrefix === values.categoryPrefix)) {
-                                errors.categoryPrefix = "Prefix is already existed. Please enter a different prefix";
-                            }
-                            return errors;
-                        }}
-                        onSubmit={handleCreateCategory}>
-                    {({
-                          values,
-                          errors,
-                          touched,
-                          handleBlur,
-                          handleChange,
-                          handleSubmit,
-                      }) => (
-                        <Form onSubmit={handleSubmit}>
-                            <Form.Group>
-                                <Form.Control
-                                    type="text"
-                                    name="categoryName"
-                                    value={values.categoryName}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    isInvalid={touched.categoryName && errors.categoryName}
-                                    placeholder="Name of new category"
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.categoryName}
-                                </Form.Control.Feedback>
-                                <InputGroup>
+                                if (!values.categoryPrefix) {
+                                    errors.categoryPrefix = "Required";
+                                } else if (values.categoryPrefix.length > 3) {
+                                    errors.categoryPrefix = "Prefix must not be more than 3 characters";
+                                } else if (categories.find(category => category.categoryPrefix === values.categoryPrefix)) {
+                                    errors.categoryPrefix = "Prefix is already existed. Please enter a different prefix";
+                                }
+                                return errors;
+                            }}
+                            onSubmit={handleCreateCategory}>
+                        {({
+                              values,
+                              errors,
+                              touched,
+                              handleBlur,
+                              handleChange,
+                              handleSubmit,
+                          }) => (
+                            <Form onSubmit={handleSubmit}>
+                                <Form.Group>
                                     <Form.Control
                                         type="text"
-                                        name="categoryPrefix"
-                                        placeholder="Prefix of new category"
-                                        value={values.categoryPrefix}
+                                        name="categoryName"
+                                        className="categoryName"
+                                        value={values.categoryName}
                                         onChange={handleChange}
                                         onBlur={handleBlur}
-                                        isInvalid={touched.categoryPrefix && errors.categoryPrefix}
+                                        isInvalid={touched.categoryName && errors.categoryName}
+                                        placeholder="Name of new category"
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        {errors.categoryPrefix}
+                                        {errors.categoryName}
                                     </Form.Control.Feedback>
-                                    <Button type="submit" className="btn btn-addCategory"><BsPlusLg/>Add category
-                                    </Button>
-                                </InputGroup>
-                            </Form.Group>
-                        </Form>
-                    )}
-                </Formik>
+                                    <Form.Group as={Row} className="mb-3 group-category">
+                                        <Col sm="6">
+                                            <Form.Control
+                                                type="text"
+                                                name="categoryPrefix"
+                                                placeholder="Prefix of new category"
+                                                value={values.categoryPrefix}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                isInvalid={touched.categoryPrefix && errors.categoryPrefix}
+                                            />
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.categoryPrefix}
+                                            </Form.Control.Feedback>
+                                        </Col>
+                                        <Col sm="6">
+                                            <Button type="submit" className="btn btn-addCategory"><BsPlusLg/>Add category
+                                            </Button>
+                                        </Col>
 
-            </ModalBody>
-        </Modal>
+                                    </Form.Group>
+                                </Form.Group>
+                            </Form>
+                        )}
+                    </Formik>
+
+                </ModalBody>
+            </Modal>
     )
         ;
 };

@@ -1,45 +1,33 @@
-.drop-category{
-    background-color: #ffffff !important;
-    border: 1px solid #000000 !important;
+.fade.modal-backdrop.drop-display.show{
+    opacity: 0;
 }
-.drop-box{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--text-color);
+.modal-display{
+    width:336px !important;
+    margin-left: 778px;
+    margin-top: 124px ;
 }
-.category-form{
-    margin-left: 10px;
-    margin-right: 10px;
+.body-content{
+    padding: 8px !important;
 }
-.input-cate{
-    width: 100%;
-    padding: 6px 10px;
-    border:1px solid #33333373;
-    border-radius: 4px;
-    margin: 10px 0;
+input.form-prefix.form-control{
+    margin-top: 12px;
 }
-
-.input-prefix{
-    width: 56%;
-    margin-right: 16px;
-    border:1px solid #33333373;
-    border-radius: 4px;
-    padding: 4px 4px;
-}
-.btn-addCategory {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #ffffff !important;
-    color: #0a53be !important;
-    margin-bottom: 5px;
-    padding: 0;
-}
-.plus-icon{
-    font-size: 18px;
-}
-
 .table-scroll {
     overflow-y: scroll;
+    height: 300px;
 }
+.categoryName{
+    margin: 12px 0;
+}
+.btn-addCategory {
+    background-color: #ffffff !important;
+    color: #0a53be !important;
+    padding: 0;
+}
+.group-category{
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0 !important;
+}
+
+
