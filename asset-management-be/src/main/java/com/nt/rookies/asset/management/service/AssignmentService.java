@@ -1,10 +1,9 @@
 package com.nt.rookies.asset.management.service;
 
-import java.util.List;
-
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
 import com.nt.rookies.asset.management.exception.ResourceDeleteException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
+import java.util.List;
 
 /** Service interface for Assignment. */
 public interface AssignmentService { 
@@ -47,7 +46,7 @@ public interface AssignmentService {
    * @param assignmentDTO
    * @return
    */
-  AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) throws Exception;
+  AssignmentDTO createAssignment(AssignmentDTO assignmentDTO);
 
   /**
    *

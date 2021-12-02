@@ -1,5 +1,20 @@
 package com.nt.rookies.asset.management.service.impl;
 
+import com.nt.rookies.asset.management.common.BaseConstants;
+import com.nt.rookies.asset.management.dto.AssignmentDTO;
+import com.nt.rookies.asset.management.entity.Asset;
+import com.nt.rookies.asset.management.entity.Assignment;
+import com.nt.rookies.asset.management.entity.Location;
+import com.nt.rookies.asset.management.entity.User;
+import com.nt.rookies.asset.management.exception.AssignmentCreateException;
+import com.nt.rookies.asset.management.exception.AssignmentNotFound;
+import com.nt.rookies.asset.management.exception.ResourceDeleteException;
+import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
+import com.nt.rookies.asset.management.repository.AssetRepository;
+import com.nt.rookies.asset.management.repository.AssignmentRepository;
+import com.nt.rookies.asset.management.repository.UserRepository;
+import com.nt.rookies.asset.management.service.AssignmentService;
+import com.nt.rookies.asset.management.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
@@ -9,20 +24,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.nt.rookies.asset.management.common.BaseConstants;
-import com.nt.rookies.asset.management.dto.AssignmentDTO;
-import com.nt.rookies.asset.management.entity.Asset;
-import com.nt.rookies.asset.management.entity.Assignment;
-import com.nt.rookies.asset.management.entity.Location;
-import com.nt.rookies.asset.management.entity.User;
-import com.nt.rookies.asset.management.exception.AssignmentNotFound;
-import com.nt.rookies.asset.management.exception.ResourceDeleteException;
-import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
-import com.nt.rookies.asset.management.repository.AssetRepository;
-import com.nt.rookies.asset.management.repository.AssignmentRepository;
-import com.nt.rookies.asset.management.repository.UserRepository;
-import com.nt.rookies.asset.management.service.AssignmentService;
-import com.nt.rookies.asset.management.service.UserService;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
@@ -30,7 +31,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
   private final UserService userService;
   private final UserRepository userRepository;
-  private final AssetRepository assetRepository; 
+  private final AssetRepository assetRepository;
   private final ModelMapper modelMapper;
   private final AssignmentRepository assignmentRepository;
 
@@ -49,7 +50,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
   @Override
   @Transactional
-  public AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) throws Exception {
+  public AssignmentDTO createAssignment(AssignmentDTO assignmentDTO) {
 
     Assignment newAssignment = modelMapper.map(assignmentDTO, Assignment.class);
     Assignment createdAssignment = new Assignment();
@@ -97,9 +98,9 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     } else if (!asset.getState().equals(BaseConstants.ASSET_STATUS_AVAILABLE)) {
       // Asset not available to be assigned
-      //            logger.error("Asset ({}) status: {} (must be Available)", asset.getAssetCode(),
-      // asset.getState());
-      throw new Exception("Asset not available");
+//      logger.error(
+//          "Asset ({}) status: {} (must be Available)", asset.getAssetCode(), asset.getState());
+      throw new AssignmentCreateException("Asset not available");
     } else if (!assignBy.getLocation().getId().equals(assignTo.getLocation().getId())
         || !assignBy.getLocation().getId().equals(asset.getLocation().getId())) {
       // Asset, who creates assign and be assigned must have the same location
@@ -107,13 +108,14 @@ public class AssignmentServiceImpl implements AssignmentService {
       // {} (must be equal)",
       //                    assignBy.getLocation().getId(), assignTo.getLocation().getId(),
       // asset.getLocation().getId());
-      throw new Exception("Asset, who assigned and was assigned must has the same location");
+      throw new AssignmentCreateException(
+          "Asset, who assigned and was assigned must has the same location");
     } else if (assignBy.getStatus() == BaseConstants.USER_STATUS_DISABLED
         || assignTo.getStatus() == BaseConstants.USER_STATUS_DISABLED) {
       // who creates assign and be assigned must have active account
       //            logger.error("assignBy_state: {} and assignTo_state: {} (must be -1 or 1)",
       //                    assignBy.getStatus(), assignTo.getStatus());
-      throw new Exception("User who has disable account can not be assigned asset");
+      throw new AssignmentCreateException("User who has disable account can not be assigned asset");
     }
     return modelMapper.map(createdAssignment, AssignmentDTO.class);
   }
@@ -146,14 +148,14 @@ public class AssignmentServiceImpl implements AssignmentService {
     Assignment updatedAssignment = assignmentRepository.save(assignment);
     logger.info("Asset updated: {}", updatedAssignment);
     return modelMapper.map(updatedAssignment, AssignmentDTO.class);
-
   }
 
   @Override
   public List<AssignmentDTO> getAllAssignmentsByLocation() {
     logger.info("Get all assignments by admin location");
     Location currentAdminLocation = userService.getUserLocation();
-    List<Assignment> assignments = assignmentRepository.findAllByAssetLocation(currentAdminLocation);
+    List<Assignment> assignments =
+        assignmentRepository.findAllByAssetLocation(currentAdminLocation);
     return assignments.stream()
         .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
         .collect(Collectors.toList());
@@ -184,14 +186,21 @@ public class AssignmentServiceImpl implements AssignmentService {
 
   @Override
   public boolean isAssignmentValidToDelete(Integer id) {
-    Assignment assignment = assignmentRepository.getStateById(id).orElseThrow(() -> new AssignmentNotFound("Assignment not found"));
-    return !(assignment.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED) || assignment.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_RETURNING));
+    Assignment assignment =
+        assignmentRepository
+            .getStateById(id)
+            .orElseThrow(() -> new AssignmentNotFound("Assignment not found"));
+    return !(assignment.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED)
+        || assignment.getState().equalsIgnoreCase(BaseConstants.ASSIGNMENT_STATUS_RETURNING));
   }
 
   @Override
   public void deleteAssignment(Integer id) {
     if (isAssignmentValidToDelete(id)) {
-      Assignment assignment = assignmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+      Assignment assignment =
+          assignmentRepository
+              .findById(id)
+              .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
       assignmentRepository.delete(assignment);
     } else {
       throw new ResourceDeleteException("Cannot delete this assignment");
