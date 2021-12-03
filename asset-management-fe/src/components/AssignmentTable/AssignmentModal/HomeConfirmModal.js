@@ -17,25 +17,18 @@ const HomeConfirmModal =
 
         const history = useHistory();
 
-        const updateDataState = () => {
-            const index = assignments.map(x => {
-                return x.id;
-            }).indexOf(assignmentID);
-            assignments.splice(index, 1);
-        }
-
         const handleConfirmDecline = () => {
             axios
                 .delete(`${API_URL}/user/assignment/${assignmentID}/decline`)
                 .then(() => {
                     console.log(`Decline successful assignment: ${assignmentID}`);
                     handleCloseDeclineConfirm();
+                    return <Redirect to="/" />;
                 })
                 .catch(err => {
                     handleCloseDeclineConfirm();
                     alert(`Decline error: ${err}`);
                 });
-            updateDataState();
         }
         console.log(assignments)
         const assignment = assignments.find( a => a.id === assignmentID);
