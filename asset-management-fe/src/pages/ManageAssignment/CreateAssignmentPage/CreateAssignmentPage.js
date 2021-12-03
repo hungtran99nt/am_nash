@@ -35,7 +35,7 @@ const convertUserResponse = res => res.data.map(u => (
     }
 ));
 const convertAssetResponse = res => res.data;
-const CreateAssignmentPage = () => {
+const CreateAssignmentPage = ({curUsername}) => {
     let history = useHistory();
 
     let curDate = moment(Date.now()).format("YYYY-MM-DD");
@@ -62,7 +62,7 @@ const CreateAssignmentPage = () => {
             url: `${API_URL}/admin/assignments/`,
             data: {
                 assetCode: assignedAsset.assetCode,
-                assignBy: localStorage.getItem('USERNAME'),
+                assignBy: curUsername,
                 assignTo: assignedTo.userName,
                 assignedDate: values.assignedDate,
                 state: FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE,
@@ -139,7 +139,7 @@ const CreateAssignmentPage = () => {
                               handleSubmit,
                           }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextFullName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextFullName" id="userInput">
                                     <Form.Label column sm="3">User</Form.Label>
                                     <Col sm="6">
                                         <InputGroup>
@@ -158,6 +158,7 @@ const CreateAssignmentPage = () => {
                                             </Button>
                                             <UserAssignmentModal
                                                 show={show} handleClose={handleClose} users={users} handlePassingData={handlePassingData}
+                                                curUsername={curUsername}
                                             />
                                             <Form.Control.Feedback type="invalid">
                                                 {errors.user}
@@ -165,7 +166,7 @@ const CreateAssignmentPage = () => {
                                         </InputGroup>
                                     </Col>
                                 </Form.Group>
-                                <Form.Group as={Row} className="mb-3" controlId="formTextAssetName">
+                                <Form.Group as={Row} className="mb-3" controlId="formTextAssetName" id="assetInput">
                                     <Form.Label column sm="3">Asset</Form.Label>
                                     <Col sm="6">
                                         <InputGroup>

@@ -71,4 +71,16 @@ public interface AssignmentService {
    * @exception ResourceDeleteException if can not delete assignment
    */
   void deleteAssignment(Integer id);
+
+  /**
+   * User can accept assignment which in state "Waiting for Acceptance"
+   * @param assignmentID
+   */
+  AssignmentDTO acceptAssignment(Integer assignmentID);
+
+  /**
+   * User can accept assignment which in state "Waiting for Acceptance"
+   * @param assignmentID
+   */
+  void declineAssignment(Integer assignmentID);
 }

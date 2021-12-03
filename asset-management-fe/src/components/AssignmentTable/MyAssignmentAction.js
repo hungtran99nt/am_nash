@@ -4,7 +4,7 @@ import {BsCheckLg, FaTimes, FaUndoAlt} from "react-icons/all";
 import {useHistory} from "react-router-dom";
 import './AssignmentTable.css';
 
-const MyAssignmentAction = ({cell, row}) => {
+const MyAssignmentAction = ({cell, row, handleAcceptClick, handleDeclineClick}) => {
     const history = useHistory();
 
     return (
@@ -15,7 +15,7 @@ const MyAssignmentAction = ({cell, row}) => {
                 className={`action__items ${row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE ? '' : 'disable'}`}
                 onClick={
                     row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE ?
-                        () => console.log(`Accept assignment id: ${row.id}`) : undefined
+                        () => handleAcceptClick(row.id) : undefined
                 }
                 title={"Accept assignment"}
             />
@@ -26,7 +26,7 @@ const MyAssignmentAction = ({cell, row}) => {
                 className={`action__items ${row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE ? '' : 'disable'}`}
                 onClick={
                     row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE ?
-                        () => console.log(`Decline assignment id: ${row.id}`) : undefined
+                        () => handleDeclineClick(row.id) : undefined
                 }
                 title={"Decline assignment"}
             />
