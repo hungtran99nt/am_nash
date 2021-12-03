@@ -29,14 +29,14 @@ const CreateAssetPage = () => {
     const [show, setShow] = useState(false);
     const handleClickCategoryPopup = () => setShow(true);
     const handleClose = () => setShow(false);
+    // const [category, setCategory] = useState({});
+    // console.log("before send data ", category)
+    // const handlePassingData = (cate) => setCategory(cate);
+    // console.log("after send data = ", category)
 
-    const [category, setCategory] = useState({});
-    console.log("before send data ", category)
-    const handlePassingData = (cate) => setCategory(cate);
-    console.log("after send data = ", category)
     const initialValues = {
         assetName: "",
-        categoryName: category.categoryName,
+        categoryName: "",
         specification: "",
         installedDate: "",
         state: "Available"
@@ -65,11 +65,6 @@ const CreateAssetPage = () => {
             resetForm()
         );
     }
-    const [assetName, setAssetName] = useState("");
-    const [categoryName, setCategoryName] = useState("");
-    const [specification, setSpecification] = useState("");
-    const [installedDate, setInstalledDate] = useState("");
-    const [state, setState] = useState("");
 
     return (
         <div className="app-page">
@@ -78,7 +73,7 @@ const CreateAssetPage = () => {
                 <div className="col-lg-8">
                     <div className="app-content__title">Create New Asset</div>
                     <Formik
-                        enableReinitialize={true}
+                        enableReinitialize={false}
                         initialValues={initialValues}
                         validationSchema={validateForm}
                         onSubmit={submit}
@@ -89,7 +84,8 @@ const CreateAssetPage = () => {
                               touched,
                               handleBlur,
                               handleChange,
-                              handleSubmit,
+                              setFieldValue,
+                              handleSubmit
                           }) => (
                             <Form onSubmit={handleSubmit}>
                                 {/*Asset name*/}
@@ -99,11 +95,8 @@ const CreateAssetPage = () => {
                                         <Form.Control
                                             type="text"
                                             name="assetName"
-                                            value={assetName}
-                                            onChange={(evt) => {
-                                                handleChange(evt);
-                                                setAssetName(evt.target.value);
-                                            }}
+                                            value={values.assetName}
+                                            onChange={handleChange}
                                             onBlur={handleBlur}
                                             isInvalid={touched.assetName && errors.assetName}
                                         />
@@ -125,17 +118,19 @@ const CreateAssetPage = () => {
                                                 value={values.categoryName}
                                                 onBlur={handleBlur}
                                                 readOnly
+                                                // disabled
                                                 isInvalid={touched.categoryName && errors.categoryName}
+                                                placeholder="Select category"
                                             />
-
                                             <Button className="btn-modal"
                                                     onClick={handleClickCategoryPopup}
                                             >
                                                 <FiChevronDown/>
                                             </Button>
                                             <CategoryModal
-                                                show={show} handleClose={handleClose}
-                                                handlePassingData={handlePassingData}
+                                                show={show}
+                                                handleClose={handleClose}
+                                                setFieldValue={setFieldValue}
                                             />
                                             <Form.Control.Feedback type="invalid">
                                                 {errors.categoryName}
@@ -151,11 +146,8 @@ const CreateAssetPage = () => {
                                                       as="textarea"
 
                                                       name="specification"
-                                                      value={specification}
-                                                      onChange={(evt) => {
-                                                          handleChange(evt);
-                                                          setSpecification(evt.target.value);
-                                                      }}
+                                                      value={values.specification}
+                                                      onChange={handleChange}
                                                       onBlur={handleBlur}
                                                       isInvalid={touched.specification && errors.specification}
                                         />
@@ -171,11 +163,8 @@ const CreateAssetPage = () => {
                                         <Form.Control
                                             name="installedDate"
                                             type="date"
-                                            value={installedDate}
-                                            onChange={(evt) => {
-                                                handleChange(evt);
-                                                setInstalledDate(evt.target.value);
-                                            }}
+                                            value={values.installedDate}
+                                            onChange={handleChange}
                                             onBlur={handleBlur}
                                             isInvalid={touched.installedDate && errors.installedDate}
                                         />
