@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import './CreateAssignmentPage.css'
-import {Button, Col, Form, Row} from "react-bootstrap";
+import {Alert, Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from "formik";
 import {useHistory} from "react-router-dom";
 import * as Yup from 'yup';
@@ -28,7 +28,7 @@ const convertUserResponse = res => res.data.map(u => (
         id: u.id,
         staffCode: u.staffCode,
         fullName: `${u.lastName} ${u.firstName}`,
-        userName: u.username,
+        username: u.username,
         joinedDate: moment(u.joinedDate).format(DATE_FORMAT.TO),
         type: u.type,
         location: u.location
@@ -37,6 +37,17 @@ const convertUserResponse = res => res.data.map(u => (
 const convertAssetResponse = res => res.data;
 const CreateAssignmentPage = ({curUsername}) => {
     let history = useHistory();
+
+    const [visible, setVisible] = useState(false);
+
+    const whenCreateSuccess = () => {
+        setVisible(true,
+            () => {
+                setTimeout(() => {
+                    setVisible(false);
+                }, 1000)
+            })
+    }
 
     let curDate = moment(Date.now()).format("YYYY-MM-DD");
 
@@ -48,12 +59,13 @@ const CreateAssignmentPage = ({curUsername}) => {
         data: users,
         errorUserMessage
     } = useFetch([], `${API_URL}/users`, convertUserResponse);
+    console.log(users)
     const {
         isAssetLoading,
         data: assets,
         errorAssetMessage
     } = useFetch([], `${API_URL}/assets`, convertAssetResponse);
-    console.log(assets)
+
     if (errorUserMessage && errorAssetMessage) window.location.reload(history.push("/login"));
 
     const submit = (values, {resetForm}) => {
@@ -63,13 +75,15 @@ const CreateAssignmentPage = ({curUsername}) => {
             data: {
                 assetCode: assignedAsset.assetCode,
                 assignBy: curUsername,
-                assignTo: assignedTo.userName,
+                assignTo: assignedTo.username,
                 assignedDate: values.assignedDate,
                 state: FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE,
                 note: values.note
             }
         }).then(res => {
-            history.push("/assignment")
+            if (res.status === 200) {
+                history.push("/assignment")
+            }
         }).catch(err => {
             console.log("err = ", err);
         }).finally( () => {
@@ -124,6 +138,7 @@ const CreateAssignmentPage = ({curUsername}) => {
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
                     <div className="app-content__title">Create New Assignment</div>
+
                     <Formik
                         enableReinitialize={true}
                         initialValues={initialValues}
@@ -139,6 +154,9 @@ const CreateAssignmentPage = ({curUsername}) => {
                               handleSubmit,
                           }) => (
                             <Form onSubmit={handleSubmit}>
+                                <Alert color="info" show={visible} >
+                                    I am an alert and I will disappear in 2sec.!
+                                </Alert>
                                 <Form.Group as={Row} className="mb-3" controlId="formTextFullName" id="userInput">
                                     <Form.Label column sm="3">User</Form.Label>
                                     <Col sm="6">
@@ -158,7 +176,6 @@ const CreateAssignmentPage = ({curUsername}) => {
                                             </Button>
                                             <UserAssignmentModal
                                                 show={show} handleClose={handleClose} users={users} handlePassingData={handlePassingData}
-                                                curUsername={curUsername}
                                             />
                                             <Form.Control.Feedback type="invalid">
                                                 {errors.user}
