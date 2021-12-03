@@ -10,7 +10,7 @@ import {BsPlusLg} from "react-icons/all";
 import axios from "axios";
 import Error from "../../../Error/Error";
 import {useHistory} from "react-router-dom";
-import CategoryList from "./CategoryList";
+
 
 const convertDataResponse = res => res.data;
 
