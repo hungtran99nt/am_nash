@@ -9,13 +9,11 @@ import useFetch from "../../../../hooks/useFetch";
 import {BsPlusLg} from "react-icons/all";
 import axios from "axios";
 import Error from "../../../Error/Error";
-import {useHistory} from "react-router-dom";
 
 
 const convertDataResponse = res => res.data;
 
 const CategoryModal = ({show, handleClose, setFieldValue}) => {
-    const history = useHistory();
     const {
         data: categories,
     } = useFetch([], `${API_URL}/categories`, convertDataResponse);
