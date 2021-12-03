@@ -4,6 +4,7 @@ import './UserAssignmentModal.css'
 import BootstrapTable from 'react-bootstrap-table-next'
 import {userColumns} from "./AssigmentModalAttribute";
 import {BiSearchAlt} from "react-icons/all";
+import jwt_decode from "jwt-decode";
 
 const UserAssignmentModal = ({show, handleClose, users, handlePassingData, curUsername }) => {
     const [selectedRow, setSelectedRow] = useState({});
@@ -24,7 +25,7 @@ const UserAssignmentModal = ({show, handleClose, users, handlePassingData, curUs
         return users.filter(user => {
                 return (user.fullName?.toLowerCase().includes(searchText?.toLowerCase()) ||
                     user.staffCode?.toLowerCase().includes(searchText?.toLowerCase())) &&
-                    user.userName !== curUsername;
+                    user.username !== jwt_decode(localStorage.getItem('TOKEN')).sub;
             }
         );
     }, [searchText, users]);

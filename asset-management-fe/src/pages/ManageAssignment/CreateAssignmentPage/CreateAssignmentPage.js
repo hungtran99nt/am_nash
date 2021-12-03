@@ -28,7 +28,7 @@ const convertUserResponse = res => res.data.map(u => (
         id: u.id,
         staffCode: u.staffCode,
         fullName: `${u.lastName} ${u.firstName}`,
-        userName: u.username,
+        username: u.username,
         joinedDate: moment(u.joinedDate).format(DATE_FORMAT.TO),
         type: u.type,
         location: u.location
@@ -62,8 +62,8 @@ const CreateAssignmentPage = ({curUsername}) => {
             url: `${API_URL}/admin/assignments/`,
             data: {
                 assetCode: assignedAsset.assetCode,
-                assignBy: curUsername,
-                assignTo: assignedTo.userName,
+                assignBy: localStorage.getItem('USERNAME'),
+                assignTo: assignedTo.username,
                 assignedDate: values.assignedDate,
                 state: FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE,
                 note: values.note
