@@ -5,7 +5,7 @@ import BootstrapTable from 'react-bootstrap-table-next'
 import {userColumns} from "./AssigmentModalAttribute";
 import {BiSearchAlt} from "react-icons/all";
 
-const UserAssignmentModal = ({show, handleClose, users, handlePassingData }) => {
+const UserAssignmentModal = ({show, handleClose, users, handlePassingData, curUsername }) => {
     const [selectedRow, setSelectedRow] = useState({});
     const selectRow = (row, isSelected, rowIndex) => {
         setSelectedRow(row)
@@ -24,13 +24,13 @@ const UserAssignmentModal = ({show, handleClose, users, handlePassingData }) => 
         return users.filter(user => {
                 return (user.fullName?.toLowerCase().includes(searchText?.toLowerCase()) ||
                     user.staffCode?.toLowerCase().includes(searchText?.toLowerCase())) &&
-                    user.userName !== localStorage.getItem("USERNAME");
+                    user.userName !== curUsername;
             }
         );
     }, [searchText, users]);
 
     return (
-        <Modal className="userModal" show={show} onHide={handleClose} centered>
+        <Modal id="userModal" show={show} onHide={handleClose} centered backdrop={false}>
             <Modal.Header className="text-danger">
                 <Modal.Title>Select user</Modal.Title>
                 <InputGroup id="input-group-header">

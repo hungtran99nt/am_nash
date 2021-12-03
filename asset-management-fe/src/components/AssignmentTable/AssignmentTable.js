@@ -11,6 +11,7 @@ import { API_URL } from "../../common/constants";
 import MyAssignmentAction from "./MyAssignmentAction";
 import ManageAssignmentAction from "./ManageAssignmentAction";
 import AssignmentDeleteConfirmation from './AssignmentModal/AssignmentDeleteConfirmation'
+import HomeConfirmModal from "./AssignmentModal/HomeConfirmModal";
 
 
 const defaultSorted = [{
@@ -27,7 +28,10 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 
 	const columnFormatter = (cell, row) => {
 		return (
-			isMyAssignment ? <MyAssignmentAction cell={cell} row={row}/> : <ManageAssignmentAction cell={cell} row={row} handleDeleteClicked={handleDeleteClicked}/>
+			isMyAssignment ?
+				<MyAssignmentAction cell={cell} row={row} handleAcceptClick={handleAcceptClicked} handleDeclineClick={handleDeclineClicked}/>
+				:
+				<ManageAssignmentAction cell={cell} row={row} handleDeleteClicked={handleDeleteClicked}/>
 		)
 	};
 
@@ -118,7 +122,6 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 		}).catch(err => {alert(`Error with check valid to delete asset ${err}`)})
 	}
 
-
 	const [assignmentIdPopup, setAssignmentIdPopup] = useState("");
 	const [showDetail, setShowDetail] = useState(false);
 	const handleCloseDetail = () => setShowDetail(false);
@@ -131,6 +134,43 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 			handleShowDetail();
 		}
 	}
+
+	const [idAccept, setIdAccept] = useState(null);
+	const [idDecline, setIdDecline] = useState(null);
+
+	const [showAcceptConfirm, setShowAcceptConfirm] = useState(false);
+	const handleCloseAcceptConfirm = () => setShowAcceptConfirm(false);
+	const handleShowAcceptConfirm = () => setShowAcceptConfirm(true);
+
+	const handleAcceptClicked = (id) => {
+		setIdAccept(id);
+		axios.get(`${API_URL}/user/assignment/${id}/valid`).then((response) => {
+			if (response.data === true) {
+				handleShowAcceptConfirm();
+				console.log(response.data);
+				console.log(showAcceptConfirm)
+			}
+
+		}).catch(err => {alert(`Error with check valid to accept assignment ${err}`)})
+	}
+
+	const [showDeclineConfirm, setShowDeclineConfirm] = useState(false);
+	const handleCloseDeclineConfirm = () => setShowDeclineConfirm(false);
+	const handleShowDeclineConfirm = () => setShowDeclineConfirm(true);
+
+	const handleDeclineClicked = (id) => {
+		setIdDecline(id);
+		axios.get(`${API_URL}/user/assignment/${id}/valid`).then((response) => {
+			if (response.data === true) {
+				handleShowDeclineConfirm();
+				console.log(response.data);
+				console.log(showDeclineConfirm)
+			}
+
+		}).catch(err => {alert(`Error with check valid to decline assignment ${err}`)})
+	}
+
+	const [loading, setLoading] = useState(null);
 
 	return (
 		<>
@@ -164,6 +204,29 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 					handleCloseDeleteConfirm={handleCloseDeleteConfirm}
 					assignments={assignments}
 					idDelete={idDelete}
+				/>
+			}
+			{
+				showAcceptConfirm &&
+				<HomeConfirmModal
+					message="Do you want to accept this assignment?"
+					buttonName="Accept"
+					showAcceptConfirm={showAcceptConfirm}
+					handleCloseAcceptConfirm={handleCloseAcceptConfirm}
+					assignments={assignments}
+					assignmentID={idAccept}
+					setLoading = {setLoading}
+				/>
+			}
+			{
+				showDeclineConfirm &&
+				<HomeConfirmModal
+					message="Do you want to decline this assignment?"
+					buttonName="Decline"
+					showDeclineConfirm={showDeclineConfirm}
+					handleCloseDeclineConfirm={handleCloseDeclineConfirm}
+					assignments={assignments}
+					assignmentID={idDecline}
 				/>
 			}
 		</>

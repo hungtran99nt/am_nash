@@ -42,12 +42,13 @@ export default function App() {
     const [headerInfo, setHeaderInfo] = useState(headerTitle.Home);
     const [token, setToken] = useState(localStorage.getItem("TOKEN"));
 
-    let curUsername = localStorage.getItem("USERNAME");
     let role = "";
+    let curUsername = "";
     if (token) {
         localStorage.setItem("TOKEN", token);
         const decode = jwt_decode(token);
         role = decode.role;
+        curUsername = decode.sub;
         if (decode.exp * 1000 <= Date.now()) {
             localStorage.removeItem("TOKEN");
             setToken(null);
@@ -151,7 +152,7 @@ export default function App() {
                                         <EditAssignmentPage/>
                                     </Route>}
                                     {role === "Admin" && <Route path="/assignment/create" exact>
-                                        <CreateAssignmentPage/>
+                                        <CreateAssignmentPage curUsername = {curUsername}/>
                                     </Route>}
                                 </Switch>
                             </div>
