@@ -48,7 +48,7 @@ const EditAssignmentPage = () => {
         data: users
     } = useFetch([], `${API_URL}/users`, convertDataUserResponse);
     const listUser = users.filter(u => u.username !== jwt_decode(localStorage.getItem("TOKEN")).sub);
-    
+
     const {
         data: assets,
     } = useFetch([], `${API_URL}/assets`, convertDataResponse);
@@ -96,7 +96,7 @@ const EditAssignmentPage = () => {
         assignedFullName = assignedTo.fullName;
     }
     let assignedAssetName = "";
-    if (assignedAsset.assetName !== undefined){
+    if (assignedAsset.assetName !== undefined) {
         assignedAssetName = assignedAsset.assetName;
     }
     const initialValues = {
@@ -174,7 +174,8 @@ const EditAssignmentPage = () => {
                                                 <BiSearchAlt/>
                                             </Button>
                                             <UserAssignmentModal
-                                                show={show} handleClose={handleClose} users={listUser} handlePassingData={handlePassingUser}
+                                                show={show} handleClose={handleClose} users={listUser}
+                                                handlePassingData={handlePassingUser}
                                             />
                                         </InputGroup>
                                     </Col>
@@ -197,7 +198,8 @@ const EditAssignmentPage = () => {
                                                 <BiSearchAlt/>
                                             </Button>
                                             <AssetAssignmentModal
-                                                show={showAsset} handleClose={handleAssetClose} assets={assets} handlePassingData={handlePassingAsset}
+                                                show={showAsset} handleClose={handleAssetClose} assets={assets}
+                                                handlePassingData={handlePassingAsset}
                                             />
                                         </InputGroup>
                                     </Col>
