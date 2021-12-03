@@ -4,7 +4,7 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import * as Yup from "yup";
 import useFetch from "../../../hooks/useFetch";
-import {API_URL, FILTER_STATE_OPTIONS} from "../../../common/constants";
+import {API_URL} from "../../../common/constants";
 import moment from "moment";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
@@ -52,7 +52,6 @@ const EditAssignmentPage = () => {
     const {
         data: assets,
     } = useFetch([], `${API_URL}/assets`, convertDataResponse);
-    const availableAssets = assets.filter(a => a.state === FILTER_STATE_OPTIONS.AVAILABLE);
 
     const {
         isLoading,
@@ -70,7 +69,7 @@ const EditAssignmentPage = () => {
     const handleAssetClose = () => setShowAsset(false);
 
     const currentUser = listUser.find(u => u.username === assignments.assignTo);
-    const currentAsset = availableAssets.find(a => a.assetCode === assignments.assetCode);
+    const currentAsset = assets.find(a => a.assetCode === assignments.assetCode);
     console.log('currentUser', currentUser);
     console.log('currentAsset', currentAsset);
 
