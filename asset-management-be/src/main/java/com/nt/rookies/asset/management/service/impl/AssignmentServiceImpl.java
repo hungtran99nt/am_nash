@@ -256,12 +256,22 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignmentRepository
             .findById(assignmentID)
             .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+
     if (!assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_ACCEPTING)) {
       throw new BusinessException("Can not modify assignment with id: " + assignmentID);
     }
-    logger.info("Assignment's current state: {}", assignment.getState());
 
-    // Delete to DB
-    assignmentRepository.delete(assignment);
+    Asset asset = assignment.getAsset();
+    logger.info("Assignment's current state: {}", assignment.getState());
+    logger.info("Asset's current state: {}", asset.getState());
+
+    //Change state to Declined
+    assignment.setState(BaseConstants.ASSIGNMENT_STATUS_DECLINED);
+    //Change asset's state to Available
+    asset.setState(BaseConstants.ASSET_STATUS_AVAILABLE);
+
+    // Save to DB
+    assignmentRepository.save(assignment);
+    assetRepository.save(asset);
   }
 }
