@@ -167,6 +167,7 @@ const UserTable = ({users, isLoading, isRecentUser}) => {
 				idDisable={idDisable}
 				showConfirm={showConfirm}
 				handleCloseConfirm={handleCloseConfirm}
+				users={users}
 				/>
 			) : null}
 		</>

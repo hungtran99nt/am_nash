@@ -7,7 +7,14 @@ const UserDisableConfirmation = ({
   idDisable,
   showConfirm,
   handleCloseConfirm,
+  users
 }) => {
+  const updateDataState = () => {
+		const index = users.map(x => {
+			return x.id;
+		}).indexOf(idDisable);
+		users.splice(index, 1);
+	}
   return (
     <Modal show={showConfirm} onHide={handleCloseConfirm} centered backdrop="static">
       <Modal.Header closeButton='' className="text-danger">
@@ -22,6 +29,7 @@ const UserDisableConfirmation = ({
           onClick={() => {
             axios.put(`${API_URL}/users/disable/${idDisable}`);
             handleCloseConfirm(false);
+            updateDataState();
           }}
           type="submit"
         >

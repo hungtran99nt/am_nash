@@ -20,7 +20,6 @@ const Login = ({message}) => {
                 if (res.status === 200) {
                     setRedirect(true);
                     localStorage.setItem('TOKEN', res.data.jwttoken);
-                    localStorage.setItem('USERNAME', res.data.username);
                 }
             })
             .catch(err => {

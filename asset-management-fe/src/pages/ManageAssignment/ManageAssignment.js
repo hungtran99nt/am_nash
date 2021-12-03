@@ -9,67 +9,67 @@ import './ManageAssignment.css'
 import {isMatchExact} from "../../common/config";
 
 const convertDataResponse = res => res.data.map(a => (
-	{
-		id: a.id,
-		assetCode: a.assetCode,
-		assetName: a.assetName,
-		assignTo: a.assignTo,
-		assignBy: a.assignBy,
-		assignedDate: moment(a.assignedDate).format(DATE_FORMAT.TO),
-		state: a.state
-	}
+    {
+        id: a.id,
+        assetCode: a.assetCode,
+        assetName: a.assetName,
+        assignTo: a.assignTo,
+        assignBy: a.assignBy,
+        assignedDate: moment(a.assignedDate).format(DATE_FORMAT.TO),
+        state: a.state
+    }
 ));
 
 const ManageAssignment = () => {
-	const history = useHistory();
+    const history = useHistory();
 
-	const handleCreateAssigmentClicked = () => {
-		history.push("/assignment/create");
-	}
+    const handleCreateAssigmentClicked = () => {
+        history.push("/assignment/create");
+    }
     let recentUserId = history.location.state ? history.location.state.firstId : null;
 
     const {
-		isLoading,
-		data: assignments,
-		errorMessage
-	} = useFetch([], `${API_URL}/admin/assignments`, convertDataResponse);
+        isLoading,
+        data: assignments,
+        errorMessage
+    } = useFetch([], `${API_URL}/admin/assignments`, convertDataResponse);
 
-	const stateKeys = Object.keys(FILTER_ASM_STATE_OPTIONS);
-	const listStates = stateKeys.map(key =>
-		<option
-			key={FILTER_ASM_STATE_OPTIONS[key]}
-			value={FILTER_ASM_STATE_OPTIONS[key]}
-		>
-			{FILTER_ASM_STATE_OPTIONS[key]}
-		</option>
-	)
+    const stateKeys = Object.keys(FILTER_ASM_STATE_OPTIONS);
+    const listStates = stateKeys.map(key =>
+        <option
+            key={FILTER_ASM_STATE_OPTIONS[key]}
+            value={FILTER_ASM_STATE_OPTIONS[key]}
+        >
+            {FILTER_ASM_STATE_OPTIONS[key]}
+        </option>
+    )
 
     if (recentUserId) { // user created/edited: move it to the top of the list
         assignments.sort((a, b) => a.id === recentUserId ? -1 : b.id === recentUserId ? 1 : 0);
         window.history.replaceState(null, '');
     }
 
-	const [filterStateOption, setFilterStateOption] = useState('');
-	const [dateFilterValue, setDateFilterValue] = useState('');
-	const [searchText, setSearchText] = useState('');
+    const [filterStateOption, setFilterStateOption] = useState('');
+    const [dateFilterValue, setDateFilterValue] = useState('');
+    const [searchText, setSearchText] = useState('');
 
-	const dateFilterFormatted = moment(dateFilterValue, 'YYYY-MM-DD').format(DATE_FORMAT.TO);
+    const dateFilterFormatted = moment(dateFilterValue, 'YYYY-MM-DD').format(DATE_FORMAT.TO);
 
-	const assignmentsFiltered = useMemo(() => {
-		return assignments.filter(assignment => {
-			if (dateFilterValue === '') return assignment.state.toLowerCase().includes(filterStateOption.toLowerCase());
-			return assignment.state.toLowerCase().includes(filterStateOption.toLowerCase())
-				&& isMatchExact(assignment.assignedDate, dateFilterFormatted);
-		});
-	}, [assignments, filterStateOption, dateFilterValue, dateFilterFormatted]);
+    const assignmentsFiltered = useMemo(() => {
+        return assignments.filter(assignment => {
+            if (dateFilterValue === '') return assignment.state.toLowerCase().includes(filterStateOption.toLowerCase());
+            return assignment.state.toLowerCase().includes(filterStateOption.toLowerCase())
+                && isMatchExact(assignment.assignedDate, dateFilterFormatted);
+        });
+    }, [assignments, filterStateOption, dateFilterValue, dateFilterFormatted]);
 
-	const assignmentsSearched = useMemo(() => {
-		return assignmentsFiltered.filter(assignment => {
-			return assignment.assetCode.toLowerCase().includes(searchText.toLowerCase()) ||
-				assignment.assetName.toLowerCase().includes(searchText.toLowerCase()) ||
-				assignment.assignTo.toLowerCase().includes(searchText.toLowerCase());
-		});
-	}, [searchText, assignmentsFiltered]);
+    const assignmentsSearched = useMemo(() => {
+        return assignmentsFiltered.filter(assignment => {
+            return assignment.assetCode.toLowerCase().includes(searchText.toLowerCase()) ||
+                assignment.assetName.toLowerCase().includes(searchText.toLowerCase()) ||
+                assignment.assignTo.toLowerCase().includes(searchText.toLowerCase());
+        });
+    }, [searchText, assignmentsFiltered]);
 
 	return (
 		<div className="mt-4">

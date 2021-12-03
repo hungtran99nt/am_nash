@@ -30,7 +30,7 @@ const AssetAssignmentModal = ({show, handleClose, assets, handlePassingData}) =>
     }, [searchText, assets]);
 
     return (
-        <Modal className="userModal" show={show} onHide={handleClose} centered>
+        <Modal id="assetModal" show={show} onHide={handleClose} centered backdrop={false}>
             <Modal.Header className="text-danger">
                 <Modal.Title>Select asset</Modal.Title>
                 <InputGroup id="input-group-header">

@@ -114,4 +114,31 @@ public class AssignmentRestController {
   public void deleteAssignment(@PathVariable(name = "id") Integer id) {
     assignmentService.deleteAssignment(id);
   }
+
+  /**
+   * User can accept assignment which in state "Waiting for Acceptance"
+   * @param id
+   * @param assignmentDTO
+   * @return
+   */
+  @PutMapping("/user/assignment/{id}/accept")
+  public AssignmentDTO acceptAssignment(@PathVariable(name = "id") Integer id) {
+    return assignmentService.acceptAssignment(id);
+  }
+
+  /**
+   * User can decline assignment which in state "Waiting for Acceptance"
+   * @param id
+   * @return
+   */
+  @DeleteMapping("/user/assignment/{id}/decline")
+  public ResponseEntity<?> declineAssignment(@PathVariable(name = "id") Integer id){
+    assignmentService.declineAssignment(id);
+    return ResponseEntity.ok("Assignment deleted");
+  }
+
+  @GetMapping("/user/assignment/{id}/valid")
+  public ResponseEntity<Boolean> isAssignmentValid(@PathVariable(name = "id") Integer id) {
+    return new ResponseEntity<>(assignmentService.isAssignmentValidToDelete(id), HttpStatus.OK);
+  }
 }

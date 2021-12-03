@@ -4,3 +4,19 @@
 #search-icon{
     border: 1px solid #3e4042 !important;
 }
+#userModal{
+    position: absolute;
+    top: calc(100%/30);
+    left: calc(100%/2.2);
+}
+#userInput{
+    position: relative;
+}
+#assetInput{
+    position: relative;
+}
+#assetModal{
+    position: absolute;
+    top: calc(100%/30);
+    left: calc(100%/2.2);
+}

@@ -35,7 +35,8 @@ const MyAssignment = () => {
                     My Assignment
                 </div>
             </Container>
-            <AssignmentTable isLoading={isLoading} errorMessage={errorMessage} assignments={assignments}
+            <AssignmentTable isLoading={isLoading} errorMessage={errorMessage}
+                             assignments={assignments}
                              isMyAssignment={true}/>
         </div>
     )
