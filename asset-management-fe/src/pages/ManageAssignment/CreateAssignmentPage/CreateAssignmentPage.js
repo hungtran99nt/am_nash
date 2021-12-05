@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import './CreateAssignmentPage.css'
-import {Alert, Button, Col, Form, Row} from "react-bootstrap";
+import {Button, Col, Form, Row} from "react-bootstrap";
 import {Formik} from "formik";
 import {useHistory} from "react-router-dom";
 import * as Yup from 'yup';
@@ -37,17 +37,6 @@ const convertUserResponse = res => res.data.map(u => (
 const convertAssetResponse = res => res.data;
 const CreateAssignmentPage = ({curUsername}) => {
     let history = useHistory();
-
-    const [visible, setVisible] = useState(false);
-
-    const whenCreateSuccess = () => {
-        setVisible(true,
-            () => {
-                setTimeout(() => {
-                    setVisible(false);
-                }, 1000)
-            })
-    }
 
     let curDate = moment(Date.now()).format("YYYY-MM-DD");
 
@@ -86,7 +75,7 @@ const CreateAssignmentPage = ({curUsername}) => {
             }
         }).catch(err => {
             console.log("err = ", err);
-        }).finally( () => {
+        }).finally(() => {
                 resetForm();
                 setAssignedAsset("");
                 setAssignedTo("");
@@ -122,7 +111,7 @@ const CreateAssignmentPage = ({curUsername}) => {
         assignedFullName = assignedTo.fullName
     }
     let assignedAssetName = "";
-    if (assignedAsset.assetName !== undefined){
+    if (assignedAsset.assetName !== undefined) {
         assignedAssetName = assignedAsset.assetName;
     }
     const initialValues = {
@@ -154,9 +143,7 @@ const CreateAssignmentPage = ({curUsername}) => {
                               handleSubmit,
                           }) => (
                             <Form onSubmit={handleSubmit}>
-                                <Alert color="info" show={visible} >
-                                    I am an alert and I will disappear in 2sec.!
-                                </Alert>
+
                                 <Form.Group as={Row} className="mb-3" controlId="formTextFullName" id="userInput">
                                     <Form.Label column sm="3">User</Form.Label>
                                     <Col sm="6">
@@ -172,10 +159,11 @@ const CreateAssignmentPage = ({curUsername}) => {
                                             <Button variant="outline-secondary" id="button-addon1"
                                                     onClick={handleClickUserPopup}
                                             >
-                                               <BiSearchAlt/>
+                                                <BiSearchAlt/>
                                             </Button>
                                             <UserAssignmentModal
-                                                show={show} handleClose={handleClose} users={users} handlePassingData={handlePassingData}
+                                                show={show} handleClose={handleClose} users={users}
+                                                handlePassingData={handlePassingData}
                                             />
                                             <Form.Control.Feedback type="invalid">
                                                 {errors.user}
@@ -202,7 +190,8 @@ const CreateAssignmentPage = ({curUsername}) => {
                                                 <BiSearchAlt/>
                                             </Button>
                                             <AssetAssignmentModal
-                                                show={showAsset} handleClose={handleAssetClose} assets={assets} handlePassingData={handlePassingAsset}
+                                                show={showAsset} handleClose={handleAssetClose} assets={assets}
+                                                handlePassingData={handlePassingAsset}
                                             />
                                             <Form.Control.Feedback type="invalid">
                                                 {errors.asset}

@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import AssignmentTable from "../../components/AssignmentTable/AssignmentTable";
 import useFetch from "../../hooks/useFetch";
@@ -19,7 +18,6 @@ const convertDataResponse = res => res.data.map(a => (
 ));
 
 const MyAssignment = () => {
-    const history = useHistory();
 
     const {
         isLoading,

@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
 import {SORT_ORDERS} from "../../common/constants";
-import {useHistory} from "react-router-dom";
 import NoDataFound from "../NoDataFound/NoDataFound";
 import './AssignmentTable.css';
 import AssignmentDetail from "./AssignmentModal/AssignmentDetail";
@@ -20,7 +19,6 @@ const defaultSorted = [{
 }]
 
 const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, isMyAssignment, isRecentUser}) => {
-	const history = useHistory();
 
 	const columnNoFormatter = (cell, row, index) => {
 		return <span>{index + 1}</span>;
@@ -102,10 +100,6 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, 
 			}
 		}
 	];
-
-	const handleEditClicked = (id) => {
-		history.push(`edit/assignment/${id}`)
-	}
 	
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 	const [idDelete, setIdDelete] = useState(null);
@@ -169,8 +163,6 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, 
 
 		}).catch(err => {alert(`Error with check valid to decline assignment ${err}`)})
 	}
-
-	const [loading, setLoading] = useState(null);
 
 	return (
 		<>

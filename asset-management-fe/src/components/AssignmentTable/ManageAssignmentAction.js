@@ -1,4 +1,4 @@
-import React,  {useState} from 'react';
+import React from 'react';
 import {useHistory} from "react-router-dom";
 import {FILTER_ASM_STATE_OPTIONS} from "../../common/constants";
 import {BsPencilFill, FaRegTimesCircle, FaUndoAlt} from "react-icons/all";
