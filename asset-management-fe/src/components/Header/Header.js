@@ -69,7 +69,6 @@ const Header = ({header, account, token, setToken}) => {
                                        style={{backgroundColor: "#f44336", borderColor: "#f44336"}}
                                        onClick={() => {
                                            localStorage.clear();
-                                           setToken("");
                                        }}
                                     >Log out</a>
                                     <button type="button" className="a-btn btn btn-secondary"

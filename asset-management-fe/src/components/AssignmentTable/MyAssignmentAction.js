@@ -5,7 +5,6 @@ import {useHistory} from "react-router-dom";
 import './AssignmentTable.css';
 
 const MyAssignmentAction = ({cell, row, handleAcceptClick, handleDeclineClick}) => {
-    const history = useHistory();
 
     return (
         <div className={'table__actions'}>

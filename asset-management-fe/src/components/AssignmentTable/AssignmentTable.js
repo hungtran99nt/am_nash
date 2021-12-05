@@ -19,7 +19,7 @@ const defaultSorted = [{
 	order: SORT_ORDERS.ASC
 }]
 
-const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, isRecentUser}) => {
+const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, isMyAssignment, isRecentUser}) => {
 	const history = useHistory();
 
 	const columnNoFormatter = (cell, row, index) => {
@@ -215,7 +215,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 					handleCloseAcceptConfirm={handleCloseAcceptConfirm}
 					assignments={assignments}
 					assignmentID={idAccept}
-					setLoading = {setLoading}
+					setAssignments={setAssignments}
 				/>
 			}
 			{

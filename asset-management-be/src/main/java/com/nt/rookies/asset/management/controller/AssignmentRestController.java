@@ -118,7 +118,6 @@ public class AssignmentRestController {
   /**
    * User can accept assignment which in state "Waiting for Acceptance"
    * @param id
-   * @param assignmentDTO
    * @return
    */
   @PutMapping("/user/assignment/{id}/accept")
@@ -134,7 +133,7 @@ public class AssignmentRestController {
   @DeleteMapping("/user/assignment/{id}/decline")
   public ResponseEntity<?> declineAssignment(@PathVariable(name = "id") Integer id){
     assignmentService.declineAssignment(id);
-    return ResponseEntity.ok("Assignment deleted");
+    return ResponseEntity.ok("Assignment declined");
   }
 
   @GetMapping("/user/assignment/{id}/valid")

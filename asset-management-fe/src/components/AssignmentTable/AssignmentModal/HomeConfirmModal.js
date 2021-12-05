@@ -3,7 +3,6 @@ import {Button, Modal} from "react-bootstrap";
 import axios from "axios";
 import {API_URL, FILTER_ASM_STATE_OPTIONS} from "../../../common/constants";
 import moment from "moment";
-import {Redirect, useHistory} from "react-router-dom";
 import './HomeConfirmModal.css';
 
 const HomeConfirmModal =
@@ -12,23 +11,36 @@ const HomeConfirmModal =
          handleCloseAcceptConfirm, handleCloseDeclineConfirm,
          showAcceptConfirm, showDeclineConfirm,
          assignments, assignmentID,
-         setLoading
+         setAssignments
     }) => {
 
-        const history = useHistory();
-
+        const updateDataState = () => {
+            const index = assignments.map(x => {
+                return x.id;
+            }).indexOf(assignmentID);
+            let newAssignments = assignments;
+            newAssignments[index] = {...newAssignments[index], state: "Accepted"}
+            setAssignments(newAssignments);
+        }
+        
+        const deleteDataState = () => {
+            const index = assignments.map(x => {
+                return x.id;
+            }).indexOf(assignmentID);
+            assignments.splice(index, 1);
+        }
         const handleConfirmDecline = () => {
             axios
                 .delete(`${API_URL}/user/assignment/${assignmentID}/decline`)
                 .then(() => {
                     console.log(`Decline successful assignment: ${assignmentID}`);
                     handleCloseDeclineConfirm();
-                    return <Redirect to="/" />;
                 })
                 .catch(err => {
                     handleCloseDeclineConfirm();
                     alert(`Decline error: ${err}`);
                 });
+            deleteDataState();
         }
         console.log(assignments)
         const assignment = assignments.find( a => a.id === assignmentID);
@@ -49,12 +61,11 @@ const HomeConfirmModal =
             }).then(() => {
                 console.log(`Accept successful assignment: ${assignmentID}`);
                 handleCloseAcceptConfirm();
-                return <Redirect to="/" />;
             }).catch(err => {
                 handleCloseAcceptConfirm();
                 alert(`Accept error: ${err}`);
             });
-            history.go();
+            updateDataState();
         }
 
     return (

@@ -1,10 +1,10 @@
 import React from "react";
-import {useHistory} from "react-router-dom";
-import {Container} from "react-bootstrap";
+import { useHistory } from "react-router-dom";
+import { Container } from "react-bootstrap";
 import AssignmentTable from "../../components/AssignmentTable/AssignmentTable";
 import useFetch from "../../hooks/useFetch";
 import moment from "moment";
-import {API_URL, DATE_FORMAT} from "../../common/constants";
+import { API_URL, DATE_FORMAT } from "../../common/constants";
 
 const convertDataResponse = res => res.data.map(a => (
     {
@@ -24,9 +24,10 @@ const MyAssignment = () => {
     const {
         isLoading,
         data: assignments,
+        setData: setAssignments,
         errorMessage
     } = useFetch([], `${API_URL}/user/assignments`, convertDataResponse);
-    //console.log(assignments);
+    console.log(assignments);
 
     return (
         <div className="mt-4">
@@ -36,8 +37,10 @@ const MyAssignment = () => {
                 </div>
             </Container>
             <AssignmentTable isLoading={isLoading} errorMessage={errorMessage}
-                             assignments={assignments}
-                             isMyAssignment={true}/>
+                assignments={assignments}
+                isMyAssignment={true}
+                setAssignments={setAssignments}
+            />
         </div>
     )
 }
