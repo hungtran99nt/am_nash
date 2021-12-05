@@ -1,17 +1,16 @@
 import React, {useState} from 'react';
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
-import {SORT_ORDERS} from "../../common/constants";
-import {useHistory} from "react-router-dom";
+import {API_URL, DATE_FORMAT, SORT_ORDERS} from "../../common/constants";
 import NoDataFound from "../NoDataFound/NoDataFound";
 import './AssignmentTable.css';
 import AssignmentDetail from "./AssignmentModal/AssignmentDetail";
 import axios from 'axios';
-import { API_URL } from "../../common/constants";
 import MyAssignmentAction from "./MyAssignmentAction";
 import ManageAssignmentAction from "./ManageAssignmentAction";
 import AssignmentDeleteConfirmation from './AssignmentModal/AssignmentDeleteConfirmation'
 import HomeConfirmModal from "./AssignmentModal/HomeConfirmModal";
+import moment from "moment";
 
 
 const defaultSorted = [{
@@ -20,7 +19,6 @@ const defaultSorted = [{
 }]
 
 const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, isRecentUser}) => {
-	const history = useHistory();
 
 	const columnNoFormatter = (cell, row, index) => {
 		return <span>{index + 1}</span>;
@@ -43,7 +41,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 			formatter: columnNoFormatter,
 			hidden: isMyAssignment,
 			headerStyle: () => {
-				return {width: '70px'};
+				return {width: '60px'};
 			}
 		},
 		{
@@ -51,22 +49,25 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 			text: 'Asset Code',
 			sort: true,
 			headerStyle: () => {
-				return {width: '120px'};
+				return {width: '105px'};
 			}
 		}, {
 			dataField: 'assetName',
 			text: 'Asset Name',
 			sort: true,
+			headerStyle: () => {
+				return {width: '170px'};
+			}
 		}, {
 			dataField: 'assignTo',
-			text: 'Assign to',
+			text: 'Assigned to',
 			sort: true,
 			headerStyle: () => {
 				return {width: '110px'};
 			}
 		}, {
 			dataField: 'assignBy',
-			text: 'Assign by',
+			text: 'Assigned by',
 			sort: true,
 			headerStyle: () => {
 				return {width: '110px'};
@@ -74,23 +75,27 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 		},
 		{
 			dataField: 'assignedDate',
-			text: 'Assign Date',
+			text: 'Assigned Date',
 			sort: true,
+			sortFunc: (a, b, order) => {
+				if (order === SORT_ORDERS.ASC)
+					return moment(a, DATE_FORMAT.TO) - moment(b, DATE_FORMAT.TO);
+				return moment(b, DATE_FORMAT.TO) - moment(a, DATE_FORMAT.TO);
+			},
 			headerStyle: () => {
-				return {width: '130px'};
+				return {width: '125px'};
 			}
 		}, {
 			dataField: 'state',
 			text: 'State',
 			sort: true,
 			headerStyle: () => {
-				return {width: '190px'};
+				return {width: '150px'};
 			}
 		},
 		{
 			dataField: 'action',
 			text: '',
-			width: '50',
 			events: {
 				onClick: (e) => {
 					e.stopPropagation();
@@ -98,15 +103,11 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 			},
 			formatter: columnFormatter,
 			headerStyle: () => {
-				return {width: '95px'};
+				return {width: '80px'};
 			}
 		}
 	];
 
-	const handleEditClicked = (id) => {
-		history.push(`edit/assignment/${id}`)
-	}
-	
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 	const [idDelete, setIdDelete] = useState(null);
 	const handleCloseDeleteConfirm = () => setShowDeleteConfirm(false);
