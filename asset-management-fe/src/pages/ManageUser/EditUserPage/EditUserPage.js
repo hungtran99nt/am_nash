@@ -220,7 +220,6 @@ const EditUserPage = ({token}) => {
                                             isInvalid={touched.type && errors.type}
                                             disabled={jwt_decode(token).sub === values.username}
                                         >
-                                            <option value=""/>
                                             <option value="Staff" defaultChecked={values.type === "Staff"}
                                                     label="Staff"/>
                                             <option value="Admin" defaultChecked={values.type === "Admin"}
