@@ -11,6 +11,7 @@ import {pagination, sortCode} from "../../common/config";
 import UserDisableError from "./UserModal/UserDisableError";
 import UserDisableConfirmation from "./UserModal/UserDisableConfirmation";
 import {BsPencilFill, FaRegTimesCircle} from "react-icons/all";
+import NoDataFound from "../NoDataFound/NoDataFound";
 
 const defaultSorted = [{
 	dataField: 'staffCode',
@@ -157,6 +158,9 @@ const UserTable = ({users, isLoading, isRecentUser}) => {
 				pagination={pagination}
 			/>
 			{isLoading && <div>Loading...</div>}
+
+			{!isLoading && users.length === 0 && <NoDataFound/>}
+
 			{show ? <UserPopup show={show} handleClose={handleClose} userInfo={userDetail}/> : null}
 			{showErr ? (
 				<UserDisableError showErr={showErr} handleCloseErr={handleCloseErr} />

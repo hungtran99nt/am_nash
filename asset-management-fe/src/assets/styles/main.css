@@ -42,11 +42,11 @@
 }
 
 .app-create__input {
-    border: 1px solid #9CA2A7;
+    border: 1px solid #ced4da;
 }
 
 .form-control {
-    border: 1px solid #3e4042 !important;
+    border: 1px solid #3e4042;
 
 }
 
@@ -66,7 +66,7 @@
 .btn-cancel {
     background-color: #ffffff !important;
     color: #9CA2A7 !important;
-    border: 1px solid #9CA2A7 !important;
+    border: 1px solid #ced4da !important;
     margin-left: 20px;
 }
 

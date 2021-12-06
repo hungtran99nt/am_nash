@@ -1,17 +1,16 @@
 import React, {useState} from 'react';
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
-import {SORT_ORDERS} from "../../common/constants";
+import {API_URL, DATE_FORMAT, SORT_ORDERS} from "../../common/constants";
 import NoDataFound from "../NoDataFound/NoDataFound";
 import './AssignmentTable.css';
 import AssignmentDetail from "./AssignmentModal/AssignmentDetail";
 import axios from 'axios';
-import { API_URL } from "../../common/constants";
 import MyAssignmentAction from "./MyAssignmentAction";
 import ManageAssignmentAction from "./ManageAssignmentAction";
 import AssignmentDeleteConfirmation from './AssignmentModal/AssignmentDeleteConfirmation'
 import HomeConfirmModal from "./AssignmentModal/HomeConfirmModal";
-
+import moment from "moment";
 
 const defaultSorted = [{
 	dataField: 'assetCode',
@@ -27,7 +26,8 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, 
 	const columnFormatter = (cell, row) => {
 		return (
 			isMyAssignment ?
-				<MyAssignmentAction cell={cell} row={row} handleAcceptClick={handleAcceptClicked} handleDeclineClick={handleDeclineClicked}/>
+				<MyAssignmentAction cell={cell} row={row} handleAcceptClick={handleAcceptClicked}
+									handleDeclineClick={handleDeclineClicked}/>
 				:
 				<ManageAssignmentAction cell={cell} row={row} handleDeleteClicked={handleDeleteClicked}/>
 		)
@@ -41,7 +41,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, 
 			formatter: columnNoFormatter,
 			hidden: isMyAssignment,
 			headerStyle: () => {
-				return {width: '70px'};
+				return {width: '60px'};
 			}
 		},
 		{
@@ -49,22 +49,25 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, 
 			text: 'Asset Code',
 			sort: true,
 			headerStyle: () => {
-				return {width: '120px'};
+				return {width: '105px'};
 			}
 		}, {
 			dataField: 'assetName',
 			text: 'Asset Name',
 			sort: true,
+			headerStyle: () => {
+				return {width: '170px'};
+			}
 		}, {
 			dataField: 'assignTo',
-			text: 'Assign to',
+			text: 'Assigned to',
 			sort: true,
 			headerStyle: () => {
 				return {width: '110px'};
 			}
 		}, {
 			dataField: 'assignBy',
-			text: 'Assign by',
+			text: 'Assigned by',
 			sort: true,
 			headerStyle: () => {
 				return {width: '110px'};
@@ -72,23 +75,27 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, 
 		},
 		{
 			dataField: 'assignedDate',
-			text: 'Assign Date',
+			text: 'Assigned Date',
 			sort: true,
+			sortFunc: (a, b, order) => {
+				if (order === SORT_ORDERS.ASC)
+					return moment(a, DATE_FORMAT.TO) - moment(b, DATE_FORMAT.TO);
+				return moment(b, DATE_FORMAT.TO) - moment(a, DATE_FORMAT.TO);
+			},
 			headerStyle: () => {
-				return {width: '130px'};
+				return {width: '125px'};
 			}
 		}, {
 			dataField: 'state',
 			text: 'State',
 			sort: true,
 			headerStyle: () => {
-				return {width: '190px'};
+				return {width: '150px'};
 			}
 		},
 		{
 			dataField: 'action',
 			text: '',
-			width: '50',
 			events: {
 				onClick: (e) => {
 					e.stopPropagation();
@@ -96,24 +103,26 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, 
 			},
 			formatter: columnFormatter,
 			headerStyle: () => {
-				return {width: '95px'};
+				return {width: '80px'};
 			}
 		}
 	];
-	
+
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 	const [idDelete, setIdDelete] = useState(null);
 	const handleCloseDeleteConfirm = () => setShowDeleteConfirm(false);
 	const handleShowDeleteConfirm = () => setShowDeleteConfirm(true);
 
-    const handleDeleteClicked = (id) => {
+	const handleDeleteClicked = (id) => {
 		setIdDelete(id);
 		axios.get(`${API_URL}/admin/assignments/${id}/valid`).then((response) => {
 			if (response.data === true) {
 				handleShowDeleteConfirm();
 			}
-			
-		}).catch(err => {alert(`Error with check valid to delete asset ${err}`)})
+
+		}).catch(err => {
+			alert(`Error with check valid to delete asset ${err}`)
+		})
 	}
 
 	const [assignmentIdPopup, setAssignmentIdPopup] = useState("");
@@ -145,7 +154,9 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, 
 				console.log(showAcceptConfirm)
 			}
 
-		}).catch(err => {alert(`Error with check valid to accept assignment ${err}`)})
+		}).catch(err => {
+			alert(`Error with check valid to accept assignment ${err}`)
+		})
 	}
 
 	const [showDeclineConfirm, setShowDeclineConfirm] = useState(false);
@@ -161,7 +172,9 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, 
 				console.log(showDeclineConfirm)
 			}
 
-		}).catch(err => {alert(`Error with check valid to decline assignment ${err}`)})
+		}).catch(err => {
+			alert(`Error with check valid to decline assignment ${err}`)
+		})
 	}
 
 	return (
@@ -189,7 +202,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, 
 					isMyAssignment={isMyAssignment}
 				/>
 			}
-			 {
+			{
 				showDeleteConfirm &&
 				<AssignmentDeleteConfirmation
 					showDeleteConfirm={showDeleteConfirm}

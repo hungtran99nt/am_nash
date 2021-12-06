@@ -27,11 +27,11 @@
 }
 
 .select::after {
-    content: '';
+    content: "";
     top: 0;
     left: 120px;
     position: absolute;
-    border: 1px solid #ced4da;
+    border-left: 1px solid #ced4da;
     height: 75%;
 }
 /*end custom for form select*/
@@ -42,7 +42,7 @@
 }
 
 .search-input {
-    border: 1px #9CA2A7 solid !important;
+    border: 1px solid #ced4da !important;
 }
 
 .search-input:focus {
@@ -51,7 +51,9 @@
 }
 
 .search-button {
-    width: 65px;
+    width: 60px;
+    height: 41px;
+    border: 1px solid #b9bdc0 !important;
     border-top-right-radius: 5px !important;
     border-bottom-right-radius: 5px !important;
 }
