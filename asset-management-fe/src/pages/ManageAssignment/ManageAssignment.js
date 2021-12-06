@@ -34,16 +34,6 @@ const ManageAssignment = () => {
         errorMessage
     } = useFetch([], `${API_URL}/admin/assignments`, convertDataResponse);
 
-    const stateKeys = Object.keys(FILTER_ASM_STATE_OPTIONS);
-    const listStates = stateKeys.map(key =>
-        <option
-            key={FILTER_ASM_STATE_OPTIONS[key]}
-            value={FILTER_ASM_STATE_OPTIONS[key]}
-        >
-            {FILTER_ASM_STATE_OPTIONS[key]}
-        </option>
-    )
-
     if (recentUserId) { // user created/edited: move it to the top of the list
         assignments.sort((a, b) => a.id === recentUserId ? -1 : b.id === recentUserId ? 1 : 0);
         window.history.replaceState(null, '');
@@ -86,7 +76,8 @@ const ManageAssignment = () => {
 								onChange={evt => setFilterStateOption(evt.target.value)}
 							>
 								<option value="">State</option>
-								{listStates}
+								<option value={FILTER_ASM_STATE_OPTIONS.ACCEPTED}>Accepted</option>
+								<option value={FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE}>Waiting for acceptance</option>
 							</Form.Select>
 						</Col>
 						<Col className='asset calendar'>

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useHistory} from "react-router-dom";
-import {API_URL, FILTER_STATE_OPTIONS, SORT_ORDERS} from "../../common/constants";
+import {API_URL, FILTER_ASM_STATE_OPTIONS, FILTER_STATE_OPTIONS, SORT_ORDERS} from "../../common/constants";
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
 import axios from "axios";
@@ -20,20 +20,20 @@ const AssetTable = ({assets, isLoading, errorMessage, isRecentAsset}) => {
 
 	const columnFormatter = (cell, row) => {
 		return (
-			<div className={`table__actions ${row.state === FILTER_STATE_OPTIONS.ASSIGNED ? 'disable' : ''}`}>
+			<div className="table__actions">
 				{/* Edit button */}
 				<BsPencilFill
 					color={'#6F6F6F'}
-					className="action__items"
 					title={`Edit asset ${row.assetName}`}
+					className={`action__items ${row.state !== FILTER_STATE_OPTIONS.ASSIGNED ? '' : 'disable'}`}
 					onClick={row.state !== FILTER_STATE_OPTIONS.ASSIGNED ? () => handleEditClicked(row.id): undefined}
 				/>
 
 				{/* Delete button */}
 				<FaRegTimesCircle
 					color={'#D85667'}
-					className="action__items"
 					title={`Delete asset ${row.assetName}`}
+					className={`action__items ${row.state !== FILTER_STATE_OPTIONS.ASSIGNED ? '' : 'disable'}`}
 					onClick={row.state !== FILTER_STATE_OPTIONS.ASSIGNED ? () => handleDeleteClicked(row.id): undefined}
 				/>
 			</div>
