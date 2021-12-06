@@ -18,6 +18,9 @@ public class AssignmentDTO {
   @Size(max = 50, message = BaseConstants.ERR_ASSET_NAME_LENGTH)
   private String assetName;
 
+  @Size(max = 300, message = BaseConstants.ERR_ASSET_SPECIFICATION_LENGTH)
+  private String assetSpecification;
+
 //  @NotBlank(message = BaseConstants.ERR_USER_USERNAME_BLANK)
 //  @Size(max = 30, message = BaseConstants.ERR_USER_USERNAME_LENGTH)
   private String assignBy;
