@@ -1,11 +1,9 @@
 import React from 'react';
 import {FILTER_ASM_STATE_OPTIONS} from "../../common/constants";
 import {BsCheckLg, FaTimes, FaUndoAlt} from "react-icons/all";
-import {useHistory} from "react-router-dom";
 import './AssignmentTable.css';
 
 const MyAssignmentAction = ({cell, row, handleAcceptClick, handleDeclineClick}) => {
-    const history = useHistory();
 
     return (
         <div className={'table__actions'}>

@@ -12,13 +12,12 @@ import AssignmentDeleteConfirmation from './AssignmentModal/AssignmentDeleteConf
 import HomeConfirmModal from "./AssignmentModal/HomeConfirmModal";
 import moment from "moment";
 
-
 const defaultSorted = [{
 	dataField: 'assetCode',
 	order: SORT_ORDERS.ASC
 }]
 
-const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, isRecentUser}) => {
+const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, isMyAssignment, isRecentUser}) => {
 
 	const columnNoFormatter = (cell, row, index) => {
 		return <span>{index + 1}</span>;
@@ -27,7 +26,8 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 	const columnFormatter = (cell, row) => {
 		return (
 			isMyAssignment ?
-				<MyAssignmentAction cell={cell} row={row} handleAcceptClick={handleAcceptClicked} handleDeclineClick={handleDeclineClicked}/>
+				<MyAssignmentAction cell={cell} row={row} handleAcceptClick={handleAcceptClicked}
+									handleDeclineClick={handleDeclineClicked}/>
 				:
 				<ManageAssignmentAction cell={cell} row={row} handleDeleteClicked={handleDeleteClicked}/>
 		)
@@ -113,14 +113,16 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 	const handleCloseDeleteConfirm = () => setShowDeleteConfirm(false);
 	const handleShowDeleteConfirm = () => setShowDeleteConfirm(true);
 
-    const handleDeleteClicked = (id) => {
+	const handleDeleteClicked = (id) => {
 		setIdDelete(id);
 		axios.get(`${API_URL}/admin/assignments/${id}/valid`).then((response) => {
 			if (response.data === true) {
 				handleShowDeleteConfirm();
 			}
-			
-		}).catch(err => {alert(`Error with check valid to delete asset ${err}`)})
+
+		}).catch(err => {
+			alert(`Error with check valid to delete asset ${err}`)
+		})
 	}
 
 	const [assignmentIdPopup, setAssignmentIdPopup] = useState("");
@@ -152,7 +154,9 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 				console.log(showAcceptConfirm)
 			}
 
-		}).catch(err => {alert(`Error with check valid to accept assignment ${err}`)})
+		}).catch(err => {
+			alert(`Error with check valid to accept assignment ${err}`)
+		})
 	}
 
 	const [showDeclineConfirm, setShowDeclineConfirm] = useState(false);
@@ -168,10 +172,10 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 				console.log(showDeclineConfirm)
 			}
 
-		}).catch(err => {alert(`Error with check valid to decline assignment ${err}`)})
+		}).catch(err => {
+			alert(`Error with check valid to decline assignment ${err}`)
+		})
 	}
-
-	const [loading, setLoading] = useState(null);
 
 	return (
 		<>
@@ -198,7 +202,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 					isMyAssignment={isMyAssignment}
 				/>
 			}
-			 {
+			{
 				showDeleteConfirm &&
 				<AssignmentDeleteConfirmation
 					showDeleteConfirm={showDeleteConfirm}
@@ -216,7 +220,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 					handleCloseAcceptConfirm={handleCloseAcceptConfirm}
 					assignments={assignments}
 					assignmentID={idAccept}
-					setLoading = {setLoading}
+					setAssignments={setAssignments}
 				/>
 			}
 			{
