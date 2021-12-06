@@ -194,7 +194,6 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 					show={showDetail}
 					handleClose={handleCloseDetail}
 					assignmentId={assignmentIdPopup}
-					isMyAssignment={isMyAssignment}
 				/>
 			}
 			 {
