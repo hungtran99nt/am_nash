@@ -47,6 +47,7 @@ public class BaseConstants {
    *                     ASSIGNMENT STATUS
    *-------------------------------------------------------------------*/
   public static final String ASSIGNMENT_STATUS_ACCEPTED = "Accepted";
+  public static final String ASSIGNMENT_STATUS_DECLINED = "Declined";
   public static final String ASSIGNMENT_STATUS_RETURNING = "Waiting for returning";
   public static final String ASSIGNMENT_STATUS_ACCEPTING = "Waiting for acceptance";
   public static final String ASSIGNMENT_STATUS_COMPLETED = "Completed";

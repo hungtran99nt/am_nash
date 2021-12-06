@@ -109,7 +109,7 @@ const ManageAssignment = () => {
 									onChange={evt => setSearchText(evt.target.value)}
 								/>
 								<Button className="search-button btn-cancel" id="button-addon2" disabled>
-									<img src="https://img.icons8.com/ios/25/000000/search--v1.png" alt="search"/>
+									<img src="https://img.icons8.com/ios/22/000000/search--v1.png" alt="search"/>
 								</Button>
 							</InputGroup>
 						</Col>

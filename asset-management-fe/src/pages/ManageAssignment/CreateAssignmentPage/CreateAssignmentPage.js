@@ -48,12 +48,13 @@ const CreateAssignmentPage = ({curUsername}) => {
         data: users,
         errorUserMessage
     } = useFetch([], `${API_URL}/users`, convertUserResponse);
+    console.log(users)
     const {
         isAssetLoading,
         data: assets,
         errorAssetMessage
     } = useFetch([], `${API_URL}/assets`, convertAssetResponse);
-    console.log(assets)
+
     if (errorUserMessage && errorAssetMessage) window.location.reload(history.push("/login"));
 
     const submit = (values, {resetForm}) => {
@@ -62,17 +63,19 @@ const CreateAssignmentPage = ({curUsername}) => {
             url: `${API_URL}/admin/assignments/`,
             data: {
                 assetCode: assignedAsset.assetCode,
-                assignBy: localStorage.getItem('USERNAME'),
+                assignBy: curUsername,
                 assignTo: assignedTo.username,
                 assignedDate: values.assignedDate,
                 state: FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE,
                 note: values.note
             }
         }).then(res => {
-            history.push("/assignment")
+            if (res.status === 200) {
+                history.push("/assignment")
+            }
         }).catch(err => {
             console.log("err = ", err);
-        }).finally( () => {
+        }).finally(() => {
                 resetForm();
                 setAssignedAsset("");
                 setAssignedTo("");
@@ -108,7 +111,7 @@ const CreateAssignmentPage = ({curUsername}) => {
         assignedFullName = assignedTo.fullName
     }
     let assignedAssetName = "";
-    if (assignedAsset.assetName !== undefined){
+    if (assignedAsset.assetName !== undefined) {
         assignedAssetName = assignedAsset.assetName;
     }
     const initialValues = {
@@ -124,6 +127,7 @@ const CreateAssignmentPage = ({curUsername}) => {
                 <div className="col-lg-2"/>
                 <div className="col-lg-8">
                     <div className="app-content__title">Create New Assignment</div>
+
                     <Formik
                         enableReinitialize={true}
                         initialValues={initialValues}
@@ -139,6 +143,7 @@ const CreateAssignmentPage = ({curUsername}) => {
                               handleSubmit,
                           }) => (
                             <Form onSubmit={handleSubmit}>
+
                                 <Form.Group as={Row} className="mb-3" controlId="formTextFullName" id="userInput">
                                     <Form.Label column sm="3">User</Form.Label>
                                     <Col sm="6">
@@ -154,11 +159,11 @@ const CreateAssignmentPage = ({curUsername}) => {
                                             <Button variant="outline-secondary" id="button-addon1"
                                                     onClick={handleClickUserPopup}
                                             >
-                                               <BiSearchAlt/>
+                                                <BiSearchAlt/>
                                             </Button>
                                             <UserAssignmentModal
-                                                show={show} handleClose={handleClose} users={users} handlePassingData={handlePassingData}
-                                                curUsername={curUsername}
+                                                show={show} handleClose={handleClose} users={users}
+                                                handlePassingData={handlePassingData}
                                             />
                                             <Form.Control.Feedback type="invalid">
                                                 {errors.user}
@@ -185,7 +190,8 @@ const CreateAssignmentPage = ({curUsername}) => {
                                                 <BiSearchAlt/>
                                             </Button>
                                             <AssetAssignmentModal
-                                                show={showAsset} handleClose={handleAssetClose} assets={assets} handlePassingData={handlePassingAsset}
+                                                show={showAsset} handleClose={handleAssetClose} assets={assets}
+                                                handlePassingData={handlePassingAsset}
                                             />
                                             <Form.Control.Feedback type="invalid">
                                                 {errors.asset}

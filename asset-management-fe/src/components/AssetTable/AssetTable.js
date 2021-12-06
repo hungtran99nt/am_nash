@@ -8,6 +8,7 @@ import AssetDetail from "./AssetModal/AssetDetail";
 import AssetDeleteNotification from "./AssetModal/AssetDeleteNotification";
 import AssetDeleteConfirm from "./AssetModal/AssetDeleteConfirm";
 import {BsPencilFill, FaRegTimesCircle} from "react-icons/all";
+import NoDataFound from "../NoDataFound/NoDataFound";
 
 const defaultSorted = [{
 	dataField: 'assetCode',
@@ -135,6 +136,7 @@ const AssetTable = ({assets, isLoading, errorMessage, isRecentAsset}) => {
 			/>
 			{isLoading && <div>Loading...</div>}
 			{errorMessage && <div>{errorMessage}</div>}
+			{!errorMessage && !isLoading && assets.length === 0 && <NoDataFound/>}
 
 			{
 				showDetail &&

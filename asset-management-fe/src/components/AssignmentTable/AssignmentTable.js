@@ -1,26 +1,23 @@
 import React, {useState} from 'react';
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
-import {SORT_ORDERS} from "../../common/constants";
-import {useHistory} from "react-router-dom";
+import {API_URL, DATE_FORMAT, SORT_ORDERS} from "../../common/constants";
 import NoDataFound from "../NoDataFound/NoDataFound";
 import './AssignmentTable.css';
 import AssignmentDetail from "./AssignmentModal/AssignmentDetail";
 import axios from 'axios';
-import { API_URL } from "../../common/constants";
 import MyAssignmentAction from "./MyAssignmentAction";
 import ManageAssignmentAction from "./ManageAssignmentAction";
 import AssignmentDeleteConfirmation from './AssignmentModal/AssignmentDeleteConfirmation'
 import HomeConfirmModal from "./AssignmentModal/HomeConfirmModal";
-
+import moment from "moment";
 
 const defaultSorted = [{
 	dataField: 'assetCode',
 	order: SORT_ORDERS.ASC
 }]
 
-const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, isRecentUser}) => {
-	const history = useHistory();
+const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, isMyAssignment, isRecentUser}) => {
 
 	const columnNoFormatter = (cell, row, index) => {
 		return <span>{index + 1}</span>;
@@ -29,7 +26,8 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 	const columnFormatter = (cell, row) => {
 		return (
 			isMyAssignment ?
-				<MyAssignmentAction cell={cell} row={row} handleAcceptClick={handleAcceptClicked} handleDeclineClick={handleDeclineClicked}/>
+				<MyAssignmentAction cell={cell} row={row} handleAcceptClick={handleAcceptClicked}
+									handleDeclineClick={handleDeclineClicked}/>
 				:
 				<ManageAssignmentAction cell={cell} row={row} handleDeleteClicked={handleDeleteClicked}/>
 		)
@@ -43,7 +41,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 			formatter: columnNoFormatter,
 			hidden: isMyAssignment,
 			headerStyle: () => {
-				return {width: '70px'};
+				return {width: '60px'};
 			}
 		},
 		{
@@ -51,22 +49,25 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 			text: 'Asset Code',
 			sort: true,
 			headerStyle: () => {
-				return {width: '120px'};
+				return {width: '105px'};
 			}
 		}, {
 			dataField: 'assetName',
 			text: 'Asset Name',
 			sort: true,
+			headerStyle: () => {
+				return {width: '170px'};
+			}
 		}, {
 			dataField: 'assignTo',
-			text: 'Assign to',
+			text: 'Assigned to',
 			sort: true,
 			headerStyle: () => {
 				return {width: '110px'};
 			}
 		}, {
 			dataField: 'assignBy',
-			text: 'Assign by',
+			text: 'Assigned by',
 			sort: true,
 			headerStyle: () => {
 				return {width: '110px'};
@@ -74,23 +75,27 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 		},
 		{
 			dataField: 'assignedDate',
-			text: 'Assign Date',
+			text: 'Assigned Date',
 			sort: true,
+			sortFunc: (a, b, order) => {
+				if (order === SORT_ORDERS.ASC)
+					return moment(a, DATE_FORMAT.TO) - moment(b, DATE_FORMAT.TO);
+				return moment(b, DATE_FORMAT.TO) - moment(a, DATE_FORMAT.TO);
+			},
 			headerStyle: () => {
-				return {width: '130px'};
+				return {width: '125px'};
 			}
 		}, {
 			dataField: 'state',
 			text: 'State',
 			sort: true,
 			headerStyle: () => {
-				return {width: '190px'};
+				return {width: '150px'};
 			}
 		},
 		{
 			dataField: 'action',
 			text: '',
-			width: '50',
 			events: {
 				onClick: (e) => {
 					e.stopPropagation();
@@ -98,28 +103,26 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 			},
 			formatter: columnFormatter,
 			headerStyle: () => {
-				return {width: '95px'};
+				return {width: '80px'};
 			}
 		}
 	];
 
-	const handleEditClicked = (id) => {
-		history.push(`edit/assignment/${id}`)
-	}
-	
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 	const [idDelete, setIdDelete] = useState(null);
 	const handleCloseDeleteConfirm = () => setShowDeleteConfirm(false);
 	const handleShowDeleteConfirm = () => setShowDeleteConfirm(true);
 
-    const handleDeleteClicked = (id) => {
+	const handleDeleteClicked = (id) => {
 		setIdDelete(id);
 		axios.get(`${API_URL}/admin/assignments/${id}/valid`).then((response) => {
 			if (response.data === true) {
 				handleShowDeleteConfirm();
 			}
-			
-		}).catch(err => {alert(`Error with check valid to delete asset ${err}`)})
+
+		}).catch(err => {
+			alert(`Error with check valid to delete asset ${err}`)
+		})
 	}
 
 	const [assignmentIdPopup, setAssignmentIdPopup] = useState("");
@@ -151,7 +154,9 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 				console.log(showAcceptConfirm)
 			}
 
-		}).catch(err => {alert(`Error with check valid to accept assignment ${err}`)})
+		}).catch(err => {
+			alert(`Error with check valid to accept assignment ${err}`)
+		})
 	}
 
 	const [showDeclineConfirm, setShowDeclineConfirm] = useState(false);
@@ -167,10 +172,10 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 				console.log(showDeclineConfirm)
 			}
 
-		}).catch(err => {alert(`Error with check valid to decline assignment ${err}`)})
+		}).catch(err => {
+			alert(`Error with check valid to decline assignment ${err}`)
+		})
 	}
-
-	const [loading, setLoading] = useState(null);
 
 	return (
 		<>
@@ -196,7 +201,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 					assignmentId={assignmentIdPopup}
 				/>
 			}
-			 {
+			{
 				showDeleteConfirm &&
 				<AssignmentDeleteConfirmation
 					showDeleteConfirm={showDeleteConfirm}
@@ -214,7 +219,7 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, isMyAssignment, 
 					handleCloseAcceptConfirm={handleCloseAcceptConfirm}
 					assignments={assignments}
 					assignmentID={idAccept}
-					setLoading = {setLoading}
+					setAssignments={setAssignments}
 				/>
 			}
 			{
