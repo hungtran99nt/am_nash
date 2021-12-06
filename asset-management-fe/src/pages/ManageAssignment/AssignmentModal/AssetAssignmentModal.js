@@ -4,6 +4,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import {assetColumns} from "./AssigmentModalAttribute";
 import {FILTER_STATE_OPTIONS} from "../../../common/constants";
 import {BiSearchAlt} from "react-icons/all";
+import NoDataFound from "../../../components/NoDataFound/NoDataFound";
 
 const AssetAssignmentModal = ({show, handleClose, assets, handlePassingData}) => {
     const [selectedRow, setSelectedRow] = useState({});
@@ -20,7 +21,7 @@ const AssetAssignmentModal = ({show, handleClose, assets, handlePassingData}) =>
      * Only show asset which has Available state
      */
     const [searchText, setSearchText] = useState('');
-    const usersSearched = useMemo(() => {
+    const assetsSearched = useMemo(() => {
         return assets.filter(asset => {
                 return (asset.assetName?.toLowerCase().includes(searchText?.toLowerCase()) ||
                     asset.assetCode?.toLowerCase().includes(searchText?.toLowerCase())) &&
@@ -45,7 +46,7 @@ const AssetAssignmentModal = ({show, handleClose, assets, handlePassingData}) =>
                 <BootstrapTable
                     keyField='id'
                     columns={assetColumns}
-                    data={usersSearched}
+                    data={assetsSearched}
                     selectRow={{
                         mode: 'radio',
                         clickToSelect: true,
@@ -53,6 +54,7 @@ const AssetAssignmentModal = ({show, handleClose, assets, handlePassingData}) =>
                         onSelect: selectRow
                     }}
                 />
+                {assetsSearched.length === 0 && <NoDataFound/>}
                 <div className="d-flex justify-content-end">
                     <Button variant="primary" onClick={sendData}
                             className="m-1"

@@ -36,6 +36,7 @@ const useFetch = (initialData, url, convertResponseToData) => {
 	return {
 		isLoading,
 		data,
+		setData,
 		errorMessage
 	}
 }
