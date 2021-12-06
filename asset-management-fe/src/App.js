@@ -4,7 +4,6 @@ import {BrowserRouter as Router, NavLink, Route, Switch} from "react-router-dom"
 import logoimg from "./assets/images/logonashtech.png"
 import ManageAssignment from "./pages/ManageAssignment/ManageAssignment";
 import RequestOfReturning from "./pages/RequestOfReturning/RequestOfReturning";
-import Home from "./pages/Home/Home";
 import ManageAsset from "./pages/ManageAsset/ManageAsset";
 import ManageUser from "./pages/ManageUser/ManageUser";
 import Report from "./pages/Report/Report";

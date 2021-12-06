@@ -6,18 +6,12 @@ import com.nt.rookies.asset.management.entity.Asset;
 import com.nt.rookies.asset.management.entity.Assignment;
 import com.nt.rookies.asset.management.entity.Location;
 import com.nt.rookies.asset.management.entity.User;
-import com.nt.rookies.asset.management.exception.AssignmentCreateException;
-import com.nt.rookies.asset.management.exception.AssignmentNotFound;
-import com.nt.rookies.asset.management.exception.BusinessException;
-import com.nt.rookies.asset.management.exception.ResourceDeleteException;
-import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
+import com.nt.rookies.asset.management.exception.*;
 import com.nt.rookies.asset.management.repository.AssetRepository;
 import com.nt.rookies.asset.management.repository.AssignmentRepository;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.AssignmentService;
 import com.nt.rookies.asset.management.service.UserService;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +19,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
@@ -182,6 +179,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     logger.info("Current user: {}", username);
     List<Assignment> assignments = assignmentRepository.findRecentAssignmentsByUser(username);
     return assignments.stream()
+        .filter(
+            assignment -> !assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_DECLINED))
         .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
         .collect(Collectors.toList());
   }
@@ -256,12 +255,22 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignmentRepository
             .findById(assignmentID)
             .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+
     if (!assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_ACCEPTING)) {
       throw new BusinessException("Can not modify assignment with id: " + assignmentID);
     }
-    logger.info("Assignment's current state: {}", assignment.getState());
 
-    // Delete to DB
-    assignmentRepository.delete(assignment);
+    Asset asset = assignment.getAsset();
+    logger.info("Assignment's current state: {}", assignment.getState());
+    logger.info("Asset's current state: {}", asset.getState());
+
+    // Change state to Declined
+    assignment.setState(BaseConstants.ASSIGNMENT_STATUS_DECLINED);
+    // Change asset's state to Available
+    asset.setState(BaseConstants.ASSET_STATUS_AVAILABLE);
+
+    // Save to DB
+    assignmentRepository.save(assignment);
+    assetRepository.save(asset);
   }
 }
