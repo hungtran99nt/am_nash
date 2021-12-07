@@ -76,4 +76,11 @@ public interface AssignmentService {
    * @param assignmentID
    */
   void declineAssignment(Integer assignmentID);
+
+  /**
+   * Get all request for returning.
+   *
+   * @return {@link List<AssignmentDTO>} the returning request list
+   */
+  List<AssignmentDTO> getAllRequestForReturning();
 }

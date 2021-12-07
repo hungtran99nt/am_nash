@@ -140,4 +140,16 @@ public class AssignmentRestController {
   public ResponseEntity<Boolean> isAssignmentValid(@PathVariable(name = "id") Integer id) {
     return new ResponseEntity<>(assignmentService.isAssignmentValidToDelete(id), HttpStatus.OK);
   }
+
+  /**
+   * API Get all request for returning<br>
+   * Link: <code>/api/v1.0/admin/assignments/requests</code><br>
+   * Method: GET
+   *
+   * @return {@link List<AssignmentDTO>} the request for return list
+   */
+  @GetMapping("/admin/assignments/returns")
+  public List<AssignmentDTO> getAllRequestForReturning() {
+    return assignmentService.getAllRequestForReturning();
+  }
 }
