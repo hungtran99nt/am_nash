@@ -3,6 +3,8 @@ package com.nt.rookies.asset.management.service;
 import com.nt.rookies.asset.management.dto.AccountDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.Location;
+import com.nt.rookies.asset.management.entity.User;
+import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,4 +46,12 @@ public interface UserService {
    * @return {@link Location}
    */
   Location getUserLocation();
+
+  /**
+   * Get current user login
+   *
+   * @return current {@link User} entity
+   * @exception ResourceNotFoundException if user not found
+   */
+  User getCurrentUser();
 }

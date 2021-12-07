@@ -6,12 +6,19 @@ import com.nt.rookies.asset.management.entity.Asset;
 import com.nt.rookies.asset.management.entity.Assignment;
 import com.nt.rookies.asset.management.entity.Location;
 import com.nt.rookies.asset.management.entity.User;
-import com.nt.rookies.asset.management.exception.*;
+import com.nt.rookies.asset.management.exception.AssignmentCreateException;
+import com.nt.rookies.asset.management.exception.AssignmentNotFound;
+import com.nt.rookies.asset.management.exception.BusinessException;
+import com.nt.rookies.asset.management.exception.IllegalAssignmentException;
+import com.nt.rookies.asset.management.exception.ResourceDeleteException;
+import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.repository.AssetRepository;
 import com.nt.rookies.asset.management.repository.AssignmentRepository;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.AssignmentService;
 import com.nt.rookies.asset.management.service.UserService;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +26,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
@@ -267,5 +271,22 @@ public class AssignmentServiceImpl implements AssignmentService {
     // Save to DB
     assignmentRepository.save(assignment);
     assetRepository.save(asset);
+  }
+
+  @Override
+  public AssignmentDTO createRequestReturning(Integer id) {
+    logger.info("Inside createRequestReturning() method");
+    Assignment assignment =
+        assignmentRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+    if (!assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED))
+      throw new IllegalAssignmentException("Can not create request returning for this assignment");
+
+    User requestBy = userService.getCurrentUser();
+    assignment.setRequestBy(requestBy);
+    assignment.setState(BaseConstants.ASSIGNMENT_STATUS_RETURNING);
+    Assignment requestedAssignment = assignmentRepository.save(assignment);
+    return modelMapper.map(requestedAssignment, AssignmentDTO.class);
   }
 }
