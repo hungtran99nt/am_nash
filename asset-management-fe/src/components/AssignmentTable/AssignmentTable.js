@@ -11,6 +11,7 @@ import ManageAssignmentAction from "./ManageAssignmentAction";
 import AssignmentDeleteConfirmation from './AssignmentModal/AssignmentDeleteConfirmation'
 import HomeConfirmModal from "./AssignmentModal/HomeConfirmModal";
 import moment from "moment";
+import CreateReturnConfirmation from "./AssignmentModal/CreateReturnConfirmation";
 
 const defaultSorted = [{
 	dataField: 'assetCode',
@@ -26,11 +27,13 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, 
 	const columnFormatter = (cell, row) => {
 		return (
 			isMyAssignment ?
-				<MyAssignmentAction cell={cell} row={row} handleAcceptClick={handleAcceptClicked}
-									handleDeclineClick={handleDeclineClicked}/>
+				<MyAssignmentAction row={row} handleAcceptClick={handleAcceptClicked}
+									handleDeclineClick={handleDeclineClicked}
+									handleReturnClicked={handleReturnClicked}/>
 				:
-				<ManageAssignmentAction cell={cell} row={row} handleDeleteClicked={handleDeleteClicked}/>
-		)
+				<ManageAssignmentAction row={row} handleDeleteClicked={handleDeleteClicked}
+										handleReturnClicked={handleReturnClicked}/>
+		);
 	};
 
 	const columns = [
@@ -177,6 +180,15 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, 
 		})
 	}
 
+	const [currentRowSelected, setCurrentRowSelected] = useState();
+	const [showReturnConfirmation, setShowReturnConfirmation] = useState(false);
+	const handleCloseReturnConfirm = () => setShowReturnConfirmation(false);
+	const handleShowReturnConfirm = () => setShowReturnConfirmation(true);
+	const handleReturnClicked = (row) => {
+		setCurrentRowSelected(row)
+		handleShowReturnConfirm();
+	}
+
 	return (
 		<>
 			<BootstrapTable
@@ -231,6 +243,14 @@ const AssignmentTable = ({isLoading, errorMessage, assignments, setAssignments, 
 					handleCloseDeclineConfirm={handleCloseDeclineConfirm}
 					assignments={assignments}
 					assignmentID={idDecline}
+				/>
+			}
+			{
+				showReturnConfirmation &&
+				<CreateReturnConfirmation
+					currentRowSelected={currentRowSelected}
+					showReturnConfirm={showReturnConfirmation}
+					handleCloseReturnConfirm={handleCloseReturnConfirm}
 				/>
 			}
 		</>
