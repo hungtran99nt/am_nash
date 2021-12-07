@@ -1,8 +1,11 @@
 package com.nt.rookies.asset.management.service;
 
 import com.nt.rookies.asset.management.dto.AccountDTO;
+import com.nt.rookies.asset.management.dto.PasswordDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.Location;
+import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -44,4 +47,11 @@ public interface UserService {
    * @return {@link Location}
    */
   Location getUserLocation();
+
+  /**
+   * Change password
+   * @param passwordDTO
+   * @return Change status: OK, FAILED
+   */
+  void changePassword(PasswordDTO passwordDTO);
 }

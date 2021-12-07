@@ -2,10 +2,12 @@ package com.nt.rookies.asset.management.service.impl;
 
 import com.nt.rookies.asset.management.common.BaseConstants;
 import com.nt.rookies.asset.management.dto.AccountDTO;
+import com.nt.rookies.asset.management.dto.PasswordDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.entity.Assignment;
 import com.nt.rookies.asset.management.entity.Location;
 import com.nt.rookies.asset.management.entity.User;
+import com.nt.rookies.asset.management.exception.BusinessException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.exception.UserDisabledException;
 import com.nt.rookies.asset.management.repository.AssignmentRepository;
@@ -21,6 +23,8 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -114,6 +118,22 @@ public class UserServiceImpl implements UserService {
     User updatedUser = userRepository.save(user);
     logger.info("Changed pass:{}", updatedUser);
     return modelMapper.map(updatedUser, UserDTO.class);
+  }
+
+  @Override
+  public void changePassword(PasswordDTO passwordDTO){
+    UserDetails userDetails =
+            (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    String username = userDetails.getUsername();
+    User currentUser = userRepository.findByUsername(username);
+
+    if (!passwordEncoder.matches(passwordDTO.getOldPassword(), currentUser.getPassword())){
+      throw new BusinessException("Password Not Matched");
+    }
+
+    currentUser.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
+    User updateUser = userRepository.save(currentUser);
+    logger.info("New password: ", updateUser.getPassword());
   }
 
   @Override
