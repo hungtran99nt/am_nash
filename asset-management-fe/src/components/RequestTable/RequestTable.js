@@ -1,5 +1,5 @@
 import React from 'react';
-import {DATE_FORMAT, FILTER_STATE_OPTIONS, SORT_ORDERS} from "../../common/constants";
+import {DATE_FORMAT, FILTER_ASM_STATE_OPTIONS, FILTER_STATE_OPTIONS, SORT_ORDERS} from "../../common/constants";
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
 import NoDataFound from "../NoDataFound/NoDataFound";
@@ -26,22 +26,21 @@ const RequestTable = ({requests, isLoading, errorMessage}) => {
 	}
 
 	const columnFormatter = (cell, row) => {
-
-		return (<div className={`table__actions ${row.state === FILTER_STATE_OPTIONS.ASSIGNED ? 'disable' : ''}`}>
-			{/* Edit button */}
+		return (<div className={`table__actions ${row.state === FILTER_STATE_OPTIONS.WAITING_FOR_RECYCLING ? 'disable' : ''}`}>
+			{/* Complete button */}
 			<BsCheckLg
 				color={'#6F6F6F'}
-				className="action__items"
+				className={`action__items ${row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_RETURNING ? '' : 'disable'}`}
 				title="Complete request"
-				onClick={row.state !== FILTER_STATE_OPTIONS.ASSIGNED ? () => handleCompleteClicked(row.id) : undefined}
+				onClick={row.state !== FILTER_ASM_STATE_OPTIONS.COMPLETED ? () => handleCompleteClicked(row.id) : undefined}
 			/>
 
-			{/* Delete button */}
+			{/* Cancel button */}
 			<FaTimes
 				color={'#D85667'}
-				className="action__items"
+				className={`action__items ${row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_RETURNING ? '' : 'disable'}`}
 				title="Cancel request"
-				onClick={row.state !== FILTER_STATE_OPTIONS.ASSIGNED ? () => handleCancelClicked(row.id) : undefined}
+				onClick={row.state !== FILTER_ASM_STATE_OPTIONS.WAITING_FOR_RETURNING ? () => handleCancelClicked(row.id) : undefined}
 			/>
 		</div>)
 	};
@@ -53,7 +52,7 @@ const RequestTable = ({requests, isLoading, errorMessage}) => {
 			sort: true,
 			formatter: columnNoFormatter,
 			headerStyle: () => {
-				return {width: '60px'};
+				return {width: '50px'};
 			}
 		},
 		{
@@ -61,7 +60,7 @@ const RequestTable = ({requests, isLoading, errorMessage}) => {
 			text: 'Asset Code',
 			sort: true,
 			headerStyle: () => {
-				return {width: '105px'};
+				return {width: '90px'};
 			}
 		},
 		{
@@ -69,7 +68,7 @@ const RequestTable = ({requests, isLoading, errorMessage}) => {
 			text: 'Asset Name',
 			sort: true,
 			headerStyle: () => {
-				return {width: '170px'};
+				return {width: '120px'};
 			}
 		},
 		{
@@ -90,7 +89,7 @@ const RequestTable = ({requests, isLoading, errorMessage}) => {
 				return moment(b, DATE_FORMAT.TO) - moment(a, DATE_FORMAT.TO);
 			},
 			headerStyle: () => {
-				return {width: '125px'};
+				return {width: '110px'};
 			}
 		},
 		{
@@ -98,7 +97,7 @@ const RequestTable = ({requests, isLoading, errorMessage}) => {
 			text: 'Accepted by',
 			sort: true,
 			headerStyle: () => {
-				return {width: '110px'};
+				return {width: '100px'};
 			}
 		},
 		{
@@ -111,7 +110,7 @@ const RequestTable = ({requests, isLoading, errorMessage}) => {
 				return moment(b, DATE_FORMAT.TO) - moment(a, DATE_FORMAT.TO);
 			},
 			headerStyle: () => {
-				return {width: '125px'};
+				return {width: '110px'};
 			}
 		},
 		{
@@ -119,7 +118,7 @@ const RequestTable = ({requests, isLoading, errorMessage}) => {
 			text: 'State',
 			sort: true,
 			headerStyle: () => {
-				return {width: '150px'};
+				return {width: '120px'};
 			}
 		},
 		{
@@ -132,7 +131,7 @@ const RequestTable = ({requests, isLoading, errorMessage}) => {
 			},
 			formatter: columnFormatter,
 			headerStyle: () => {
-				return {width: '80px'};
+				return {width: '50px'};
 			}
 		}
 	];
