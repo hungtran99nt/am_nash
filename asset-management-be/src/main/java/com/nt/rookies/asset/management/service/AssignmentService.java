@@ -10,7 +10,7 @@ import java.util.List;
 public interface AssignmentService { 
 
   /**
-   * Get all assignments by current admin location.
+   * Get all in-progress assignments by current admin location.
    *
    * @return {@link List<AssignmentDTO>}
    */
@@ -32,7 +32,6 @@ public interface AssignmentService {
    */
   List<AssignmentDTO> getRecentAssignmentsByUser();
 
-
   /**
    * Edit an assignment.
    *
@@ -48,12 +47,6 @@ public interface AssignmentService {
    * @return
    */
   AssignmentDTO createAssignment(AssignmentDTO assignmentDTO);
-
-  /**
-   *
-   * @return
-   */
-  List<AssignmentDTO> getAllAssignments();
 
    /**
    * Check removable assignment

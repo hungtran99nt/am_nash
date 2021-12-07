@@ -124,15 +124,6 @@ public class AssignmentServiceImpl implements AssignmentService {
   }
 
   @Override
-  public List<AssignmentDTO> getAllAssignments() {
-    logger.info("Get all assignments");
-    List<Assignment> assignments = assignmentRepository.findAll();
-    return assignments.stream()
-        .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
-        .collect(Collectors.toList());
-  }
-
-  @Override
   public AssignmentDTO updateAssignment(Integer id, AssignmentDTO assignmentDTO) {
     logger.info("Inside updateAsset({}, {})", id, assignmentDTO);
     Assignment assignment =
@@ -155,11 +146,15 @@ public class AssignmentServiceImpl implements AssignmentService {
 
   @Override
   public List<AssignmentDTO> getAllAssignmentsByLocation() {
-    logger.info("Get all assignments by admin location");
     Location currentAdminLocation = userService.getUserLocation();
+    logger.info("Get all in-progress assignments in location: {}", currentAdminLocation);
     List<Assignment> assignments =
         assignmentRepository.findAllByAssetLocation(currentAdminLocation);
     return assignments.stream()
+        .filter(
+            assignment ->
+                assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED)
+                    || assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_ACCEPTING))
         .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
         .collect(Collectors.toList());
   }
