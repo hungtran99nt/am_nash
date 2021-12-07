@@ -51,7 +51,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/authenticate")
         .permitAll() // Don't authenticate this particular request
         .antMatchers(
-            "/**/user/assignment", "/**/user/assignment/") // user can access only their own
+            "/**/user/assignment",
+            "/**/user/assignment/",
+            "/**/user/assignments**",
+            "/**/user/assignments/**"
+        ) // user can access only their own assignments
         .authenticated() // user can access their own assignments
         .antMatchers(
             "/**/users**", // get all, create

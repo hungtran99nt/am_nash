@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useHistory} from "react-router-dom";
-import {API_URL, FILTER_ASM_STATE_OPTIONS, FILTER_STATE_OPTIONS, SORT_ORDERS} from "../../common/constants";
+import {API_URL, FILTER_STATE_OPTIONS, SORT_ORDERS} from "../../common/constants";
 import BootstrapTable from "react-bootstrap-table-next";
 import {pagination} from "../../common/config";
 import axios from "axios";

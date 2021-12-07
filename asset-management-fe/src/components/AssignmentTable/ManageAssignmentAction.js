@@ -4,11 +4,11 @@ import {FILTER_ASM_STATE_OPTIONS} from "../../common/constants";
 import {BsPencilFill, FaRegTimesCircle, FaUndoAlt} from "react-icons/all";
 
 
-const ManageAssignmentAction = ({cell, row, handleDeleteClicked}) => {
+const ManageAssignmentAction = ({row, handleDeleteClicked, handleReturnClicked}) => {
     const history = useHistory();
 
     const handleEditClicked = (id) => {
-        history.push(`edit/assignment/${id}`)
+        history.push(`edit/assignment/${id}`);
     }
 	
     return (
@@ -18,7 +18,7 @@ const ManageAssignmentAction = ({cell, row, handleDeleteClicked}) => {
                 color={'#6F6F6F'}
                 className={`action__items ${row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE ? '' : 'disable'}`}
                 onClick={
-                    row.state !== FILTER_ASM_STATE_OPTIONS.ACCEPTED ?
+                    row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_ACCEPTANCE ?
                         () => handleEditClicked(row.id) : undefined
                 }
                 title={"Edit assignment"}
@@ -37,15 +37,12 @@ const ManageAssignmentAction = ({cell, row, handleDeleteClicked}) => {
                 title={"Delete assignment"}
             />
 
-            {/* Return button: only available when assignment already accepted or waiting for returning */}
+            {/* Return button: only available when assignment already accepted */}
             <FaUndoAlt
                 color={'#5367E0'}
-                className={`action__items ${row.state === FILTER_ASM_STATE_OPTIONS.ACCEPTED
-                || row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_RETURNING ? '' : 'disable'}`}
+                className={`action__items ${row.state === FILTER_ASM_STATE_OPTIONS.ACCEPTED ? '' : 'disable'}`}
                 onClick={
-                    row.state === FILTER_ASM_STATE_OPTIONS.ACCEPTED
-                    || row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_RETURNING ?
-                        () => console.log(`Return assignment id: ${row.id}`) : undefined
+                    row.state === FILTER_ASM_STATE_OPTIONS.ACCEPTED ? () => handleReturnClicked(row) : undefined
                 }
                 title={"Return assignment"}
             />

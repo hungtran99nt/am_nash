@@ -1,12 +1,13 @@
 package com.nt.rookies.asset.management.service;
 
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
+import com.nt.rookies.asset.management.exception.IllegalAssignmentException;
 import com.nt.rookies.asset.management.exception.ResourceDeleteException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import java.util.List;
 
 /** Service interface for Assignment. */
-public interface AssignmentService { 
+public interface AssignmentService {
 
   /**
    * Get all in-progress assignments by current admin location.
@@ -49,7 +50,7 @@ public interface AssignmentService {
 
    /**
    * Check removable assignment
-   * 
+   *
    * @param id
    * @return {@link boolean} true if able to delete, and vice versa
    */
@@ -58,7 +59,7 @@ public interface AssignmentService {
 
   /**
    * Delete assignment
-   * 
+   *
    * @param id
    * @return void
    * @exception ResourceDeleteException if can not delete assignment
@@ -76,4 +77,21 @@ public interface AssignmentService {
    * @param assignmentID
    */
   void declineAssignment(Integer assignmentID);
+
+  /**
+   * Get all request for returning.
+   *
+   * @return {@link List<AssignmentDTO>} the returning request list
+   */
+  List<AssignmentDTO> getAllRequestForReturning();
+
+  /**
+   * Create request of returning for assignment
+   *
+   * @param id assignment id
+   * @return {@link AssignmentDTO} object
+   * @exception ResourceNotFoundException if assignment not found
+   * @exception  IllegalAssignmentException if assignment is not in state "Accepted"
+   */
+  AssignmentDTO createRequestReturning(Integer id);
 }
