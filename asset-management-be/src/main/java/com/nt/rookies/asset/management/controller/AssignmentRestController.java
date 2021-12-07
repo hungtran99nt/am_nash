@@ -1,9 +1,9 @@
 package com.nt.rookies.asset.management.controller;
 
+import com.nt.rookies.asset.management.dto.AssignmentDTO;
+import com.nt.rookies.asset.management.service.AssignmentService;
 import java.util.List;
-
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.nt.rookies.asset.management.dto.AssignmentDTO;
-import com.nt.rookies.asset.management.service.AssignmentService;
 
 /** REST controller for Assignment. */
 @RestController
@@ -84,7 +81,7 @@ public class AssignmentRestController {
    * Link: <code>/api/v1.0/assignments/user</code><br>
    * Method: GET
    *
-   * @return {@link List <AssignmentDTO>} list of assignments
+   * @return {@link List <AssignmentDTO/>} list of assignments
    */
   @GetMapping("/user/assignments")
   public List<AssignmentDTO> getRecentAssignmentsByUser() {
@@ -151,5 +148,18 @@ public class AssignmentRestController {
   @GetMapping("/admin/assignments/returns")
   public List<AssignmentDTO> getAllRequestForReturning() {
     return assignmentService.getAllRequestForReturning();
+  }
+
+  /**
+   * User/ Admin can create request of return assignment.<br>
+   * Link: <code>/api/v1.0/assignment/{id}/return</code><br>
+   * Method: PUT
+   *
+   * @param id assignment id
+   * @return {@link AssignmentDTO} object
+   */
+  @PutMapping("/user/assignments/{id}/return")
+  public AssignmentDTO createRequestReturning(@PathVariable(name = "id") Integer id) {
+    return assignmentService.createRequestReturning(id);
   }
 }

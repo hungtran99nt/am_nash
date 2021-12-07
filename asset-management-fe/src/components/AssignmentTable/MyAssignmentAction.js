@@ -3,7 +3,7 @@ import {FILTER_ASM_STATE_OPTIONS} from "../../common/constants";
 import {BsCheckLg, FaTimes, FaUndoAlt} from "react-icons/all";
 import './AssignmentTable.css';
 
-const MyAssignmentAction = ({cell, row, handleAcceptClick, handleDeclineClick}) => {
+const MyAssignmentAction = ({row, handleAcceptClick, handleDeclineClick, handleReturnClicked}) => {
 
     return (
         <div className={'table__actions'}>
@@ -29,15 +29,12 @@ const MyAssignmentAction = ({cell, row, handleAcceptClick, handleDeclineClick}) 
                 title={"Decline assignment"}
             />
 
-            {/* Return button: only available when assignment already accepted or waiting for returning */}
+            {/* Return button: only available when assignment already accepted */}
             <FaUndoAlt
                 color={'#5367E0'}
-                className={`action__items ${row.state === FILTER_ASM_STATE_OPTIONS.ACCEPTED
-                || row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_RETURNING ? '' : 'disable'}`}
+                className={`action__items ${row.state === FILTER_ASM_STATE_OPTIONS.ACCEPTED ? '' : 'disable'}`}
                 onClick={
-                    row.state === FILTER_ASM_STATE_OPTIONS.ACCEPTED
-                    || row.state === FILTER_ASM_STATE_OPTIONS.WAITING_FOR_RETURNING ?
-                        () => console.log(`Return assignment id: ${row.id}`) : undefined
+                    row.state === FILTER_ASM_STATE_OPTIONS.ACCEPTED ? () => handleReturnClicked(row) : undefined
                 }
                 title={"Return assignment"}
             />

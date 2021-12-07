@@ -196,4 +196,17 @@ public class UserServiceImpl implements UserService {
       return true;
     } else return false;
   }
+
+  @Override
+  public User getCurrentUser() {
+    logger.info("Inside getCurrentUser() method");
+    UserDetails userDetails =
+        (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    String username = userDetails.getUsername();
+    User user = userRepository.findByUsername(username);
+    if (user == null) {
+      throw new ResourceNotFoundException("User not found");
+    }
+    return user;
+  }
 }
