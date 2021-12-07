@@ -1,6 +1,7 @@
 package com.nt.rookies.asset.management.service;
 
 import com.nt.rookies.asset.management.dto.AssignmentDTO;
+import com.nt.rookies.asset.management.exception.IllegalAssignmentException;
 import com.nt.rookies.asset.management.exception.ResourceDeleteException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import java.util.List;
@@ -83,4 +84,14 @@ public interface AssignmentService {
    * @param assignmentID
    */
   void declineAssignment(Integer assignmentID);
+
+  /**
+   * Create request of returning for assignment
+   *
+   * @param id assignment id
+   * @return {@link AssignmentDTO} object
+   * @exception ResourceNotFoundException if assignment not found
+   * @exception  IllegalAssignmentException if assignment is not in state "Accepted"
+   */
+  AssignmentDTO createRequestReturning(Integer id);
 }
