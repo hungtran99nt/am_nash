@@ -139,6 +139,18 @@ public class AssignmentRestController {
   }
 
   /**
+   * API Get all request for returning<br>
+   * Link: <code>/api/v1.0/admin/assignments/requests</code><br>
+   * Method: GET
+   *
+   * @return {@link List<AssignmentDTO>} the request for return list
+   */
+  @GetMapping("/admin/assignments/returns")
+  public List<AssignmentDTO> getAllRequestForReturning() {
+    return assignmentService.getAllRequestForReturning();
+  }
+
+  /**
    * User/ Admin can create request of return assignment.<br>
    * Link: <code>/api/v1.0/assignment/{id}/return</code><br>
    * Method: PUT

@@ -274,6 +274,20 @@ public class AssignmentServiceImpl implements AssignmentService {
   }
 
   @Override
+  public List<AssignmentDTO> getAllRequestForReturning() {
+    logger.info("Get all request for returning");
+    Location currentAdminLocation = userService.getUserLocation();
+    List<Assignment> assignments =
+        assignmentRepository.findAllByAssetLocation(currentAdminLocation);
+    return assignments.stream()
+        .filter(
+            assignment ->
+                assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_COMPLETED)
+                    || assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_RETURNING))
+        .map(assignment -> modelMapper.map(assignment, AssignmentDTO.class))
+        .collect(Collectors.toList());
+  }
+
   public AssignmentDTO createRequestReturning(Integer id) {
     logger.info("Inside createRequestReturning() method");
     Assignment assignment =
