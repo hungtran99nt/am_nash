@@ -280,13 +280,44 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignmentRepository
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
-    if (!assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED))
+    if (!assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED)) {
       throw new IllegalAssignmentException("Can not create request returning for this assignment");
+    }
 
     User requestBy = userService.getCurrentUser();
     assignment.setRequestBy(requestBy);
     assignment.setState(BaseConstants.ASSIGNMENT_STATUS_RETURNING);
     Assignment requestedAssignment = assignmentRepository.save(assignment);
+    logger.info("Assignment's state changed to: {}", requestedAssignment.getState());
     return modelMapper.map(requestedAssignment, AssignmentDTO.class);
+  }
+
+  @Override
+  public AssignmentDTO completeRequestReturning(Integer id) {
+    logger.info("Inside completeRequestReturning() method");
+    Assignment assignment =
+        assignmentRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+    if (!assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_RETURNING)) {
+      throw new IllegalAssignmentException(
+          "Can not complete request returning for this assignment");
+    }
+
+    User acceptedBy = userService.getCurrentUser();
+    assignment.setAcceptedBy(acceptedBy);
+    assignment.setState(BaseConstants.ASSIGNMENT_STATUS_COMPLETED);
+    Assignment completedAssignment = assignmentRepository.save(assignment);
+    logger.info("Assignment's state changed to: {}", completedAssignment.getState());
+
+    /* Update asset's state to Available */
+    Asset asset =
+        assetRepository
+            .findAssetByAssetCode(assignment.getAsset().getAssetCode())
+            .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
+    asset.setState(BaseConstants.ASSET_STATUS_AVAILABLE);
+    Asset completedAsset = assetRepository.save(asset);
+    logger.info("Asset's state changed to: {}", completedAsset.getState());
+    return modelMapper.map(completedAssignment, AssignmentDTO.class);
   }
 }

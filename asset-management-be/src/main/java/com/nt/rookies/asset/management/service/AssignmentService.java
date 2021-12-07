@@ -87,4 +87,14 @@ public interface AssignmentService {
    * @exception  IllegalAssignmentException if assignment is not in state "Accepted"
    */
   AssignmentDTO createRequestReturning(Integer id);
+
+  /**
+   * Complete request of returning for assignment
+   *
+   * @param id assignment id
+   * @return {@link AssignmentDTO} object
+   * @exception ResourceNotFoundException if assignment not found or asset not found
+   * @exception  IllegalAssignmentException if assignment is not in state "Waiting for returning"
+   */
+  AssignmentDTO completeRequestReturning(Integer id);
 }
