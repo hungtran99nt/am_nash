@@ -37,6 +37,7 @@ public interface AssignmentService {
    *
    * @param assignmentDTO edit asset
    * @return edited {@link AssignmentDTO} object
+   * @exception ResourceNotFoundException if user not found
    */
   AssignmentDTO updateAssignment(Integer id, AssignmentDTO assignmentDTO);
 
@@ -45,6 +46,7 @@ public interface AssignmentService {
    *
    * @param assignmentDTO
    * @return
+   * @exception ResourceNotFoundException if user not found
    */
   AssignmentDTO createAssignment(AssignmentDTO assignmentDTO);
 
@@ -69,6 +71,7 @@ public interface AssignmentService {
   /**
    * User can accept assignment which in state "Waiting for Acceptance"
    * @param assignmentID
+   * @exception ResourceNotFoundException if user not found
    */
   AssignmentDTO acceptAssignment(Integer assignmentID);
 
