@@ -3,6 +3,7 @@ package com.nt.rookies.asset.management.controller;
 import com.nt.rookies.asset.management.exception.AccountNotAllowedException;
 import com.nt.rookies.asset.management.exception.BusinessException;
 import com.nt.rookies.asset.management.exception.ErrorResponse;
+import com.nt.rookies.asset.management.exception.IllegalAssignmentException;
 import com.nt.rookies.asset.management.exception.ResourceAlreadyExistsException;
 import com.nt.rookies.asset.management.exception.ResourceNotFoundException;
 import com.nt.rookies.asset.management.exception.UserDisabledException;
@@ -35,7 +36,7 @@ public class ApplicationExceptionHandler {
       httpStatus = HttpStatus.CONFLICT;
     } else if (ex instanceof AccountNotAllowedException) {
       httpStatus = HttpStatus.METHOD_NOT_ALLOWED;
-    } else if (ex instanceof UserDisabledException) {
+    } else if (ex instanceof UserDisabledException || ex instanceof IllegalAssignmentException) {
       httpStatus = HttpStatus.NOT_ACCEPTABLE;
     } else {
       httpStatus = HttpStatus.BAD_REQUEST;
@@ -58,7 +59,7 @@ public class ApplicationExceptionHandler {
   }
 
   @ExceptionHandler(value = MethodArgumentNotValidException.class)
-  public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
+  public ResponseEntity<ErrorResponse> MethodArgumentNotValidException(
       MethodArgumentNotValidException ex, HttpServletRequest request) {
     logger.error("Invalid API argument: ", ex);
 
