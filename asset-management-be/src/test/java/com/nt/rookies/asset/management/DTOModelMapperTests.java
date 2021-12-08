@@ -183,7 +183,7 @@ public class DTOModelMapperTests {
 
   @Test
   void testAccountMapper() {
-    User user = userRepository.findByUsername("phuongnv");
+    User user = userRepository.findByUsername("phuongnv").get();
     logger.info("User: {}", user);
     AccountDTO account = userService.findActiveByUsername("phuongnv").get();
     logger.info("AccountDTO: {}", account);

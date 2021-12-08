@@ -56,8 +56,10 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     Assignment newAssignment = modelMapper.map(assignmentDTO, Assignment.class);
     Assignment createdAssignment = new Assignment();
-    User assignBy = userRepository.findByUsername(assignmentDTO.getAssignBy());
-    User assignTo = userRepository.findByUsername(assignmentDTO.getAssignTo());
+    User assignBy = userRepository.findByUsername(assignmentDTO.getAssignBy())
+        .orElseThrow(() -> new ResourceNotFoundException("Assign by user not found"));
+    User assignTo = userRepository.findByUsername(assignmentDTO.getAssignTo())
+        .orElseThrow(() -> new ResourceNotFoundException("Assign to user not found"));
     Asset asset =
         assetRepository
             .findAssetByAssetCode(assignmentDTO.getAssetCode())
@@ -131,7 +133,9 @@ public class AssignmentServiceImpl implements AssignmentService {
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Edit assignment not found."));
     logger.info("Assignment found: {}", assignment);
-    assignment.setAssignTo(userRepository.findByUsername(assignmentDTO.getAssignTo()));
+    User assignTo = userRepository.findByUsername(assignmentDTO.getAssignTo())
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    assignment.setAssignTo(assignTo);
     assignment.setAsset(
         assetRepository
             .findAssetByAssetCode(assignmentDTO.getAssetCode())
@@ -215,9 +219,9 @@ public class AssignmentServiceImpl implements AssignmentService {
             .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
     // Get user logged in
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    User acceptedBy = userRepository.findByUsername(username);
+    User acceptedBy = userRepository.findByUsername(username)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-    if (acceptedBy == null) throw new ResourceNotFoundException("User not found: " + username);
     if (acceptedBy != assignment.getAssignTo()) throw new BusinessException("Invalid request");
     if (!assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_ACCEPTING)) {
       throw new BusinessException("Can not modify assignment with id: " + assignmentID);

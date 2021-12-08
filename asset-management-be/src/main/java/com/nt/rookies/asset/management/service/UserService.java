@@ -21,6 +21,7 @@ public interface UserService {
    *
    * @param username
    * @return {@link AccountDTO}
+   * @exception ResourceNotFoundException if user not found
    */
   Optional<AccountDTO> findActiveByUsername(String username);
 
@@ -31,6 +32,7 @@ public interface UserService {
    * @param username
    * @param newPassword
    * @return
+   * @exception ResourceNotFoundException if user not found
    */
   UserDTO changePasswordAtFirstLogin(String username, String newPassword);
 
@@ -44,6 +46,7 @@ public interface UserService {
    * Get user's location follow current user login
    *
    * @return {@link Location}
+   * @exception ResourceNotFoundException if user not found
    */
   Location getUserLocation();
 
