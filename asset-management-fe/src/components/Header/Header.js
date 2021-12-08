@@ -2,8 +2,15 @@ import './Header.css'
 import {DropdownButton} from "react-bootstrap";
 import DropdownItem from "react-bootstrap/DropdownItem";
 import profileImage from "./github.png"
+import ChangePasswordModal from "./ChangePassword/ChangePasswordModal";
+import {useState} from "react";
 
 const Header = ({header, account, token, setToken}) => {
+
+    const [show, setShow] = useState(false);
+    const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
+
     let headerButton;
     if (account && token) {
         headerButton = (
@@ -19,9 +26,19 @@ const Header = ({header, account, token, setToken}) => {
                                 </div>
                             }
             >
-                <DropdownItem href="/profile">Profile</DropdownItem>
-                <DropdownItem type="button" className="btn del-button btn-outline-secondary" data-bs-toggle="modal"
-                              data-bs-target="#confirmModal">Logout</DropdownItem>
+                <DropdownItem type="button"
+                              className="btn del-button btn-outline-secondary"
+                              onClick={handleShow}
+                >
+                    Change password
+                </DropdownItem>
+                <DropdownItem type="button"
+                              className="btn del-button btn-outline-secondary"
+                              data-bs-toggle="modal"
+                              data-bs-target="#confirmModal"
+                >
+                    Logout
+                </DropdownItem>
             </DropdownButton>
         )
     } else {
@@ -81,6 +98,7 @@ const Header = ({header, account, token, setToken}) => {
                         </div>
                     </div>
                 </div>
+                <ChangePasswordModal show={show} handleClose={handleClose}/>
             </div>
         </nav>
     )

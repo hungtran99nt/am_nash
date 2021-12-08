@@ -1,6 +1,7 @@
 package com.nt.rookies.asset.management.controller;
 
 import com.nt.rookies.asset.management.dto.AccountDTO;
+import com.nt.rookies.asset.management.dto.PasswordDTO;
 import com.nt.rookies.asset.management.dto.UserDTO;
 import com.nt.rookies.asset.management.service.UserService;
 import java.util.List;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /** REST controller for user. */
 @RestController
@@ -69,5 +72,11 @@ public class UserRestController {
   @PutMapping("/user/updatePassword")
   public UserDTO changePasswordAtFirstLogin(@RequestParam String username, @RequestParam String password) {
     return userService.changePasswordAtFirstLogin(username, password);
+  }
+
+  @PutMapping("user/changePassword")
+  public ResponseEntity<Void> changePassword(@RequestBody @Valid PasswordDTO passwordDTO){
+    userService.changePassword(passwordDTO);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }
