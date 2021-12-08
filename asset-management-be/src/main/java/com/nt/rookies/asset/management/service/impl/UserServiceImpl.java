@@ -102,7 +102,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Optional<AccountDTO> findActiveByUsername(String username) {
-    User user = userRepository.findByUsername(username);
+    User user = userRepository.findByUsername(username)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     if (user.getStatus() != BaseConstants.USER_STATUS_DISABLED) {
       return Optional.of(modelMapper.map(user, AccountDTO.class));
     }
@@ -111,7 +112,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTO changePasswordAtFirstLogin(String username, String newPassword) {
-    User user = userRepository.findByUsername(username);
+    User user = userRepository.findByUsername(username).get();
     logger.info("User need to change:{}", user);
     user.setPassword(passwordEncoder.encode(newPassword));
     user.setStatus(BaseConstants.USER_STATUS_ACTIVE);
@@ -151,7 +152,8 @@ public class UserServiceImpl implements UserService {
     UserDetails userDetails =
         (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
-    User currentUser = userRepository.findByUsername(username);
+    User currentUser = userRepository.findByUsername(username)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     return currentUser.getLocation();
   }
 
@@ -223,10 +225,8 @@ public class UserServiceImpl implements UserService {
     UserDetails userDetails =
         (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
-    User user = userRepository.findByUsername(username);
-    if (user == null) {
-      throw new ResourceNotFoundException("User not found");
-    }
-    return user;
+    return userRepository
+        .findByUsername(username)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
   }
 }

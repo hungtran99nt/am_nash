@@ -56,8 +56,10 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     Assignment newAssignment = modelMapper.map(assignmentDTO, Assignment.class);
     Assignment createdAssignment = new Assignment();
-    User assignBy = userRepository.findByUsername(assignmentDTO.getAssignBy());
-    User assignTo = userRepository.findByUsername(assignmentDTO.getAssignTo());
+    User assignBy = userRepository.findByUsername(assignmentDTO.getAssignBy())
+        .orElseThrow(() -> new ResourceNotFoundException("Assign by user not found"));
+    User assignTo = userRepository.findByUsername(assignmentDTO.getAssignTo())
+        .orElseThrow(() -> new ResourceNotFoundException("Assign to user not found"));
     Asset asset =
         assetRepository
             .findAssetByAssetCode(assignmentDTO.getAssetCode())
@@ -131,7 +133,9 @@ public class AssignmentServiceImpl implements AssignmentService {
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Edit assignment not found."));
     logger.info("Assignment found: {}", assignment);
-    assignment.setAssignTo(userRepository.findByUsername(assignmentDTO.getAssignTo()));
+    User assignTo = userRepository.findByUsername(assignmentDTO.getAssignTo())
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    assignment.setAssignTo(assignTo);
     assignment.setAsset(
         assetRepository
             .findAssetByAssetCode(assignmentDTO.getAssetCode())
@@ -215,9 +219,9 @@ public class AssignmentServiceImpl implements AssignmentService {
             .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
     // Get user logged in
     String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    User acceptedBy = userRepository.findByUsername(username);
+    User acceptedBy = userRepository.findByUsername(username)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-    if (acceptedBy == null) throw new ResourceNotFoundException("User not found: " + username);
     if (acceptedBy != assignment.getAssignTo()) throw new BusinessException("Invalid request");
     if (!assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_ACCEPTING)) {
       throw new BusinessException("Can not modify assignment with id: " + assignmentID);
@@ -294,13 +298,44 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignmentRepository
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
-    if (!assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED))
+    if (!assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_ACCEPTED)) {
       throw new IllegalAssignmentException("Can not create request returning for this assignment");
+    }
 
     User requestBy = userService.getCurrentUser();
     assignment.setRequestBy(requestBy);
     assignment.setState(BaseConstants.ASSIGNMENT_STATUS_RETURNING);
     Assignment requestedAssignment = assignmentRepository.save(assignment);
+    logger.info("Assignment's state changed to: {}", requestedAssignment.getState());
     return modelMapper.map(requestedAssignment, AssignmentDTO.class);
+  }
+
+  @Override
+  public AssignmentDTO completeRequestReturning(Integer id) {
+    logger.info("Inside completeRequestReturning() method");
+    Assignment assignment =
+        assignmentRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Assignment not found"));
+    if (!assignment.getState().equals(BaseConstants.ASSIGNMENT_STATUS_RETURNING)) {
+      throw new IllegalAssignmentException(
+          "Can not complete request returning for this assignment");
+    }
+
+    User acceptedBy = userService.getCurrentUser();
+    assignment.setAcceptedBy(acceptedBy);
+    assignment.setState(BaseConstants.ASSIGNMENT_STATUS_COMPLETED);
+    Assignment completedAssignment = assignmentRepository.save(assignment);
+    logger.info("Assignment's state changed to: {}", completedAssignment.getState());
+
+    /* Update asset's state to Available */
+    Asset asset =
+        assetRepository
+            .findAssetByAssetCode(assignment.getAsset().getAssetCode())
+            .orElseThrow(() -> new ResourceNotFoundException("Asset not found"));
+    asset.setState(BaseConstants.ASSET_STATUS_AVAILABLE);
+    Asset completedAsset = assetRepository.save(asset);
+    logger.info("Asset's state changed to: {}", completedAsset.getState());
+    return modelMapper.map(completedAssignment, AssignmentDTO.class);
   }
 }

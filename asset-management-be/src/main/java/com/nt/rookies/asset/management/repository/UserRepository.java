@@ -6,14 +6,19 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+  /**
+   * Find user by username
+   *
+   * @param username of user
+   * @return Optional of @{@link User} object
+   */
   @Query("SELECT u FROM User u WHERE u.username = :username")
-  User findByUsername(@Param("username") String username);
+  Optional<User> findByUsername(@Param("username") String username);
 
   List<User> findAllByLocation(Location location);
 
@@ -23,7 +28,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
               + "FROM user WHERE username LIKE CONCAT(:username, '%');",
       nativeQuery = true)
   Optional<Integer> findMaxUsernamePostfix(@Param("username") String username);
-
-  @Procedure(procedureName ="SP_USER_INSERT_StaffCode", outputParameterName = "staffCode")
-  String generateStaffCode();
 }

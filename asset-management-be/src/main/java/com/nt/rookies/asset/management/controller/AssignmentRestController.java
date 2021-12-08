@@ -162,4 +162,17 @@ public class AssignmentRestController {
   public AssignmentDTO createRequestReturning(@PathVariable(name = "id") Integer id) {
     return assignmentService.createRequestReturning(id);
   }
+
+  /**
+   * User/ Admin can complete request of return assignment.<br>
+   * Link: <code>/api/v1.0/assignment/{id}/return/complete</code><br>
+   * Method: PUT
+   *
+   * @param id assignment id
+   * @return {@link AssignmentDTO} object
+   */
+  @PutMapping("/admin/assignments/{id}/return/complete")
+  public AssignmentDTO completeRequestReturning(@PathVariable(name = "id") Integer id) {
+    return assignmentService.completeRequestReturning(id);
+  }
 }

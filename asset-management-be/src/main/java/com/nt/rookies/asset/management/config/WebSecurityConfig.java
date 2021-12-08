@@ -65,7 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/**/assets**", // get all, create
             "/**/assets/**", // get by id, update
             "/**/admin/assignments**", // create assignment
-            "/**/admin/assignments/**" // get by id
+            "/**/admin/assignments/**" // get by id, complete/ cancel request of return
             )
         .hasAuthority("Admin") // only allow admins to access these endpoints
         .anyRequest()
