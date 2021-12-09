@@ -1,5 +1,5 @@
 import './App.css'
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {BrowserRouter as Router, NavLink, Route, Switch} from "react-router-dom";
 import logoimg from "./assets/images/logonashtech.png"
 import ManageAssignment from "./pages/ManageAssignment/ManageAssignment";
@@ -11,7 +11,7 @@ import Header from "./components/Header/Header";
 import Login from "./pages/Login/Login";
 import CreateUserPage from "./pages/ManageUser/CreateUserPage/CreateUserPage";
 import Profile from "./pages/Profile/Profile";
-import {API_URL} from "./common/constants";
+import {API_URL, USER_STATUS} from "./common/constants";
 import useFetch from "./hooks/useFetch";
 import EditUserPage from "./pages/ManageUser/EditUserPage/EditUserPage";
 import jwt_decode from "jwt-decode";
@@ -21,6 +21,7 @@ import Error from "./pages/Error/Error";
 import EditAssignmentPage from "./pages/ManageAssignment/EditAssignmentPage/EditAssignmentPage";
 import CreateAssignmentPage from "./pages/ManageAssignment/CreateAssignmentPage/CreateAssignmentPage";
 import MyAssignment from "./pages/Home/MyAssignment";
+import FirstLoginModal from "./components/FirstLoginModal/FirstLoginModal";
 
 const headerTitle = {
     Home: 'Home',
@@ -35,6 +36,7 @@ const convertDataResponse = res => (
         fullName: `${res.data.lastName} ${res.data.firstName}`,
         userName: res.data.username,
         type: res.data.type,
+        status: res.data.status,
     }
 );
 export default function App() {
@@ -55,7 +57,20 @@ export default function App() {
     }
     const {
         data: account,
-    } = useFetch({}, `${API_URL}/users/user?username=${curUsername}`, convertDataResponse);
+        isLoading: isLoading
+    } = useFetch({}, `${API_URL}/account/user?username=${curUsername}`, convertDataResponse);
+
+    const [showNewPass, setShowNewPass] = useState(false);
+    const handleShowNewPass = () => {
+        setShowNewPass(true)
+    };
+    const handleCloseNewPass = () => setShowNewPass(false);
+
+    if(account.status === USER_STATUS.NEW){
+        handleShowNewPass();
+    }
+
+    console.log(account)
 
     return (
         <Router>
@@ -64,7 +79,6 @@ export default function App() {
                     header={headerInfo}
                     account={account}
                     token={token}
-                    setToken={setToken}
                 />
                 <div className="appcontainer">
                     <div className="grid wide">
@@ -158,6 +172,7 @@ export default function App() {
                         </div>
                     </div>
                 </div>
+                <FirstLoginModal show={showNewPass} handleClose={handleCloseNewPass} />
             </div>
         </Router>
     );

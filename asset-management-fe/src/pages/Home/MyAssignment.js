@@ -25,7 +25,6 @@ const MyAssignment = () => {
         setData: setAssignments,
         errorMessage
     } = useFetch([], `${API_URL}/user/assignments`, convertDataResponse);
-    console.log(assignments);
 
     return (
         <div className="mt-4">

@@ -3,13 +3,19 @@ import {DropdownButton} from "react-bootstrap";
 import DropdownItem from "react-bootstrap/DropdownItem";
 import profileImage from "./github.png"
 import ChangePasswordModal from "./ChangePassword/ChangePasswordModal";
-import {useState} from "react";
+import React, {useState} from "react";
+import FirstLoginModal from "../FirstLoginModal/FirstLoginModal";
+import {USER_STATUS} from "../../common/constants";
 
 const Header = ({header, account, token, setToken}) => {
 
-    const [show, setShow] = useState(false);
-    const handleShow = () => setShow(true);
-    const handleClose = () => setShow(false);
+    const [showChangePass, setShowChangePass] = useState(false);
+    const handleShowChangePass = () => setShowChangePass(true);
+    const handleCloseChangePass = () => setShowChangePass(false);
+    //
+    // const [showNewPass, setShowNewPass] = useState(false);
+    // const handleShowNewPass = () => setShowNewPass(true);
+    // const handleCloseNewPass = () => setShowNewPass(false);
 
     let headerButton;
     if (account && token) {
@@ -28,7 +34,7 @@ const Header = ({header, account, token, setToken}) => {
             >
                 <DropdownItem type="button"
                               className="btn del-button btn-outline-secondary"
-                              onClick={handleShow}
+                              onClick={handleShowChangePass}
                 >
                     Change password
                 </DropdownItem>
@@ -58,6 +64,8 @@ const Header = ({header, account, token, setToken}) => {
             </DropdownButton>
         )
     }
+
+
     return (
         <nav className="header navbar w-100">
             <div className="grid wide">
@@ -98,7 +106,7 @@ const Header = ({header, account, token, setToken}) => {
                         </div>
                     </div>
                 </div>
-                <ChangePasswordModal show={show} handleClose={handleClose}/>
+                <ChangePasswordModal show={showChangePass} handleClose={handleCloseChangePass}/>
             </div>
         </nav>
     )

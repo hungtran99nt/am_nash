@@ -3,12 +3,10 @@ import {Button, Col, Form, InputGroup, Modal, Row} from "react-bootstrap";
 import * as Yup from 'yup';
 import {useFormik} from 'formik';
 import axios from "axios";
-import {API_URL} from "../../../common/constants";
 import {BsFillEyeSlashFill, BsFillEyeFill} from "react-icons/all";
-import './ChangePasswordModal.css'
+import {API_URL} from "../../common/constants";
 
 const Schema = Yup.object().shape({
-    oldPassword: Yup.string().required("Required"),
     newPassword: Yup.string().required("Required"),
     confirmPassword: Yup.string()
         .required("Required")
@@ -21,12 +19,11 @@ const Schema = Yup.object().shape({
         })
 });
 
-const ChangePasswordModal = ({show, handleClose}) => {
+const FirstLoginModal = ({show, handleClose}) => {
 
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     const initialValues = {
-        oldPassword: "",
         newPassword: "",
         confirmPassword: ""
     }
@@ -34,15 +31,11 @@ const ChangePasswordModal = ({show, handleClose}) => {
     const submit = async (values, {setErrors}) => {
         await axios({
             method: 'PUT',
-            url: `${API_URL}/account/changePassword`,
-            data: {
-                oldPassword: values.oldPassword,
-                newPassword: values.newPassword
-            }
+            url: `${API_URL}/account/resetPassword?password=${values.confirmPassword}`,
         }).then(() => {
             setIsSubmitted(true);
-        }).catch(() => {
-            setErrors({oldPassword: "Password is incorrect"})
+        }).catch((err) => {
+            setErrors({newPassword: err.message()})
         });
     }
 
@@ -53,7 +46,6 @@ const ChangePasswordModal = ({show, handleClose}) => {
     });
 
     const [isHided, setIsHided] = useState({
-        oldPassword: true,
         newPassword: true,
         confirmPassword: true
     })
@@ -79,35 +71,6 @@ const ChangePasswordModal = ({show, handleClose}) => {
             {!isSubmitted &&
                 <Modal.Body>
                     <form onSubmit={formik.handleSubmit}>
-                        <Form.Group as={Row} className="mb-3">
-                            <Form.Label column sm="4">Old password</Form.Label>
-                            <Col sm="6">
-                                <InputGroup id="input-group-header">
-                                    <Form.Control
-                                        id="formPass"
-                                        type={isHided.oldPassword ? "password" : "text"}
-                                        name="oldPassword"
-                                        onBlur={formik.handleBlur}
-                                        onChange={formik.handleChange}
-                                        value={formik.values.oldPassword}
-                                        isInvalid={formik.touched.oldPassword && formik.errors.oldPassword}
-                                    />
-                                    <Button variant="outline-secondary" id="eye-addon"
-                                            onClick={() => {
-                                                setIsHided(prevState => ({
-                                                    ...prevState,
-                                                    oldPassword: !isHided.oldPassword
-                                                }));
-                                            }}
-                                    >
-                                        {isHided.oldPassword ? <BsFillEyeFill/> : <BsFillEyeSlashFill/>}
-                                    </Button>
-                                    <Form.Control.Feedback type="invalid">
-                                        {formik.errors.oldPassword}
-                                    </Form.Control.Feedback>
-                                </InputGroup>
-                            </Col>
-                        </Form.Group>
                         <Form.Group as={Row} className="mb-3">
                             <Form.Label column sm="4">New password</Form.Label>
                             <Col sm="6">
@@ -168,7 +131,7 @@ const ChangePasswordModal = ({show, handleClose}) => {
                         </Form.Group>
                         <div className="col-sm-10 p-1 d-flex justify-content-end">
                             <Button type="submit" className="btn-primary"
-                                    disabled={!formik.values.oldPassword || !formik.values.newPassword ||
+                                    disabled={!formik.values.newPassword ||
                                         !formik.values.confirmPassword || formik.errors.confirmPassword}
                             >
                                 Save
@@ -207,4 +170,4 @@ const ChangePasswordModal = ({show, handleClose}) => {
     );
 };
 
-export default ChangePasswordModal;
+export default FirstLoginModal;

@@ -54,11 +54,6 @@ public class UserRestController {
     return userService.updateUser(id, user);
   }
 
-  @GetMapping("/user")
-  public Optional<AccountDTO> getActiveUserByUsername(@RequestParam String username) {
-    return userService.findActiveByUsername(username);
-  }
-
   @PutMapping("/disable/{id}")
   public ResponseEntity<UserDTO> disableUser(@PathVariable(name = "id") Integer id) {
     return new ResponseEntity<>(userService.disableUser(id), HttpStatus.OK);
@@ -69,14 +64,4 @@ public class UserRestController {
     return new ResponseEntity<>(userService.isValidToDisable(id), HttpStatus.OK);
   }
 
-  @PutMapping("/user/updatePassword")
-  public UserDTO changePasswordAtFirstLogin(@RequestParam String username, @RequestParam String password) {
-    return userService.changePasswordAtFirstLogin(username, password);
-  }
-
-  @PutMapping("user/changePassword")
-  public ResponseEntity<Void> changePassword(@RequestBody @Valid PasswordDTO passwordDTO){
-    userService.changePassword(passwordDTO);
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
 }

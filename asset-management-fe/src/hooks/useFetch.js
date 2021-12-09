@@ -33,6 +33,8 @@ const useFetch = (initialData, url, convertResponseToData) => {
 			didCancel = true;
 		}
 	}, [url, convertResponseToData]);
+	console.log("In useFetch:");
+	console.log(JSON.stringify(data));
 	return {
 		isLoading,
 		data,

@@ -36,7 +36,7 @@ public interface UserService {
    * @return
    * @exception ResourceNotFoundException if user not found
    */
-  UserDTO changePasswordAtFirstLogin(String username, String newPassword);
+  UserDTO changePasswordAtFirstLogin(String newPassword);
 
   UserDTO disableUser(Integer id);
 

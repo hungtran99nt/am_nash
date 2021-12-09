@@ -54,8 +54,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/**/user/assignment",
             "/**/user/assignment/",
             "/**/user/assignments**",
-            "/**/user/assignments/**"
-        ) // user can access only their own assignments
+            "/**/user/assignments/**", // user can access only their own assignments
+            "/**/account/**",
+            "/**/account/",
+            "/**/account**",
+            "/**/account/")
         .authenticated() // user can access their own assignments
         .antMatchers(
             "/**/users**", // get all, create

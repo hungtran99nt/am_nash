@@ -13,22 +13,21 @@ import com.nt.rookies.asset.management.exception.UserDisabledException;
 import com.nt.rookies.asset.management.repository.AssignmentRepository;
 import com.nt.rookies.asset.management.repository.UserRepository;
 import com.nt.rookies.asset.management.service.UserService;
-import java.text.Normalizer;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.text.Normalizer;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -102,8 +101,10 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Optional<AccountDTO> findActiveByUsername(String username) {
-    User user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    User user =
+        userRepository
+            .findByUsername(username)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     if (user.getStatus() != BaseConstants.USER_STATUS_DISABLED) {
       return Optional.of(modelMapper.map(user, AccountDTO.class));
     }
@@ -111,8 +112,17 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDTO changePasswordAtFirstLogin(String username, String newPassword) {
-    User user = userRepository.findByUsername(username).get();
+  public UserDTO changePasswordAtFirstLogin(String newPassword) {
+    UserDetails userDetails =
+            (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    String username = userDetails.getUsername();
+    User user =
+        userRepository
+            .findByUsername(username)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    if (user.getStatus() != BaseConstants.USER_STATUS_NEW){
+      throw new BusinessException("Access denied");
+    }
     logger.info("User need to change:{}", user);
     user.setPassword(passwordEncoder.encode(newPassword));
     user.setStatus(BaseConstants.USER_STATUS_ACTIVE);
@@ -122,13 +132,16 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void changePassword(PasswordDTO passwordDTO){
+  public void changePassword(PasswordDTO passwordDTO) {
     UserDetails userDetails =
-            (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
-    User currentUser = userRepository.findByUsername(username);
+    User currentUser =
+        userRepository
+            .findByUsername(username)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-    if (!passwordEncoder.matches(passwordDTO.getOldPassword(), currentUser.getPassword())){
+    if (!passwordEncoder.matches(passwordDTO.getOldPassword(), currentUser.getPassword())) {
       throw new BusinessException("Password Not Matched");
     }
 
@@ -152,8 +165,10 @@ public class UserServiceImpl implements UserService {
     UserDetails userDetails =
         (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String username = userDetails.getUsername();
-    User currentUser = userRepository.findByUsername(username)
-        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    User currentUser =
+        userRepository
+            .findByUsername(username)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     return currentUser.getLocation();
   }
 
