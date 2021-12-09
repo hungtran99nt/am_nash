@@ -1,0 +1,8 @@
+.disable {
+    opacity: .3;
+}
+
+.action__items.disable{
+    cursor: default;
+}
+

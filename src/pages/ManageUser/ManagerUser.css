@@ -1,0 +1,61 @@
+.manager__heading {
+    font-size: 20px;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.manager__action {
+}
+
+.actions__wrapper {
+    height: 55px;
+}
+
+/*custom for form select*/
+.action__filter.form-select{
+    background-image: url("../../assets/images/filter.png") !important;
+    cursor: pointer;
+}
+
+.action__filter.form-select:focus {
+    border-color: #ced4da !important;
+    box-shadow: none !important;
+}
+
+.select {
+    position: relative;
+}
+
+.select::after {
+    content: "";
+    top: 0;
+    left: 120px;
+    position: absolute;
+    border-left: 1px solid #ced4da;
+    height: 75%;
+}
+/*end custom for form select*/
+
+.search-bar {
+    position: relative;
+    height: 100%;
+}
+
+.search-input {
+    border: 1px solid #ced4da !important;
+}
+
+.search-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.search-button {
+    width: 60px;
+    height: 41px;
+    border: 1px solid #b9bdc0 !important;
+    border-top-right-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+}
+
+

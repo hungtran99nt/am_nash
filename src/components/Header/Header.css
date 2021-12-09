@@ -1,0 +1,27 @@
+#dropdown-basic-button{
+    background-color: transparent !important;
+    transition: none !important;
+}
+.btn-primary:hover,.btn-primary:focus,.btn-primary:active,
+.btn-primary:active:focus:not(:disabled):not(.disabled),
+.btn:focus, .btn:active, .btn:hover{
+    box-shadow: none!important;
+    outline: 0;
+}
+.dropdown-toggle::after {
+    display:none !important;
+}
+.navbar{
+    align-items: center !important;
+}
+.header-btn span{
+    font-size: 20px;
+}
+.modal-title.logout,
+.modal-body.logout {
+    color: var(--primary-color);
+}
+
+.a-btn:hover{
+    opacity: 0.8;
+}

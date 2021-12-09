@@ -1,0 +1,20 @@
+input.input-category.form-control {
+    background-color: #ffffff;
+}
+.input-category{
+    border-right:1px solid #ffffff !important;
+}
+.input-category:focus{
+    cursor: pointer !important;
+    box-shadow: 0 0 0 0 !important;
+}
+.btn-modal{
+    background-color: #ffffff !important;
+    color: var(--text-color) !important;
+    border-bottom: 1px solid #3e4042 !important;
+    border-top: 1px solid #3e4042 !important;
+    border-right: 1px solid #3e4042 !important;
+    border-top-right-radius:4px !important;
+    border-bottom-right-radius:4px !important;
+}
+

@@ -1,0 +1,47 @@
+.calendar .form-control {
+    border: 1px solid #ced4da !important;
+}
+
+.calendar .form-control:focus {
+    box-shadow: none;
+}
+
+.date-picker {
+    position: relative;
+}
+
+.date-picker:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    height: 100%;
+    right: 55px;
+    border-left: 1px solid #ced4da;
+}
+
+.date-input.form-control {
+    line-height: 28px !important;
+}
+
+.date-input.form-control > .datetime-reset-button {
+    opacity: 0 !important;
+}
+
+.date-picker input[type="date"] {
+    position: relative;
+    cursor: pointer;
+}
+
+.date-picker input[type="date"]:before {
+    content: attr(placeholder);
+    position: absolute;
+    background: #fff;
+    pointer-events: none;
+    line-height: 28px;
+    padding: 0 0.5rem;
+}
+
+.date-picker input[type="date"]:focus:before,
+.date-picker input[type="date"]:not([value=""]):before {
+    display: none;
+}
